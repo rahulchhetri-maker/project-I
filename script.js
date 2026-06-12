@@ -493,6 +493,13 @@ let _testimonialTimer = null;
 let _sliderLock = false;
 let _realSlideCount = 0;
 
+const getTestimonialSlideWidth = (track) => {
+  const gap = parseFloat(getComputedStyle(track).gap) || 32;
+  const firstSlide = track.children[0];
+  if (!firstSlide) return 0;
+  return firstSlide.getBoundingClientRect().width + gap;
+};
+
 const initTestimonialCarousel = () => {
   const track = DOM.testimonialTrack;
   if (!track) return;
@@ -500,68 +507,67 @@ const initTestimonialCarousel = () => {
   const slides = Array.from(track.children);
   if (slides.length < 2) return; // nothing to do
 
-  // clone first and last for infinite feel
-  const firstClone = slides[0].cloneNode(true);
-  const lastClone = slides[slides.length - 1].cloneNode(true);
-  track.appendChild(firstClone);
-  track.insertBefore(lastClone, track.firstChild);
-
   _realSlideCount = slides.length;
-  activeSlideIndex = 1; // start at real first
+  activeSlideIndex = 0;
 
-  // set initial position after layout
+  track.style.visibility = 'hidden';
+  track.style.opacity = '0';
+
   requestAnimationFrame(() => {
-    const gap = parseFloat(getComputedStyle(track).gap) || 32;
-    const slideWidth = track.children[0].getBoundingClientRect().width + gap;
+    const slideWidth = getTestimonialSlideWidth(track);
+    if (!slideWidth) {
+      track.style.visibility = 'visible';
+      track.style.opacity = '1';
+      return;
+    }
+
     gsap.set(track, { x: -slideWidth * activeSlideIndex });
+    track.style.visibility = 'visible';
+    track.style.opacity = '1';
   });
 
-  // hover pause/resume
-  track.addEventListener('mouseenter', _stopTestimonialAutoplay);
-  track.addEventListener('mouseleave', _startTestimonialAutoplay);
+  document.querySelectorAll('.tn-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const direction = Number(btn.dataset.direction || 0);
+      if (direction) {
+        window.shiftSlider(direction);
+      }
+    });
+  });
 };
 
 window.shiftSlider = (movementDirection) => {
-  if (!DOM.testimonialTrack || _sliderLock) return;
+  const track = DOM.testimonialTrack;
+  if (!track || _sliderLock) return;
   _sliderLock = true;
 
-  const track = DOM.testimonialTrack;
-  const gap = parseFloat(getComputedStyle(track).gap) || 32;
-  const slideWidth = track.children[0].getBoundingClientRect().width + gap;
+  const slideWidth = getTestimonialSlideWidth(track);
+  if (!slideWidth) {
+    _sliderLock = false;
+    return;
+  }
 
-  activeSlideIndex += movementDirection;
+  const nextIndex = activeSlideIndex + movementDirection;
+  if (nextIndex < 0 || nextIndex >= _realSlideCount) {
+    _sliderLock = false;
+    return;
+  }
 
-  gsap.to(track, { x: -slideWidth * activeSlideIndex, duration: 0.55, ease: 'power3.out', onComplete: () => {
-    // handle looping when reaching clones
-    if (activeSlideIndex === 0) {
-      // moved to cloned last, jump to real last
-      activeSlideIndex = _realSlideCount;
-      gsap.set(track, { x: -slideWidth * activeSlideIndex });
+  activeSlideIndex = nextIndex;
+
+  gsap.to(track, {
+    x: -slideWidth * activeSlideIndex,
+    duration: 0.85,
+    ease: 'power3.out',
+    onComplete: () => {
+      setTimeout(() => { _sliderLock = false; }, 120);
     }
-    if (activeSlideIndex === _realSlideCount + 1) {
-      // moved to cloned first, jump to real first
-      activeSlideIndex = 1;
-      gsap.set(track, { x: -slideWidth * activeSlideIndex });
-    }
-    // small debounce to prevent rapid clicks
-    setTimeout(() => { _sliderLock = false; }, 60);
-  } });
-};
-
-const _startTestimonialAutoplay = (interval = 5000) => {
-  if (_testimonialTimer) clearInterval(_testimonialTimer);
-  _testimonialTimer = setInterval(() => window.shiftSlider(1), interval);
-};
-const _stopTestimonialAutoplay = () => {
-  if (_testimonialTimer) clearInterval(_testimonialTimer);
-  _testimonialTimer = null;
+  });
 };
 
 // initialize carousel when DOM ready
 document.addEventListener('DOMContentLoaded', () => {
   initTestimonialCarousel();
-  // start autoplay after small delay
-  setTimeout(() => _startTestimonialAutoplay(5000), 400);
 });
 
 /**

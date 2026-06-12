@@ -832,11 +832,51 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
 .pulse-graph-box svg path { stroke: var(--cb); stroke-width: 2; fill: none; }
 
 /* ADVANCED TESTIMONIALS CAROUSEL MODULE */
-.test-container { position: relative; margin-top: 60px; overflow: hidden; padding: 20px 0; }
-.test-track { display: flex; gap: 32px; transition: transform 0.6s var(--ease); }
-.test-track { display: flex; gap: 32px; transition: transform 0.6s var(--ease); will-change: transform; }
-.test-slide { flex: 0 0 auto; width: calc(50% - 16px); padding: 40px; }
-@media(max-width: 768px) { .test-slide { min-width: 100%; } }
+.test-container {
+  position: relative;
+  margin-top: 60px;
+  overflow: hidden;
+  padding: 20px 0;
+}
+.test-track {
+  display: flex;
+  gap: 32px;
+  transition: transform 0.85s var(--ease);
+  will-change: transform;
+}
+.test-slide {
+  flex: 0 0 auto;
+  width: calc(50% - 16px);
+  padding: 40px;
+  min-height: 240px;
+}
+@media(max-width: 768px) {
+  .test-slide {
+    min-width: 100%;
+    width: 100%;
+  }
+}
+.test-navs {
+  position: relative;
+  z-index: 1;
+}
+.tn-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--gborder);
+  color: var(--tp);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s;
+  background: var(--card);
+}
+.tn-btn:hover {
+  background: var(--cb);
+  color: #fff;
+  border-color: var(--cb);
+}
 
 /* Light-mode accessibility tweaks for key elements */
 [data-theme="light"] .section-desc,
