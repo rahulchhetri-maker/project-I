@@ -490,20 +490,62 @@ const animatePulseWaveNetwork = () => {
 // Testimonial Layer Slide Matrix Rotator logic
 let activeSlideIndex = 0;
 let _testimonialTimer = null;
+let _sliderLock = false;
+let _realSlideCount = 0;
+
+const initTestimonialCarousel = () => {
+  const track = DOM.testimonialTrack;
+  if (!track) return;
+
+  const slides = Array.from(track.children);
+  if (slides.length < 2) return; // nothing to do
+
+  // clone first and last for infinite feel
+  const firstClone = slides[0].cloneNode(true);
+  const lastClone = slides[slides.length - 1].cloneNode(true);
+  track.appendChild(firstClone);
+  track.insertBefore(lastClone, track.firstChild);
+
+  _realSlideCount = slides.length;
+  activeSlideIndex = 1; // start at real first
+
+  // set initial position after layout
+  requestAnimationFrame(() => {
+    const gap = parseFloat(getComputedStyle(track).gap) || 32;
+    const slideWidth = track.children[0].getBoundingClientRect().width + gap;
+    gsap.set(track, { x: -slideWidth * activeSlideIndex });
+  });
+
+  // hover pause/resume
+  track.addEventListener('mouseenter', _stopTestimonialAutoplay);
+  track.addEventListener('mouseleave', _startTestimonialAutoplay);
+};
 
 window.shiftSlider = (movementDirection) => {
-  if (!DOM.testimonialTrack) return;
+  if (!DOM.testimonialTrack || _sliderLock) return;
+  _sliderLock = true;
 
-  const totalSlides = DOM.testimonialTrack.children.length;
-  activeSlideIndex = (activeSlideIndex + movementDirection + totalSlides) % totalSlides;
+  const track = DOM.testimonialTrack;
+  const gap = parseFloat(getComputedStyle(track).gap) || 32;
+  const slideWidth = track.children[0].getBoundingClientRect().width + gap;
 
-  // calculate pixel offset based on slide width + gap so movement direction is always correct
-  const firstSlide = DOM.testimonialTrack.children[0];
-  const gap = parseFloat(getComputedStyle(DOM.testimonialTrack).gap) || 32;
-  const slideWidth = firstSlide.getBoundingClientRect().width + gap;
-  const x = -activeSlideIndex * slideWidth;
+  activeSlideIndex += movementDirection;
 
-  gsap.to(DOM.testimonialTrack, { x, duration: 0.6, ease: 'power3.out' });
+  gsap.to(track, { x: -slideWidth * activeSlideIndex, duration: 0.55, ease: 'power3.out', onComplete: () => {
+    // handle looping when reaching clones
+    if (activeSlideIndex === 0) {
+      // moved to cloned last, jump to real last
+      activeSlideIndex = _realSlideCount;
+      gsap.set(track, { x: -slideWidth * activeSlideIndex });
+    }
+    if (activeSlideIndex === _realSlideCount + 1) {
+      // moved to cloned first, jump to real first
+      activeSlideIndex = 1;
+      gsap.set(track, { x: -slideWidth * activeSlideIndex });
+    }
+    // small debounce to prevent rapid clicks
+    setTimeout(() => { _sliderLock = false; }, 60);
+  } });
 };
 
 const _startTestimonialAutoplay = (interval = 5000) => {
@@ -515,13 +557,12 @@ const _stopTestimonialAutoplay = () => {
   _testimonialTimer = null;
 };
 
-// start autoplay when DOM is ready and pause on hover
-if (DOM.testimonialTrack) {
-  DOM.testimonialTrack.addEventListener('mouseenter', _stopTestimonialAutoplay);
-  DOM.testimonialTrack.addEventListener('mouseleave', _startTestimonialAutoplay);
-  // start after a short delay to allow layout
-  setTimeout(() => _startTestimonialAutoplay(5000), 300);
-}
+// initialize carousel when DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  initTestimonialCarousel();
+  // start autoplay after small delay
+  setTimeout(() => _startTestimonialAutoplay(5000), 400);
+});
 
 /**
  * LIFE-CYCLE INITIALIZATION EXECUTION OVERLAY MANIFEST
