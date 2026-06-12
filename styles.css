@@ -89,12 +89,22 @@ html,body {
   border-bottom: 1px solid var(--tm); color: var(--tp); padding: 35px 0px;
 }
 
-.submit-btn {
-  width: 100%; padding: 14px; background: var(--c);
-  color: white; border: none; border-radius: var(--r2);
-  margin-top: 10px; cursor: pointer; font-weight: 700;
+.submit-btnn {
+  width: 100%; 
+  padding: 14px; 
+  background: var(--c);
+  color: white; 
+  border: none; 
+  border-radius: var(--r2);
+  margin-top: 10px; 
+  cursor: pointer; 
+  font-weight: 700;
+  
+  /* Turn on flexbox and center both horizontally and vertically */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
 .toggle-text { color: var(--tm); text-align: center; margin-top: 15px; font-size: 0.9rem; }
 .toggle-text span { color: var(--c); cursor: pointer; }
 .forgot-link { color: var(--tm); text-decoration: underline; font-size: 0.7rem; justify-self: left; margin-top: -10px; margin-bottom: 20px; }
