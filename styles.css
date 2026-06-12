@@ -86,7 +86,7 @@ html,body {
 .input-group label { display: block; color: var(--ts); font-size: 0.85rem; margin-bottom: 5px; }
 .input-group input {
   width: 100%; background: transparent; border: none;
-  border-bottom: 1px solid var(--tm); color: var(--tp); padding: 8px 0;
+  border-bottom: 1px solid var(--tm); color: var(--tp); padding: 35px 0px;
 }
 
 .submit-btn {
