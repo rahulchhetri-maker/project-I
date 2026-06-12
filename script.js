@@ -586,3 +586,53 @@ document.documentElement.setAttribute(
   "data-theme",
   localStorage.getItem("theme") || "light"
 );
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("footer-contact-form");
+  const statusMsg = document.getElementById("form-status");
+  const statusText = statusMsg.querySelector(".status-text");
+  const submitBtn = document.getElementById("submit-btn");
+  const btnText = submitBtn.querySelector(".btn-text");
+
+  if (form) {
+    form.addEventListener("submit", async function(e) {
+      e.preventDefault(); 
+
+      submitBtn.style.opacity = "0.6";
+      submitBtn.style.pointerEvents = "none";
+      btnText.textContent = "Processing Async Routing...";
+      
+      statusMsg.className = "form-status-msg"; 
+      
+      const data = new FormData(form);
+
+      try {
+        const response = await fetch(form.action, {
+          method: form.method,
+          body: data,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.ok) {
+          statusText.textContent = "Data payload delivered successfully! We'll sync up shortly.";
+          statusMsg.classList.add("show", "success");
+          form.reset(); 
+        } else {
+          const result = await response.json();
+          if (result.errors) {
+            statusText.textContent = result.errors.map(error => error.message).join(", ");
+          } else {
+            statusText.textContent = "Infrastructure failed to accept data transmission pipeline.";
+          }
+          statusMsg.classList.add("show", "error");
+        }
+      } catch (error) {
+        statusText.textContent = "Network stream connection interrupted. Verify link parameters.";
+        statusMsg.classList.add("show", "error");
+      } finally {
+        submitBtn.style.opacity = "1";
+        submitBtn.style.pointerEvents = "auto";
+        btnText.textContent = "Send Message";
+      }
+    });
+  }
+});
