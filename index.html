@@ -10,6 +10,15 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@700;800;900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<!-- Ensure theme preference is applied before styles render to avoid flashes -->
+<script>
+  (function(){
+    try {
+      var t = localStorage.getItem('theme') || 'light';
+      document.documentElement.setAttribute('data-theme', t);
+    } catch(e) { /* ignore */ }
+  })();
+</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
@@ -188,8 +197,8 @@
 </div>
 
   <div class="hero-left">
-    <div class="hero-kicker">
-      <div class="live-dot"></div>Real-Time Matching Node Connected
+        <div class="hero-kicker">
+      <div class="live-dot" aria-hidden="true"></div>Real-Time Matching Node Connector
     </div>
     <h1 class="hero-title">Nepal's Smart <span class="grad">Blood Ops</span> Network.</h1>
     <p class="hero-sub">Alliance for Blood Operations± connects those in urgent need of blood with local donors — in real time. When every second counts, we make sure you're never alone.</p>
@@ -403,6 +412,46 @@
             <button class="qb btn-n" onclick="answerQ(this, false)">NEGATIVE / NO</button>
           </div>
         </div>
+
+        <div class="q-item gc" data-weight="3">
+          <div class="q-text">Have you donated blood within the last 90 days?</div>
+          <div class="q-btns">
+            <button class="qb btn-y" onclick="answerQ(this, true)">YES</button>
+            <button class="qb btn-n" onclick="answerQ(this, false)">NO</button>
+          </div>
+        </div>
+
+        <div class="q-item gc" data-weight="4">
+          <div class="q-text">Have you had surgery (major or minor) in the last 6 months?</div>
+          <div class="q-btns">
+            <button class="qb btn-y" onclick="answerQ(this, true)">YES</button>
+            <button class="qb btn-n" onclick="answerQ(this, false)">NO</button>
+          </div>
+        </div>
+
+        <div class="q-item gc" data-weight="5">
+          <div class="q-text">Are you currently taking any major medication (prescription drugs that affect blood/immune system)?</div>
+          <div class="q-btns">
+            <button class="qb btn-y" onclick="answerQ(this, true)">YES</button>
+            <button class="qb btn-n" onclick="answerQ(this, false)">NO</button>
+          </div>
+        </div>
+
+        <div class="q-item gc" data-weight="6">
+          <div class="q-text">Have you experienced fever or infectious symptoms within the past 14 days?</div>
+          <div class="q-btns">
+            <button class="qb btn-y" onclick="answerQ(this, true)">YES</button>
+            <button class="qb btn-n" onclick="answerQ(this, false)">NO</button>
+          </div>
+        </div>
+
+        <div class="q-item gc" data-weight="7">
+          <div class="q-text">Are you above the minimum eligible age for donation?</div>
+          <div class="q-btns">
+            <button class="qb btn-y" onclick="answerQ(this, true)">YES</button>
+            <button class="qb btn-n" onclick="answerQ(this, false)">NO</button>
+          </div>
+        </div>
       </div>
       
       <div class="elig-vis">
@@ -460,6 +509,20 @@
           <div class="ts-author">
             <div class="dc-avatar">AS</div>
             <div class="ts-meta"><h5>Anjali Shrestha</h5><p>O- System Donor, Patan Node</p></div>
+          </div>
+        </div>
+        <div class="test-slide gc">
+          <p class="ts-quote">"The dashboard and matching alerts are reliable — we were able to coordinate 3 donors in under 15 minutes during a trauma case."</p>
+          <div class="ts-author">
+            <div class="dc-avatar">MK</div>
+            <div class="ts-meta"><h5>Mina Khatri</h5><p>Blood Bank Manager, Civil Hospital</p></div>
+          </div>
+        </div>
+        <div class="test-slide gc">
+          <p class="ts-quote">"Smooth interface and clear instructions — fantastic for volunteers who need quick, clean guidance."</p>
+          <div class="ts-author">
+            <div class="dc-avatar">SP</div>
+            <div class="ts-meta"><h5>Suresh Pradhan</h5><p>Volunteer Coordinator</p></div>
           </div>
         </div>
       </div>

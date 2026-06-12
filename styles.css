@@ -25,12 +25,12 @@
 
 [data-theme="light"] {
   --bg: #F8F9FC; --bg2: #EEF1F6;
-  --card: rgba(255,255,255,0.82);
-  --glass: rgba(12,10,24,0.03);
+  --card: rgba(255,255,255,0.94);
+  --glass: rgba(12,10,24,0.02);
   --gborder: rgba(200,16,46,0.12);
-  --tp: #080812; --ts: rgba(8,8,18,0.68);
-  --tm: rgba(8,8,18,0.38);
-  --sc: 0 20px 50px rgba(200,16,46,0.05), inset 0 1px 0 rgba(255,255,255,0.9);
+  --tp: #0B0B10; --ts: rgba(8,8,18,0.9);
+  --tm: rgba(8,8,18,0.66);
+  --sc: 0 20px 50px rgba(200,16,46,0.04), inset 0 1px 0 rgba(255,255,255,0.95);
 }
 html,body {
   overflow-x: hidden;
@@ -221,9 +221,8 @@ html,body {
 /* Container styling */
 .team-section {
   background-color: var(--bg);
-  padding: 80px 24px;
+  padding: 40px 24px;
   text-align: center;
-  min-height: 100vh;
   box-sizing: border-box;
   transition: background-color var(--ease);
 }
@@ -502,14 +501,14 @@ body { cursor: auto; }
    PREMIUM FULL-SCREEN PRELOADER
 ═══════════════════════════════════════ */
 #preloader {
-  position: fixed; inset: 0; z-index: 9980; background: #05050A;
+  position: fixed; inset: 0; z-index: 9980; background: var(--bg);
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 32px;
 }
-.pre-logo { font-family: var(--fd); font-size: 3rem; font-weight: 900; letter-spacing: -0.04em; color: #fff; }
+.pre-logo { font-family: var(--fd); font-size: 3rem; font-weight: 900; letter-spacing: -0.04em; color: var(--tp); }
 .pre-logo em { font-style: normal; color: var(--cb); }
-.pre-bar-outer { width: 240px; height: 3px; background: rgba(255,255,255,0.06); border-radius: 4px; overflow: hidden; }
+.pre-bar-outer { width: 240px; height: 3px; background: rgba(0,0,0,0.06); border-radius: 4px; overflow: hidden; }
 .pre-bar-inner { height: 100%; width: 0%; background: linear-gradient(90deg, var(--c), var(--cb)); border-radius: 4px; }
-.pre-pct { font-size: 12px; letter-spacing: 0.15em; color: rgba(255,255,255,0.4); font-weight: 600; text-transform: uppercase; }
+.pre-pct { font-size: 12px; letter-spacing: 0.15em; color: var(--tm); font-weight: 600; text-transform: uppercase; }
 
 /* Global Scroll Progress Bar */
 #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--c), var(--cb), #FFA0B0); z-index: 9000; }
@@ -734,11 +733,17 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
 .live-pill { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,59,48,0.1); border: 1px solid rgba(255,59,48,0.2); padding: 8px 20px; border-radius: 50px; font-size: 14px; font-weight: 600; color: #FF3B30; }
 .live-pill-dot { width: 8px; height: 8px; background: #FF3B30; border-radius: 50%; animation: blink 1.5s infinite; }
 
+/* Live status dot used in hero kicker */
+.live-dot { display: inline-block; width: 10px; height: 10px; margin-right: 10px; border-radius: 50%; background: var(--cb); box-shadow: 0 0 12px rgba(255,31,61,0.35); vertical-align: middle; position: relative; }
+.live-dot::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 36px; height: 36px; border-radius: 50%; background: radial-gradient(circle, rgba(255,31,61,0.16) 0%, rgba(255,31,61,0) 60%); opacity: 0.9; animation: pulseDot 1.8s infinite; }
+@keyframes pulseDot { 0% { transform: translate(-50%, -50%) scale(0.95); opacity: .9 } 50% { transform: translate(-50%, -50%) scale(1.15); opacity: .55 } 100% { transform: translate(-50%, -50%) scale(0.95); opacity: .9 } }
+
 .emg-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; }
 .dash-card { padding: 32px; position: relative; overflow: hidden; }
-.dash-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; }
-.lvl-crit::before { background: #FF3B30; }
-.lvl-high::before { background: #FF9500; }
+/* remove colored top border strip to keep cards uniform */
+.dash-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 0; background: transparent; }
+.lvl-crit::before { background: transparent; }
+.lvl-high::before { background: transparent; }
 
 .card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
 .b-badge { font-family: var(--fd); font-size: 1.8rem; font-weight: 800; color: var(--cb); }

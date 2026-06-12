@@ -100,7 +100,8 @@ document.addEventListener("DOMContentLoaded", () => {
 const PLATFORM_STATE = {
   currentTheme: 'dark',
   isMenuOpen: false,
-  eligibilityWeights: { 1: null, 2: null },
+  // expanded eligibility weights (keys are question data-weight values)
+  eligibilityWeights: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null },
   activeFeedIndex: 0
 };
 
@@ -392,21 +393,50 @@ window.answerQ = (btn, selectionValue) => {
 
 const recomputeEligibilityIndex = () => {
   if (!DOM.eligScore || !DOM.eligFeedback) return;
-  
-  let scoreIndex = 100;
-  let summaryFeedbackText = "Passes all database checks. Ready for immediate routing system execution.";
-  
-  if (PLATFORM_STATE.eligibilityWeights[2] === true) {
-    scoreIndex -= 60;
-    summaryFeedbackText = "Tattoo timeline violation identified. Deferred pending standard 6-month operational window clearance.";
+
+  const w = PLATFORM_STATE.eligibilityWeights;
+
+  // Immediate disqualifiers
+  if (w['1'] === false) {
+    DOM.eligScore.innerText = `0%`;
+    DOM.eligFeedback.innerText = 'Not Eligible: Below minimum weight requirement.';
+    gsap.from(DOM.eligScore, { scale: 0.7, duration: 0.3, ease: 'back.out' });
+    return;
   }
-  if (PLATFORM_STATE.eligibilityWeights[1] === false) {
-    scoreIndex -= 40;
-    summaryFeedbackText = "Profile structural weight index falls short of safe draw specifications.";
+  if (w['3'] === true) {
+    DOM.eligScore.innerText = `0%`;
+    DOM.eligFeedback.innerText = 'Not Eligible: Donated within the last 90 days.';
+    gsap.from(DOM.eligScore, { scale: 0.7, duration: 0.3, ease: 'back.out' });
+    return;
   }
-  
-  DOM.eligScore.innerText = `${scoreIndex}%`;
-  DOM.eligFeedback.innerText = summaryFeedbackText;
+  if (w['6'] === true) {
+    DOM.eligScore.innerText = `0%`;
+    DOM.eligFeedback.innerText = 'Not Eligible: Recent fever or infectious symptoms reported.';
+    gsap.from(DOM.eligScore, { scale: 0.7, duration: 0.3, ease: 'back.out' });
+    return;
+  }
+  if (w['7'] === false) {
+    DOM.eligScore.innerText = `0%`;
+    DOM.eligFeedback.innerText = 'Not Eligible: Does not meet minimum age requirement.';
+    gsap.from(DOM.eligScore, { scale: 0.7, duration: 0.3, ease: 'back.out' });
+    return;
+  }
+
+  // Start from 100 and apply soft penalties
+  let score = 100;
+  const notes = [];
+  if (w['2'] === true) { score -= 60; notes.push('Tattoo/piercing within 6 months'); }
+  if (w['4'] === true) { score -= 50; notes.push('Recent surgery within 6 months'); }
+  if (w['5'] === true) { score -= 40; notes.push('Currently taking medication that may affect donation'); }
+
+  if (score <= 40) {
+    DOM.eligScore.innerText = `${Math.max(0, score)}%`;
+    DOM.eligFeedback.innerText = `Temporarily Ineligible: ${notes.length ? notes.join('; ') : 'Further screening required.'}`;
+  } else {
+    DOM.eligScore.innerText = `${score}%`;
+    DOM.eligFeedback.innerText = `Eligible: ${notes.length ? 'Notes: ' + notes.join('; ') : 'Passes preliminary checks.'}`;
+  }
+
   gsap.from(DOM.eligScore, { scale: 0.7, duration: 0.3, ease: 'back.out' });
 };
 
@@ -459,15 +489,39 @@ const animatePulseWaveNetwork = () => {
 
 // Testimonial Layer Slide Matrix Rotator logic
 let activeSlideIndex = 0;
+let _testimonialTimer = null;
+
 window.shiftSlider = (movementDirection) => {
   if (!DOM.testimonialTrack) return;
-  
+
   const totalSlides = DOM.testimonialTrack.children.length;
   activeSlideIndex = (activeSlideIndex + movementDirection + totalSlides) % totalSlides;
-  
-  const visualOffset = -activeSlideIndex * (window.innerWidth > 768 ? 50 : 100);
-  gsap.to(DOM.testimonialTrack, { x: `${visualOffset}%`, duration: 0.6, ease: 'power3.out' });
+
+  // calculate pixel offset based on slide width + gap so movement direction is always correct
+  const firstSlide = DOM.testimonialTrack.children[0];
+  const gap = parseFloat(getComputedStyle(DOM.testimonialTrack).gap) || 32;
+  const slideWidth = firstSlide.getBoundingClientRect().width + gap;
+  const x = -activeSlideIndex * slideWidth;
+
+  gsap.to(DOM.testimonialTrack, { x, duration: 0.6, ease: 'power3.out' });
 };
+
+const _startTestimonialAutoplay = (interval = 5000) => {
+  if (_testimonialTimer) clearInterval(_testimonialTimer);
+  _testimonialTimer = setInterval(() => window.shiftSlider(1), interval);
+};
+const _stopTestimonialAutoplay = () => {
+  if (_testimonialTimer) clearInterval(_testimonialTimer);
+  _testimonialTimer = null;
+};
+
+// start autoplay when DOM is ready and pause on hover
+if (DOM.testimonialTrack) {
+  DOM.testimonialTrack.addEventListener('mouseenter', _stopTestimonialAutoplay);
+  DOM.testimonialTrack.addEventListener('mouseleave', _startTestimonialAutoplay);
+  // start after a short delay to allow layout
+  setTimeout(() => _startTestimonialAutoplay(5000), 300);
+}
 
 /**
  * LIFE-CYCLE INITIALIZATION EXECUTION OVERLAY MANIFEST
