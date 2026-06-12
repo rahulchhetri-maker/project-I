@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABO± | Alliance for Blood Operations — Save Lives</title>
+<meta name="description" content="Nepal's most advanced real-time blood donor matching network. Connect with donors instantly during medical emergencies.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@700;800;900&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.19/bundled/lenis.min.js"></script>
+<link rel="stylesheet" href="styles.css">
+
+</head>
+<div id="auth-modal" class="modal-overlay">
+  <div class="auth-card">
+    <button class="auth-close" onclick="toggleAuth()">×</button>
+    <div id="login-view" class="auth-view">
+      <h2 class="get">Login</h2>
+      <div class="input-group">
+        <label>Username</label>
+        <input type="text">
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password">
+        <a href="#" class="forgot-link">Forgot password?</a>
+      </div>
+      <button class="submit-btn">Login</button>
+      <p class="toggle-text">Don't have an account? <span onclick="switchView('register')">Register</span></p>
+    </div>
+    <div id="register-view" class="auth-view" style="display: none;">
+      <h2 class="get">Register</h2>
+      <div class="input-group"><label>Username</label><input type="text"></div>
+      <div class="input-group"><label>Password</label><input type="password"></div>
+      <div class="input-group"><label>Confirm Password</label><input type="password"></div>
+      <button class="submit-btn">Sign up</button>
+      <p class="toggle-text">Have an account? <span onclick="switchView('login')">Login</span></p>
+    </div>
+  </div>
+</div>
+</html>
+<body>
+
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+<div id="progress"></div>
+
+<div id="heart-fixed-container"></div>
+<canvas id="bg-canvas"></canvas>
+
+<div id="preloader">
+  <div class="pre-logo">ABO<em>±</em></div>
+  <div class="pre-bar-outer"><div class="pre-bar-inner" id="pre-bar"></div></div>
+  <div class="pre-pct" id="pre-text">SYSTEM LOADING 0%</div>
+</div>
+
+<nav class="nav" id="navbar">
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-drop"><i class="fa-solid fa-droplet"></i></div>
+      <span>ABO<em>±</em></span>
+    </a>
+    <div class="nav-links">
+      <a href="#hero" class="active">About</a>
+      <a href="#about">Why ABO±?</a>
+      <a href="#how-it-works">Process</a>
+      <a href="#compatibility">Matrix</a>
+      <a href="#dashboard">Live Feed</a>
+      <a href="#team">Team</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="nav-right">
+      <label class="theme-ios">
+        <input type="checkbox" id="theme-toggle">
+        <span class="toggle-track"></span>
+        <span class="toggle-thumb"><i class="fa-solid fa-moon"></i></span>
+      </label>
+<button class="btn-auth" id="log">Log In</button>
+      <button class="menu-toggle" id="menu-btn"><i class="fa-solid fa-bars"></i></button>
+    </div>
+  </div>
+</nav>
+
+<div class="mob-menu" id="mobile-menu">
+  <a href="#hero" class="mob-link">Network</a>
+  <a href="#about" class="mob-link">Why ABO±?</a>
+  <a href="#how-it-works" class="mob-link">Process</a>
+  <a href="#compatibility" class="mob-link">Matrix</a>
+  <a href="#dashboard" class="mob-link">Live Feed</a>
+  <a href="#team" class="mob-link">Team</a>
+  <a href="#contact" class="mob-link">Contact</a>
+</div>
+
+<section class="hero" id="hero">
+  <div class="donation-graphic-container">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" class="donation-svg-engine">
+        <defs>
+            <filter id="med-glow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur stdDeviation="8" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+            
+            <linearGradient id="metal-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#f0f2f5" />
+                <stop offset="50%" stop-color="#bcc5d1" />
+                <stop offset="100%" stop-color="#7a8799" />
+            </linearGradient>
+
+            <linearGradient id="skin-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffebd4" />
+                <stop offset="40%" stop-color="#f7d0b0" />
+                <stop offset="100%" stop-color="#e0a880" />
+            </linearGradient>
+
+            <linearGradient id="blood-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#ff2e35" />
+                <stop offset="70%" stop-color="#b8070d" />
+                <stop offset="100%" stop-color="#540003" />
+            </linearGradient>
+
+            <clipPath id="bag-fluid-clip">
+                <path d="M 520,240 L 640,240 L 640,430 C 640,450 610,460 580,460 C 550,460 520,450 520,430 Z" />
+            </clipPath>
+        </defs>
+
+        <g opacity="0.25">
+            <circle cx="280" cy="220" r="160" fill="none" stroke="#e61e25" stroke-width="1" stroke-dasharray="4,8" />
+            <line x1="50" y1="380" x2="750" y2="380" stroke="#bcc5d1" stroke-width="1" stroke-dasharray="5,5" />
+        </g>
+
+        <g id="donor-arm-group">
+            <path d="M 180,380 L 260,380 L 240,290 L 200,290 Z" fill="url(#metal-grad)" />
+            <path d="M 150,290 L 330,260 L 320,240 L 140,270 Z" fill="#4a5568" /> 
+            
+            <path d="M 80,240 C 140,230 220,210 280,215 C 340,220 420,245 460,255 L 450,290 C 390,280 320,265 260,265 C 180,265 110,280 80,285 Z" fill="url(#skin-grad)" />
+            
+            <circle cx="475" cy="265" r="22" fill="#2d3748" />
+            <path d="M 455,250 C 470,230 495,240 490,265 C 485,285 460,290 450,275 Z" fill="url(#skin-grad)" />
+        </g>
+
+        <g id="extraction-node" transform="translate(265, 230)">
+            <circle cx="0" cy="0" r="25" class="pulse-ring ring-1" />
+            <circle cx="0" cy="0" r="40" class="pulse-ring ring-2" />
+            
+            <rect x="-12" y="-12" width="24" height="24" rx="4" fill="#ffffff" fill-opacity="0.4" stroke="#ffffff" stroke-width="1" />
+            <circle cx="0" cy="0" r="4" fill="#ff2e35" />
+        </g>
+
+        <g id="iv-tubing-group">
+            <path d="M 265,230 Q 300,340 420,340 T 580,210" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="7" stroke-linecap="round" />
+            <path d="M 265,230 Q 300,340 420,340 T 580,210" class="moving-blood-vessel" fill="none" stroke="#b8070d" stroke-width="4" stroke-linecap="round" />
+        </g>
+
+        <g id="collection-bag-group">
+
+            
+            <path d="M 520,150 C 520,135 535,130 550,130 L 610,130 C 625,130 640,135 640,150 L 640,430 C 640,455 615,465 580,465 C 545,465 520,455 520,430 Z" fill="rgba(226, 232, 240, 0.25)" stroke="#bcc5d1" stroke-width="3" />
+            
+            <g clip-path="url(#bag-fluid-clip)">
+                <path d="M 450,260 Q 500,240 550,260 T 650,260 T 750,260 L 750,500 L 450,500 Z" class="liquid-wave-element" fill="url(#blood-grad)" />
+            </g>
+
+            <g fill="#ffffff" opacity="0.4" font-family="monospace" font-size="10" text-anchor="end">
+                <line x1="535" y1="260" x2="550" y2="260" stroke="#ffffff" stroke-width="1.5" />
+                <text x="575" y="263">450ml</text>
+                
+                <line x1="535" y1="310" x2="550" y2="310" stroke="#ffffff" stroke-width="1.5" />
+                <text x="575" y="313">300ml</text>
+                
+                <line x1="535" y1="360" x2="550" y2="360" stroke="#ffffff" stroke-width="1.5" />
+                <text x="575" y="363">150ml</text>
+            </g>
+
+            <rect x="545" y="155" width="70" height="65" rx="3" fill="#ffffff" fill-opacity="0.85" />
+            <rect x="553" y="163" width="18" height="18" rx="2" fill="#e61e25" />
+            <text x="562" y="177" fill="#ffffff" font-family="sans-serif" font-weight="900" font-size="14" text-anchor="middle">O+</text>
+            <line x1="553" y1="195" x2="607" y2="195" stroke="#7a8799" stroke-width="2" />
+            <line x1="553" y1="205" x2="590" y2="205" stroke="#bcc5d1" stroke-width="1.5" />
+        </g>
+    </svg>
+</div>
+
+  <div class="hero-left">
+    <div class="hero-kicker">
+      <div class="live-dot"></div>Real-Time Matching Node Connected
+    </div>
+    <h1 class="hero-title">Nepal's Smart <span class="grad">Blood Ops</span> Network.</h1>
+    <p class="hero-sub">Alliance for Blood Operations± connects those in urgent need of blood with local donors — in real time. When every second counts, we make sure you're never alone.</p>
+    
+<div class="hero-btns">
+  <button class="btn btn-p ripple-wrap btn-auth">Request Blood Instantly <i class="fa-solid fa-bolt"></i></button>
+  <button class="btn btn-g ripple-wrap btn-auth">Register as Donor <i class="fa-solid fa-shield-heart"></i></button>
+</div>
+  </div>
+  <div class="hero-right"></div>
+</section>
+
+<div class="con">
+  <div class="stats-strip gc">
+    <div class="stat-cell">
+      <div class="stat-num" id="stat-donors">14,820+</div>
+      <div class="stat-label">Registered Members</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num" id="stat-hospitals">42</div>
+      <div class="stat-label">Partner Nodes</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num" id="stat-matches">8,912</div>
+      <div class="stat-label">Successful Matches</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-num" id="stat-time">7.4 min</div>
+      <div class="stat-label">Avg Response Window</div>
+    </div>
+  </div>
+</div>
+
+<section id="about">
+  <div class="con">
+    <div class="about-grid">
+
+      <div class="about-content">
+        <div class="eyebrow">Right Choice</div>
+        <h2 class="h2">Why ABO±?</h2>
+        <p class="section-desc" style="margin-top:20px;">When a medical crisis hits, every second counts. Traditional ways of searching for blood are slow, frantic, and disorganized. Our platform changes that by instantly connecting you with nearby donors and hospitals using real-time location matching.</p>
+        
+        <div class="role-cards-2">
+          <div class="rc2 gc">
+            <div class="rc2-icon"><i class="fa-solid fa-microchip"></i></div>
+            <h4>Algorithmic Matching</h4>
+            <p>By combining secure, anonymous donor alerts with a clear urgency system, we eliminate emergency chaos—saving lives when minutes matter most.</p>
+          </div>
+          <div class="rc2 gc">
+            <div class="rc2-icon"><i class="fa-solid fa-clock-rotate-left"></i></div>
+            <h4>Timing</h4>
+            <p>Our platform changes that by instantly connecting you with nearby donors and hospitals using real-time location matching.</p>
+          </div>
+        </div>
+
+        <div class="feat-chips">
+          <div class="chip"><i class="fa-solid fa-circle-check"></i> encrypted data layers</div>
+          <div class="chip"><i class="fa-solid fa-circle-check"></i> automated validation layers</div>
+          <div class="chip"><i class="fa-solid fa-circle-check"></i> zero middle-man network</div>
+        </div>
+      </div>
+          <div class="about-graphic-side">
+        <div class="gfx-container">
+          <div class="gfx-ambient-glow"></div>
+          <div class="gfx-ring-1"></div>
+          <div class="gfx-ring-2"></div>
+          <div class="gfx-ring-3"></div>
+          
+          <div class="gfx-asset-core">
+            <div class="gfx-backlight"></div>
+            <i class="fa-solid fa-droplet gfx-droplet-icon"></i>
+            <div class="gfx-specular-dot"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how-it-works" style="background: var(--bg2);">
+  <div class="con">
+    <div class="tc">
+      <div class="eyebrow">Execution Steps</div>
+      <h2 class="h2">Simple, High-Performance Protocols</h2>
+      <p class="section-desc">Four highly integrated execution modules structured to securely transition emergency status variables into completed donation matches.</p>
+    </div>
+
+    <div class="how-grid">
+      <div class="how-step gc">
+        <div class="step-ring">01</div>
+        <h4>Trigger Broadcast</h4>
+        <p>A regional medical center or family unit issues a prioritized emergency blood pool token.</p>
+      </div>
+      <div class="how-step gc">
+        <div class="step-ring">02</div>
+        <h4>Neural Route</h4>
+        <p>The routing node searches geographic databases and sends instant notifications to compatible matching pools.</p>
+      </div>
+      <div class="how-step gc">
+        <div class="step-ring">03</div>
+        <h4>Acceptance Check</h4>
+        <p>An active blood donor accepts the structural route token, passing verification instantly.</p>
+      </div>
+      <div class="how-step gc">
+        <div class="step-ring">04</div>
+        <h4>Resolve Issue</h4>
+        <p>The blood volume delivery cycle concludes, real-time dashboards balance, and statistics update live.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="compatibility">
+  <div class="con">
+    <div class="tc">
+      <div class="eyebrow">Compatibility Engine Matrix</div>
+      <h2 class="h2">Interactive Cross-Matching</h2>
+      <p class="section-desc">Select an operational blood group item node below to calculate cross-compatibility matrices dynamically.</p>
+    </div>
+
+    <div class="blood-grid">
+      <div class="bnode" data-type="op"><span>O+</span></div>
+      <div class="bnode" data-type="on"><span>O−</span></div>
+      <div class="bnode" data-type="ap"><span>A+</span></div>
+      <div class="bnode" data-type="an"><span>A−</span></div>
+      <div class="bnode" data-type="bp"><span>B+</span></div>
+      <div class="bnode" data-type="bn"><span>B−</span></div>
+      <div class="bnode" data-type="abp"><span>AB+</span></div>
+      <div class="bnode" data-type="abn"><span>AB−</span></div>
+    </div>
+
+    <div class="compat-box gc" id="compat-output">
+      <div class="compat-ph">
+        <i class="fa-solid fa-network-wired"></i>
+        <p>Select a specific blood operational profile vector to compute parameters.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="dashboard">
+  <div class="con">
+    <div class="live-hdr">
+      <div>
+        <div class="eyebrow">Operational Status Room</div>
+        <h2 class="h2">Active Emergency Dashboard</h2>
+      </div>
+      <div class="live-pill">
+        <div class="live-pill-dot"></div> 12 Active Broadcasts Streamed
+      </div>
+    </div>
+
+    <div class="emg-grid">
+      <div class="dash-card gc lvl-crit">
+        <div class="card-top">
+          <div class="b-badge">O− Urgent</div>
+          <div class="s-pill s-crit">CRITICAL</div>
+        </div>
+        <h4>Patan Hospital</h4>
+        <div class="loc"><i class="fa-solid fa-location-dot"></i> Lalitpur, Nepal</div>
+        <div class="prog-wrap"><div class="prog-fill" style="width: 35%;"></div></div>
+        <div class="card-btm">
+          <div class="cntdwn urg"><i class="fa-solid fa-clock"></i> 42 mins remaining</div>
+          <span class="detail" style="font-size:12px; color:var(--tm);">2 Pints Needed</span>
+        </div>
+      </div>
+
+      <div class="dash-card gc lvl-high">
+        <div class="card-top">
+          <div class="b-badge">B+ Normal</div>
+          <div class="s-pill s-high">HIGH PRIORITY</div>
+        </div>
+        <h4>Civil Hospital</h4>
+        <div class="loc"><i class="fa-solid fa-location-dot"></i> Kathmandu, Nepal</div>
+        <div class="prog-wrap"><div class="prog-fill" style="width: 70%;"></div></div>
+        <div class="card-btm">
+          <div class="cntdwn"><i class="fa-solid fa-clock"></i> 2.4 hrs remaining</div>
+          <span class="detail" style="font-size:12px; color:var(--tm);">4 Pints Needed</span>
+        </div>
+      </div>
+
+      <div class="dash-card gc lvl-crit">
+        <div class="card-top">
+          <div class="b-badge">AB− Urgent</div>
+          <div class="s-pill s-crit">CRITICAL</div>
+        </div>
+        <h4>Nobel Hospital</h4>
+        <div class="loc"><i class="fa-solid fa-location-dot"></i> Sinamangal, Kathmandu</div>
+        <div class="prog-wrap"><div class="prog-fill" style="width: 15%;"></div></div>
+        <div class="card-btm">
+          <div class="cntdwn urg"><i class="fa-solid fa-clock"></i> 18 mins remaining</div>
+          <span class="detail" style="font-size:12px; color:var(--tm);">1 Pint Needed</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="elig-wrap">
+      <div class="qs-list">
+        <h3 class="h3" style="margin-bottom:10px;">Immediate Eligibility Verification Check</h3>
+        <div class="q-item gc" data-weight="1">
+          <div class="q-text">Are you currently within the standard operational weight limits (>= 45kg / 99lbs)?</div>
+          <div class="q-btns">
+            <button class="qb btn-y" onclick="answerQ(this, true)">AFFIRMATIVE / YES</button>
+            <button class="qb btn-n" onclick="answerQ(this, false)">NEGATIVE / NO</button>
+          </div>
+        </div>
+        <div class="q-item gc" data-weight="2">
+          <div class="q-text">Have you completed any structural tattoo or medical piercing procedures within the last 6 months?</div>
+          <div class="q-btns">
+            <button class="qb btn-y" onclick="answerQ(this, true)">AFFIRMATIVE / YES</button>
+            <button class="qb btn-n" onclick="answerQ(this, false)">NEGATIVE / NO</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="elig-vis">
+        <div class="elig-card gc">
+          <div class="elig-ring">
+            <div class="elig-pct-txt" id="elig-score">100%</div>
+            <div class="elig-lbl">SCORE INDEX</div>
+          </div>
+          <h4>Preliminary Match Variable</h4>
+          <p class="elig-desc" id="elig-feedback" style="margin-top:12px;">Passes all database checks. Ready for immediate routing system execution.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="viz-strip">
+      <div class="viz-card gc">
+        <div class="viz-card-title">Regional Storage Stock Metrics</div>
+        <div class="viz-card-sub">Aggregated live blood bank reserves</div>
+        <div class="blood-bars">
+          <div class="bb-row"><div class="bb-label">O+</div><div class="bb-track"><div class="bb-fill" style="width: 88%;"></div></div><div class="bb-pct">88%</div></div>
+          <div class="bb-row"><div class="bb-label">O−</div><div class="bb-track"><div class="bb-fill" style="width: 24%;"></div></div><div class="bb-pct">24%</div></div>
+          <div class="bb-row"><div class="bb-label">A+</div><div class="bb-track"><div class="bb-fill" style="width: 65%;"></div></div><div class="bb-pct">65%</div></div>
+          <div class="bb-row"><div class="bb-label">B+</div><div class="bb-track"><div class="bb-fill" style="width: 14%;"></div></div><div class="bb-pct">14%</div></div>
+        </div>
+      </div>
+
+      <div class="viz-card gc">
+        <div class="viz-card-title">Live Pipeline Activities Stream</div>
+        <div class="viz-card-sub">Automatic telemetry events timeline</div>
+        <div class="activity-list" id="activity-feed"></div>
+      </div>
+
+      <div class="viz-card gc">
+        <div class="viz-card-title">Network Demand Amplitude</div>
+        <div class="viz-card-sub">Real-time matching requests wave frequency</div>
+        <div class="pulse-graph-box">
+          <svg viewBox="0 0 300 100" preserveAspectRatio="none">
+            <path d="M0,50 Q30,20 60,50 T120,50 T180,50 T240,50 T300,50" id="pulse-path" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="test-container">
+      <div class="test-track" id="testimonial-track">
+        <div class="test-slide gc">
+          <p class="ts-quote">"The automated emergency routing interface reduced our donor matching lifecycle profile down to under 8 minutes when bir hospital reached absolute limits."</p>
+          <div class="ts-author">
+            <div class="dc-avatar">Dr</div>
+            <div class="ts-meta"><h5>Dr. Ramesh Koirala</h5><p>Emergency Coordinator, Bir Hospital</p></div>
+          </div>
+        </div>
+        <div class="test-slide gc">
+          <p class="ts-quote">"Receiving a localized dispatch notice on my terminal instantly allowed me to route directly to save an active open-heart surgical candidate."</p>
+          <div class="ts-author">
+            <div class="dc-avatar">AS</div>
+            <div class="ts-meta"><h5>Anjali Shrestha</h5><p>O- System Donor, Patan Node</p></div>
+          </div>
+        </div>
+      </div>
+      <div class="test-navs">
+        <button class="tn-btn" onclick="shiftSlider(-1)"><i class="fa-solid fa-arrow-left"></i></button>
+        <button class="tn-btn" onclick="shiftSlider(1)"><i class="fa-solid fa-arrow-right"></i></button>
+      </div>
+    </div>
+
+  </div>
+  <section class="team-section" id="team">
+  <h2 class="team-title">Our Team</h2>
+  
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="avatar-wrapper">
+        <img src="path-to-your-image1.jpg" alt="Rahul Chhetri" class="avatar-img">
+      </div>
+      <h3 class="member-name">Rahul Chhetri</h3>
+      <p class="member-role">Founder & CEO</p>
+      <a href="#" class="linkedin-link" aria-label="LinkedIn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="linkedin-icon"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93zM6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37z"/></svg>
+      </a>
+    </div>
+
+    <div class="team-card">
+      <div class="avatar-wrapper">
+        <img src="path-to-your-image2.jpg" alt="Alina Banjade" class="avatar-img">
+      </div>
+      <h3 class="member-name">Alina Banjade</h3>
+      <p class="member-role">Co-Founder & CMO</p>
+      <a href="#" class="linkedin-link" aria-label="LinkedIn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="linkedin-icon"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93zM6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37z"/></svg>
+      </a>
+    </div>
+
+<div class="team-card">
+      <div class="avatar-wrapper">
+        <img src="path-to-your-image3.jpg" alt="Saim Paudel" class="avatar-img">
+      </div>
+      <h3 class="member-name">Saim Paudel</h3>
+      <p class="member-role">Head Of Operation</p>
+      <a href="#" class="linkedin-link" aria-label="LinkedIn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="linkedin-icon"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93zM6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37z"/></svg>
+      </a>
+    </div>
+
+    <div class="team-card">
+      <div class="avatar-wrapper">
+        <img src="path-to-your-image4.jpg" alt="Sangam Pandey" class="avatar-img">
+      </div>
+      <h3 class="member-name">Sangam Pandey</h3>
+      <p class="member-role">Director</p>
+      <a href="#" class="linkedin-link" aria-label="LinkedIn">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="linkedin-icon"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93zM6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37z"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+</section>
+
+<footer class="footer" id="contact">
+  <div class="con">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="#" class="logo">
+          <div class="logo-drop"><i class="fa-solid fa-droplet"></i></div>
+          <span>ABO<em>±</em></span>
+        </a>
+        <p>Nepal's premier cloud infrastructure processing architecture engineered to bridge blood operational emergency matching frameworks securely.</p>
+      </div>
+      <div class="foot-col">
+        <h5>Platform Infrastructure</h5>
+        <ul>
+          <li><a href="#">Engine Node Routing</a></li>
+          <li><a href="#">Live Metrics Stream</a></li>
+          <li><a href="#">Encryption Protocols</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Regulatory Entities</h5>
+        <ul>
+          <li><a href="#">Hospital Specifications</a></li>
+          <li><a href="#">Compliance Reports</a></li>
+          <li><a href="#">Data Privacy Directives</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h5>Contact Operational Hub</h5>
+        <ul>
+          <li><a href="#">Emergency Hotline</a></li>
+          <li><a href="#">Developer Documentation</a></li>
+          <li><a href="#">Global Operations</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="foot-btm">
+      <div>© 2026 ABO± Network Operations Group. Distributed securely under verified non-profit frameworks.</div>
+      <div class="foot-socials">
+        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+        <a href="#"><i class="fa-brands fa-github"></i></a>
+        <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+      </div>
+    </div>
+  </div>
+  
+</footer>
+<script src="script.js"></script>
+</body>
+</html>
