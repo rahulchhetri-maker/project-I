@@ -1018,7 +1018,7 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
   background: rgba(var(--bg2-rgb, 255, 255, 255), 0.02);
   border: 1px solid var(--gborder);
   padding: 28px;
-  border-radius: 16px; 
+  border-radius: 45px; 
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
 }
 :root[data-theme="dark"] .foot-form-card {
@@ -1037,9 +1037,9 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
 
 /* Form Controls UI layout */
 .foot-email-form input,
-.foot-email-form textarea {
+.foot-email-form textarea{
   width: 100%;
-  padding: 14px 0 8px 0;
+  padding: 14px 0 14px 0;
   background: transparent;
   border: none;
   border-bottom: 1px solid var(--gborder);
@@ -1049,6 +1049,7 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
   outline: none;
   transition: border-color 0.3s;
 }
+
 .foot-email-form textarea {
   resize: none;
   height: 75px;
