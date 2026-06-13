@@ -218,10 +218,11 @@ html,body {
 .get{
   font-family: var(--fd);
   font-size: 1.8rem;
-  font-weight: 800;
+  font-weight: 600;
   color: var(--c);
   margin-bottom: 30px;
   text-align: center;
+  padding: 20px;
 }
 
 
