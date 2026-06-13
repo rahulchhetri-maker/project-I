@@ -106,13 +106,58 @@ html,body {
 }
 .tab-btn.active { color: white; border-bottom: 2px solid var(--c); background: rgba(255,255,255,0.1); }
 
-.input-group { margin-bottom: 20px; }
-.input-group label { display: block; color: var(--ts); font-size: 0.85rem; margin-bottom: 5px; }
-.input-group input {
-  width: 100%; background: transparent; border: none;
-  border-bottom: 1px solid var(--tm); color: var(--tp); padding: 35px 0px;
+.input-group {
+  position: relative;
+  margin-bottom: 24px;
+  width: 100%;
 }
 
+.input-group input {
+  width: 100%;
+  padding: 12px 4px;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid var(--gborder) !important;
+  color: var(--tp) !important;
+  font-size: 1rem;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color var(--ease);
+}
+
+.input-group label {
+  position: absolute;
+  left: 4px;
+  top: 12px;
+  color: var(--ts);
+  font-family: var(--fb);
+  font-size: 1rem;
+  pointer-events: none;
+  transition: transform 0.25s var(--ease), font-size 0.25s var(--ease), color 0.25s var(--ease);
+  transform-origin: left top;
+
+}
+
+/* Float label up when input is focused or not empty */
+.input-group input:focus ~ label,
+.input-group input:not(:placeholder-shown) ~ label {
+  transform: translateY(-20px) scale(0.85);
+  color: var(--cb);
+}
+
+.input-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 0;
+  background: var(--cb);
+  transition: width 0.3s var(--ease);
+}
+
+.input-group input:focus ~ .input-bar {
+  width: 100%;
+}
 .submit-btnn {
   width: 100%; 
   padding: 14px; 
