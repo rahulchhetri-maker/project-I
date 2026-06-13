@@ -1618,3 +1618,91 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
 .dropdown-item:hover {
     background: rgba(200, 16, 46, 0.1);
 }
+/* Ensure the button stays perfectly aligned regardless of content */
+.btn-auth {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 45px;
+    cursor: pointer;
+}
+
+/* Optional: Add a nice hover effect to the profile picture */
+#header-pic-container img:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease;
+}
+/* --- Clean Personal Info Dashboard Styles --- */
+.profile-modal-card {
+  max-width: 440px !important;
+}
+.profile-view {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.profile-popup-img-container {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--c);
+  margin-bottom: 24px;
+  background: var(--bg2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.profile-popup-img-container i {
+  font-size: 45px;
+  color: var(--ts);
+}
+.profile-popup-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-info-grid {
+  width: 100%;
+}
+.profile-info-row {
+  margin-bottom: 18px;
+}
+.profile-info-label {
+  font-size: 0.75rem;
+  color: var(--tm);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.profile-info-value {
+  padding: 8px 0;
+  border-bottom: 1px solid var(--gborder);
+  color: var(--tp);
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+.profile-popup-img-containe {
+  width: 110px;
+  height: 110px; /* Forces a perfect square base */
+  border-radius: 50%; /* Turns the square base into a perfect circle */
+
+  border: 3px solid var(--c);
+  background: var(--bg2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-popup-img-containe i {
+  font-size: 45px;
+  color: var(--ts);
+}
+
+.profile-popup-img-containe img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  aspect-ratio: 1 / 1; /* Guarantees the image matches the container shape */
+}

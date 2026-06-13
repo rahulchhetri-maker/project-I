@@ -47,7 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 2. Bind only the dedicated login button to open the modal
     const loginButton = document.getElementById('log');
     if (loginButton) {
-        loginButton.addEventListener('click', toggleAuth);
+        // FIX 1: Evaluate the global toggleAuth dynamically so it picks up the login state checking logic
+        loginButton.addEventListener('click', () => window.toggleAuth());
     }
 
     // 3. View Switcher
@@ -717,40 +718,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// Verification flow handling unauthorized application submissions
-// Verification flow handling unauthorized application submissions
-document.addEventListener("DOMContentLoaded", () => {
-    // 1. Target the buttons directly instead of the forms
-    const submitButtons = document.querySelectorAll("#donor-modal .submit-form-btn, #request-modal .submit-form-btn");
-    const customAlert = document.getElementById("custom-alert");
+// FIX 2 & 3: We have cleanly removed the block labeled "// Verification flow handling unauthorized application submissions" 
+// Because it was attaching click listeners that halted HTML5 validation entirely via event.preventDefault().
 
-    const blockAndNotifyUser = (event) => {
-        event.preventDefault(); // Halt standard actions and browser validation bubble instantly
-
-        // Route notification seamlessly inside your custom UI alerts system if active
-        if (customAlert) {
-            customAlert.textContent = "Login first.";
-            customAlert.classList.add("show");
-            
-            setTimeout(() => {
-                customAlert.classList.remove("show");
-            }, 3500);
-        } else {
-            // Default browser application alert window fallback mechanism
-            alert("Login first.");
-        }
-    };
-
-    // 2. Attach the listener to the button clicks
-    submitButtons.forEach(button => {
-        button.addEventListener("click", blockAndNotifyUser);
-    });
-});
-// =========================================================================
-// FINAL PRODUCTION-READY LOGIN STATE PIPELINE MATRIX WITH REFACTORED DROPDOWN
+/// =========================================================================
+// FINAL PRODUCTION-READY LOGIN STATE & FORM VALIDATION PIPELINE
 // =========================================================================
 document.addEventListener("DOMContentLoaded", () => {
-    let isLoggedIn = false;
+    // 1. Persist Login State securely across page refreshes
+    let isLoggedIn = localStorage.getItem('abo_logged_in') === 'true';
+    let pendingFormModal = null; // Remembers which form the guest was filling out
 
     // DOM Element Matrix Caching
     const authModal = document.getElementById('auth-modal');
@@ -758,13 +735,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const requestModal = document.getElementById('request-modal');
     const customAlert = document.getElementById("custom-alert");
     
-    // Select forms positionally from unchanged HTML layouts
     const usernameInput = document.querySelector('#login-view input[type="text"]');
     const passwordInput = document.querySelector('#login-view input[type="password"]');
     const loginSubmitBtn = document.querySelector('.submit-btnn');
     const headerLogBtn = document.getElementById('log');
 
-    // New HTML component links
     const signoutDropdown = document.getElementById('custom-signout-dropdown');
     const signoutItem = document.getElementById('signout-item');
 
@@ -776,6 +751,43 @@ document.addEventListener("DOMContentLoaded", () => {
         if (requestModal) requestModal.style.display = 'none';
     };
 
+    const transformToUserCircle = (btnElement) => {
+        if (!btnElement) return;
+        btnElement.innerHTML = '<i class="fa-solid fa-user"></i>';
+        btnElement.style.backgroundColor = 'red';
+        btnElement.style.color = 'white';
+        btnElement.style.borderRadius = '50%';
+        btnElement.style.width = '42px';
+        btnElement.style.height = '42px';
+        btnElement.style.display = 'flex';
+        btnElement.style.alignItems = 'center';
+        btnElement.style.justifyContent = 'center';
+        btnElement.style.border = 'none';
+        btnElement.style.padding = '0';
+        btnElement.style.cursor = 'pointer';
+    };
+
+    const revertUserCircle = (btnElement) => {
+        if (!btnElement) return;
+        btnElement.innerHTML = originalHeaderLogBtnHTML;
+        btnElement.style.backgroundColor = '';
+        btnElement.style.color = '';
+        btnElement.style.borderRadius = '';
+        btnElement.style.width = '';
+        btnElement.style.height = '';
+        btnElement.style.display = '';
+        btnElement.style.alignItems = '';
+        btnElement.style.justifyContent = '';
+        btnElement.style.border = '';
+        btnElement.style.padding = '';
+        btnElement.style.cursor = '';
+    };
+
+    // Initialize UI on page load based on persistent state
+    if (isLoggedIn && headerLogBtn) {
+        transformToUserCircle(headerLogBtn);
+    }
+
     // Global Router Handler for Auth button click
     window.toggleAuth = () => {
         if (isLoggedIn) {
@@ -784,12 +796,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (signoutDropdown.style.display === 'block') {
                     signoutDropdown.style.display = 'none';
                 } else {
-                    // Automatically position the dropdown directly under the circle icon bounds dynamically
-                    const rect = headerLogBtn.getBoundingClientRect();
-                    signoutDropdown.style.position = 'fixed';
-                    signoutDropdown.style.top = `${rect.bottom}px`;
-                    signoutDropdown.style.left = `${rect.left + (rect.width / 2) - 60}px`; // Centers the 120px menu underneath
-                    signoutDropdown.style.display = 'block';
+const rect = headerLogBtn.getBoundingClientRect();
+signoutDropdown.style.position = 'fixed';
+signoutDropdown.style.top = `${rect.bottom + 20}px`;
+signoutDropdown.style.left = 'auto'; // Reset left alignment
+signoutDropdown.style.right = `${window.innerWidth - rect.right}px`; // Anchor securely to the right
+signoutDropdown.style.display = 'block';
                 }
             }
             return;
@@ -829,54 +841,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
-    const transformToUserCircle = (btnElement) => {
-        if (!btnElement) return;
-        btnElement.innerHTML = '<i class="fa-solid fa-user"></i>';
-        btnElement.style.backgroundColor = 'red';
-        btnElement.style.color = 'white';
-        btnElement.style.borderRadius = '50%';
-        btnElement.style.width = '42px';
-        btnElement.style.height = '42px';
-        btnElement.style.display = 'flex';
-        btnElement.style.alignItems = 'center';
-        btnElement.style.justifyContent = 'center';
-        btnElement.style.border = 'none';
-        btnElement.style.padding = '0';
-        btnElement.style.cursor = 'pointer';
-    };
-
-    const revertUserCircle = (btnElement) => {
-        if (!btnElement) return;
-        btnElement.innerHTML = originalHeaderLogBtnHTML;
-        btnElement.style.backgroundColor = '';
-        btnElement.style.color = '';
-        btnElement.style.borderRadius = '';
-        btnElement.style.width = '';
-        btnElement.style.height = '';
-        btnElement.style.display = '';
-        btnElement.style.alignItems = '';
-        btnElement.style.justifyContent = '';
-        btnElement.style.border = '';
-        btnElement.style.padding = '';
-        btnElement.style.cursor = '';
-    };
-
-    // Sign Out Execution Script Route Interceptor
-    if (signoutItem) {
-        signoutItem.addEventListener('click', (e) => {
-            e.stopPropagation();
-            isLoggedIn = false;
-            if (signoutDropdown) signoutDropdown.style.display = 'none';
-            
-            revertUserCircle(headerLogBtn);
-            
-            if (usernameInput) usernameInput.value = '';
-            if (passwordInput) passwordInput.value = '';
-            
-            styleCustomAlert("Signed out successfully", true);
-        });
-    }
-
     const styleCustomAlert = (text, isSuccess) => {
         if (!customAlert) return;
         customAlert.textContent = text;
@@ -905,6 +869,24 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 3500);
     };
 
+    // Handle Sign Out Pipeline
+    if (signoutItem) {
+        signoutItem.addEventListener('click', (e) => {
+            e.stopPropagation();
+            isLoggedIn = false;
+            localStorage.setItem('abo_logged_in', 'false'); // Clear persistent state
+            
+            if (signoutDropdown) signoutDropdown.style.display = 'none';
+            revertUserCircle(headerLogBtn);
+            
+            if (usernameInput) usernameInput.value = '';
+            if (passwordInput) passwordInput.value = '';
+            
+            styleCustomAlert("Signed out successfully", true);
+        });
+    }
+
+    // Handle Login Pipeline
     if (loginSubmitBtn) {
         loginSubmitBtn.addEventListener('click', (event) => {
             event.preventDefault();
@@ -914,30 +896,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (usernameValue === 'admin' && passwordValue === 'password123') {
                 isLoggedIn = true;
-                if (authModal) authModal.style.display = 'none';
+                localStorage.setItem('abo_logged_in', 'true'); // Save persistent state
                 transformToUserCircle(headerLogBtn);
+
+                // 3. Guest Submission Recovery 
+                if (pendingFormModal) {
+                    // They logged in while trying to submit a form. Return them to it.
+                    if (authModal) authModal.style.display = 'none';
+                    pendingFormModal.style.display = 'flex';
+                    pendingFormModal = null; // Clear queue
+                } else {
+                    // Standard login behavior
+                    if (authModal) authModal.style.display = 'none';
+                    styleCustomAlert("Login successful", true);
+                }
             } else {
                 styleCustomAlert("Invalid username or password.", false);
             }
         });
     }
 
-    const formSubmitButtons = document.querySelectorAll("#donor-modal .submit-form-btn, #request-modal .submit-form-btn");
-    formSubmitButtons.forEach(button => {
-        button.addEventListener("click", (event) => {
-            event.preventDefault();
+    // 2. Form Validation Fixes
+    // Listen to 'submit' instead of 'click' so HTML5 validators can run first
+    const donorForm = document.getElementById("donor-registration-form");
+    const requestForm = document.getElementById("blood-request-form");
 
-            if (!isLoggedIn) {
-                closeAllActiveModals();
-                if (authModal) authModal.style.display = 'flex';
-                styleCustomAlert("Login first.", false);
-            } else {
-                closeAllActiveModals();
-                styleCustomAlert("Successful", true);
-            }
-        });
-    });
+    const handleSecureFormSubmit = (event, modalElement) => {
+        event.preventDefault(); // Prevents actual HTTP reload since forms are client-side
 
+        if (!isLoggedIn) {
+            // Not logged in: queue the form, open auth modal automatically
+            pendingFormModal = modalElement;
+            closeAllActiveModals();
+            if (authModal) authModal.style.display = 'flex';
+        } else {
+            // Logged in: submit successfully
+            closeAllActiveModals();
+            styleCustomAlert("Submitted Successfully!", true);
+            event.target.reset(); // Clear form data
+        }
+    };
+
+    if (donorForm) {
+        donorForm.addEventListener("submit", (e) => handleSecureFormSubmit(e, donorModal));
+    }
+    if (requestForm) {
+        requestForm.addEventListener("submit", (e) => handleSecureFormSubmit(e, requestModal));
+    }
+
+    // Maintain mouse wheel scrolling isolation logic
     document.querySelectorAll('.auth-car').forEach(card => {
         card.addEventListener('wheel', (e) => {
             const scrollableTarget = card.querySelector('.auth-view');
@@ -947,4 +954,143 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }, { passive: false });
     });
+});
+// Add these logic blocks to your existing script:
+
+// 1. Handle Profile Details Popup
+// Example JS logic to handle the swap
+const uploadInput = document.getElementById('pic-upload-input');
+const profileIcon = document.getElementById('profile-icon');
+const profileImg = document.getElementById('profile-img-preview');
+const changeBtn = document.getElementById('change-pic-btn');
+
+// Trigger file input
+changeBtn.addEventListener('click', () => uploadInput.click());
+
+// Handle file selection
+uploadInput.addEventListener('change', function() {
+    const file = this.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            // Set the image source
+            profileImg.src = e.target.result;
+            // Hide the default icon
+            profileIcon.style.display = 'none';
+            // Show the image element
+            profileImg.style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+    }
+});
+document.addEventListener('DOMContentLoaded', () => {
+    const loginButton = document.getElementById('log');
+    const loginText = document.getElementById('login-text');
+    const headerPicContainer = document.getElementById('header-pic-container');
+    const headerProfileImg = document.getElementById('header-profile-img');
+
+    // Function to update header based on Login State
+    const updateHeaderUI = () => {
+        const isLoggedIn = localStorage.getItem('abo_logged_in') === 'true';
+        const savedImg = localStorage.getItem('profile_pic');
+
+        if (isLoggedIn) {
+            // Show Profile Picture if exists
+            if (savedImg) {
+                loginText.style.display = 'none';
+                headerPicContainer.style.display = 'block';
+                headerProfileImg.src = savedImg;
+            } else {
+                // If logged in but no image, maybe just change text to "Profile"
+                loginText.textContent = "Profile";
+                headerPicContainer.style.display = 'none';
+            }
+        } else {
+            // Reset to default
+            loginText.textContent = "Log In";
+            loginText.style.display = 'block';
+            headerPicContainer.style.display = 'none';
+        }
+    };
+
+    // Run on load
+    updateHeaderUI();
+
+    // Listen for storage changes (in case user uploads pic in dropdown)
+    window.addEventListener('storage', updateHeaderUI);
+
+    // If your file upload triggers in the dropdown, refresh the header
+    const picUpload = document.getElementById('pic-upload-input');
+    if (picUpload) {
+        picUpload.addEventListener('change', () => {
+            // Give it a brief moment to save to localstorage
+            setTimeout(updateHeaderUI, 100);
+        });
+    }
+});
+// --- Dashboard Interactions & Image Live-Sync Engine ---
+document.addEventListener('DOMContentLoaded', () => {
+    const profileOption = document.getElementById('profile-option');
+    const changePicBtn = document.getElementById('change-pic-btn');
+    const picUploadInput = document.getElementById('pic-upload-input');
+
+    // 1. Open Personal Information Modal from Dashboard dropdown
+    if (profileOption) {
+        profileOption.addEventListener('click', () => {
+            const dropdown = document.getElementById('custom-signout-dropdown');
+            if (dropdown) dropdown.style.display = 'none'; // Hide dropdown
+            
+            const profileModal = document.getElementById('profile-modal');
+            if (profileModal) profileModal.style.display = 'flex'; // Show modal
+            
+            // Auto-load current image into the personal information popup
+            const savedImg = localStorage.getItem('profile_pic');
+            const popupImg = document.getElementById('popup-profile-img');
+            const popupIcon = document.getElementById('popup-profile-icon');
+            if (savedImg && popupImg && popupIcon) {
+                popupImg.src = savedImg;
+                popupImg.style.display = 'block';
+                popupIcon.style.display = 'none';
+            }
+        });
+    }
+
+    // 2. Link the "Change Picture" button directly to the hidden file input field
+    if (changePicBtn && picUploadInput) {
+        changePicBtn.addEventListener('click', () => picUploadInput.click());
+    }
+
+    // 3. Live-sync image uploads across both dashboards and memory slots instantly
+    if (picUploadInput) {
+        picUploadInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageData = e.target.result;
+                    localStorage.setItem('profile_pic', imageData);
+                    
+                    // Live-sync inside dropdown frame
+                    const dropImg = document.getElementById('profile-img-preview');
+                    const dropIcon = document.getElementById('profile-icon');
+                    if (dropImg && dropIcon) {
+                        dropImg.src = imageData;
+                        dropImg.style.display = 'block';
+                        dropIcon.style.display = 'none';
+                    }
+                    
+                    // Live-sync navbar user icon button
+                    const headerImg = document.getElementById('header-profile-img');
+                    const headerContainer = document.getElementById('header-pic-container');
+                    const loginText = document.getElementById('login-text');
+                    if (headerImg && headerContainer && loginText) {
+                        loginText.style.display = 'none';
+                        headerContainer.style.display = 'block';
+                        headerImg.src = imageData;
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
 });
