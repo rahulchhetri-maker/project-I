@@ -106,6 +106,12 @@ html,body {
 }
 .tab-btn.active { color: white; border-bottom: 2px solid var(--c); background: rgba(255,255,255,0.1); }
 
+.input-group { margin-bottom: 20px; }
+.input-group label { display: block; color: var(--ts); font-size: 0.85rem; margin-bottom: 5px; }
+.input-group input {
+  width: 100%; background: transparent; border: none;
+  border-bottom: 1px solid var(--tm); color: var(--tp); padding: 35px 0px;
+}
 .input-group {
   position: relative;
   margin-bottom: 24px;
@@ -135,7 +141,6 @@ html,body {
   pointer-events: none;
   transition: transform 0.25s var(--ease), font-size 0.25s var(--ease), color 0.25s var(--ease);
   transform-origin: left top;
-
 }
 
 /* Float label up when input is focused or not empty */
