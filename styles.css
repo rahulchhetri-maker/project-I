@@ -1634,76 +1634,87 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
     transition: transform 0.3s ease;
 }
 /* --- Clean Personal Info Dashboard Styles --- */
+/* 1. Modal Container - Adding Depth and Softness */
 .profile-modal-card {
   max-width: 440px !important;
+  background: var(--bg1, #ffffff);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
 .profile-view {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
 }
-.profile-popup-img-container {
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  overflow: hidden;
-  border: 3px solid var(--c);
-  margin-bottom: 24px;
-  background: var(--bg2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.profile-popup-img-container i {
-  font-size: 45px;
-  color: var(--ts);
-}
-.profile-popup-img-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.profile-info-grid {
-  width: 100%;
-}
-.profile-info-row {
-  margin-bottom: 18px;
-}
-.profile-info-label {
-  font-size: 0.75rem;
-  color: var(--tm);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-.profile-info-value {
-  padding: 8px 0;
-  border-bottom: 1px solid var(--gborder);
-  color: var(--tp);
-  font-size: 1.05rem;
-  font-weight: 500;
-}
+
+/* 2. Profile Image - Added subtle animation and glow */
+/* Container: Keeps the circular shape and provides the frame */
+.profile-popup-img-container, 
 .profile-popup-img-containe {
-  width: 110px;
-  height: 110px; /* Forces a perfect square base */
-  border-radius: 50%; /* Turns the square base into a perfect circle */
-
+  width: 120px;
+  height: 120px;
+  border-radius: 50%; /* Maintains circular frame */
   border: 3px solid var(--c);
   background: var(--bg2);
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden; /* Clips the image to the circular border */
+  flex-shrink: 0;   /* Prevents the frame from squishing */
+  margin-bottom: 30px;
 }
 
-.profile-popup-img-containe i {
-  font-size: 45px;
-  color: var(--ts);
-}
-
+/* Image: Ensures the picture respects the frame */
+.profile-popup-img-container img,
 .profile-popup-img-containe img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* Ensures the image fills the circle without distortion */
+  object-position: center; /* Keeps the focal point of the photo in the middle */
+  display: block;
+}
+
+/* 3. Typography & Data Rows */
+.profile-info-row {
+  margin-bottom: 24px;
+  width: 100%;
+  text-align: left;
+}
+
+.profile-info-label {
+  font-size: 0.70rem;
+  color: var(--tm);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em; /* Increased spacing for a premium feel */
+  margin-bottom: 4px;
+  display: block;
+}
+
+.close-btn {
+  position: absolute;
+  top: 1px;
+  right: 1px;
+  z-index: 10; /* Ensures button stays on top of content */
+  background: rgba(0,0,0,0.1);
   border-radius: 50%;
-  aspect-ratio: 1 / 1; /* Guarantees the image matches the container shape */
+  cursor: pointer;
+}
+
+.profile-info-value {
+  padding: 4px 0 8px 0;
+  border-bottom: 2px solid var(--gborder);
+  color: var(--tp);
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: border-color 0.3s ease;
+}
+
+/* 4. Subtle Interactivity */
+.profile-info-row:hover .profile-info-value {
+  border-bottom-color: var(--c); /* Highlights border on hover */
 }
