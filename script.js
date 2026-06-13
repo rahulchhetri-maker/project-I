@@ -44,12 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
         modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
     };
 
-    // 2. Select ALL buttons that should open the modal
-    // Note: Give your buttons the class "btn-auth"
-    const authButtons = document.querySelectorAll('.btn-auth');
-    authButtons.forEach(btn => {
-        btn.addEventListener('click', toggleAuth);
-    });
+    // 2. Bind only the dedicated login button to open the modal
+    const loginButton = document.getElementById('log');
+    if (loginButton) {
+        loginButton.addEventListener('click', toggleAuth);
+    }
 
     // 3. View Switcher
     window.switchView = (view) => {
