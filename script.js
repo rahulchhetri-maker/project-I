@@ -912,7 +912,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const usernameValue = usernameInput ? usernameInput.value.trim() : '';
             const passwordValue = passwordInput ? passwordInput.value : '';
 
-            if (usernameValue === 'admin' && passwordValue === 'password 123') {
+            if (usernameValue === 'admin' && passwordValue === 'password123') {
                 isLoggedIn = true;
                 if (authModal) authModal.style.display = 'none';
                 transformToUserCircle(headerLogBtn);
