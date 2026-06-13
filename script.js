@@ -746,3 +746,205 @@ document.addEventListener("DOMContentLoaded", () => {
         button.addEventListener("click", blockAndNotifyUser);
     });
 });
+// =========================================================================
+// FINAL PRODUCTION-READY LOGIN STATE PIPELINE MATRIX WITH REFACTORED DROPDOWN
+// =========================================================================
+document.addEventListener("DOMContentLoaded", () => {
+    let isLoggedIn = false;
+
+    // DOM Element Matrix Caching
+    const authModal = document.getElementById('auth-modal');
+    const donorModal = document.getElementById('donor-modal');
+    const requestModal = document.getElementById('request-modal');
+    const customAlert = document.getElementById("custom-alert");
+    
+    // Select forms positionally from unchanged HTML layouts
+    const usernameInput = document.querySelector('#login-view input[type="text"]');
+    const passwordInput = document.querySelector('#login-view input[type="password"]');
+    const loginSubmitBtn = document.querySelector('.submit-btnn');
+    const headerLogBtn = document.getElementById('log');
+
+    // New HTML component links
+    const signoutDropdown = document.getElementById('custom-signout-dropdown');
+    const signoutItem = document.getElementById('signout-item');
+
+    const originalHeaderLogBtnHTML = headerLogBtn ? headerLogBtn.innerHTML : 'Login';
+
+    const closeAllActiveModals = () => {
+        if (authModal) authModal.style.display = 'none';
+        if (donorModal) donorModal.style.display = 'none';
+        if (requestModal) requestModal.style.display = 'none';
+    };
+
+    // Global Router Handler for Auth button click
+    window.toggleAuth = () => {
+        if (isLoggedIn) {
+            // Dropdown Menu Controller Toggle Mechanism
+            if (signoutDropdown) {
+                if (signoutDropdown.style.display === 'block') {
+                    signoutDropdown.style.display = 'none';
+                } else {
+                    // Automatically position the dropdown directly under the circle icon bounds dynamically
+                    const rect = headerLogBtn.getBoundingClientRect();
+                    signoutDropdown.style.position = 'fixed';
+                    signoutDropdown.style.top = `${rect.bottom}px`;
+                    signoutDropdown.style.left = `${rect.left + (rect.width / 2) - 60}px`; // Centers the 120px menu underneath
+                    signoutDropdown.style.display = 'block';
+                }
+            }
+            return;
+        }
+        
+        if (authModal) {
+            const targetState = (authModal.style.display === 'flex') ? 'none' : 'flex';
+            closeAllActiveModals();
+            authModal.style.display = targetState;
+        }
+    };
+
+    window.toggleDonorModal = () => {
+        if (donorModal) {
+            const targetState = (donorModal.style.display === 'flex') ? 'none' : 'flex';
+            closeAllActiveModals();
+            donorModal.style.display = targetState;
+        }
+    };
+
+    window.toggleRequestModal = () => {
+        if (requestModal) {
+            const targetState = (requestModal.style.display === 'flex') ? 'none' : 'flex';
+            closeAllActiveModals();
+            requestModal.style.display = targetState;
+        }
+    };
+    
+    // Outside Modal and drop menu click dismiss actions
+    window.addEventListener('click', (e) => {
+        if (e.target === authModal) toggleAuth();
+        if (e.target === donorModal) toggleDonorModal();
+        if (e.target === requestModal) toggleRequestModal();
+        
+        if (signoutDropdown && headerLogBtn && !headerLogBtn.contains(e.target) && !signoutDropdown.contains(e.target)) {
+            signoutDropdown.style.display = 'none';
+        }
+    });
+
+    const transformToUserCircle = (btnElement) => {
+        if (!btnElement) return;
+        btnElement.innerHTML = '<i class="fa-solid fa-user"></i>';
+        btnElement.style.backgroundColor = 'red';
+        btnElement.style.color = 'white';
+        btnElement.style.borderRadius = '50%';
+        btnElement.style.width = '42px';
+        btnElement.style.height = '42px';
+        btnElement.style.display = 'flex';
+        btnElement.style.alignItems = 'center';
+        btnElement.style.justifyContent = 'center';
+        btnElement.style.border = 'none';
+        btnElement.style.padding = '0';
+        btnElement.style.cursor = 'pointer';
+    };
+
+    const revertUserCircle = (btnElement) => {
+        if (!btnElement) return;
+        btnElement.innerHTML = originalHeaderLogBtnHTML;
+        btnElement.style.backgroundColor = '';
+        btnElement.style.color = '';
+        btnElement.style.borderRadius = '';
+        btnElement.style.width = '';
+        btnElement.style.height = '';
+        btnElement.style.display = '';
+        btnElement.style.alignItems = '';
+        btnElement.style.justifyContent = '';
+        btnElement.style.border = '';
+        btnElement.style.padding = '';
+        btnElement.style.cursor = '';
+    };
+
+    // Sign Out Execution Script Route Interceptor
+    if (signoutItem) {
+        signoutItem.addEventListener('click', (e) => {
+            e.stopPropagation();
+            isLoggedIn = false;
+            if (signoutDropdown) signoutDropdown.style.display = 'none';
+            
+            revertUserCircle(headerLogBtn);
+            
+            if (usernameInput) usernameInput.value = '';
+            if (passwordInput) passwordInput.value = '';
+            
+            styleCustomAlert("Signed out successfully", true);
+        });
+    }
+
+    const styleCustomAlert = (text, isSuccess) => {
+        if (!customAlert) return;
+        customAlert.textContent = text;
+        customAlert.style.fontWeight = "400";
+        customAlert.style.fontFamily = "system-ui, -apple-system, sans-serif";
+        
+        if (isSuccess) {
+            customAlert.style.background = "rgba(46, 164, 79, 0.85)"; 
+            customAlert.style.backdropFilter = "blur(4px)";
+            customAlert.style.color = "#ffffff";
+        } else {
+            customAlert.style.background = "rgba(224, 36, 36, 0.82)"; 
+            customAlert.style.backdropFilter = "blur(4px)";
+            customAlert.style.color = "#ffffff";
+        }
+        
+        customAlert.classList.add("show");
+        setTimeout(() => {
+            customAlert.classList.remove("show");
+            setTimeout(() => {
+                customAlert.style.fontWeight = "";
+                customAlert.style.background = "";
+                customAlert.style.backdropFilter = "";
+                customAlert.style.color = "";
+            }, 400);
+        }, 3500);
+    };
+
+    if (loginSubmitBtn) {
+        loginSubmitBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            
+            const usernameValue = usernameInput ? usernameInput.value.trim() : '';
+            const passwordValue = passwordInput ? passwordInput.value : '';
+
+            if (usernameValue === 'admin' && passwordValue === 'password 123') {
+                isLoggedIn = true;
+                if (authModal) authModal.style.display = 'none';
+                transformToUserCircle(headerLogBtn);
+            } else {
+                styleCustomAlert("Invalid username or password.", false);
+            }
+        });
+    }
+
+    const formSubmitButtons = document.querySelectorAll("#donor-modal .submit-form-btn, #request-modal .submit-form-btn");
+    formSubmitButtons.forEach(button => {
+        button.addEventListener("click", (event) => {
+            event.preventDefault();
+
+            if (!isLoggedIn) {
+                closeAllActiveModals();
+                if (authModal) authModal.style.display = 'flex';
+                styleCustomAlert("Login first.", false);
+            } else {
+                closeAllActiveModals();
+                styleCustomAlert("Successful", true);
+            }
+        });
+    });
+
+    document.querySelectorAll('.auth-car').forEach(card => {
+        card.addEventListener('wheel', (e) => {
+            const scrollableTarget = card.querySelector('.auth-view');
+            if (scrollableTarget) {
+                scrollableTarget.scrollTop += e.deltaY;
+                e.preventDefault(); 
+            }
+        }, { passive: false });
+    });
+});

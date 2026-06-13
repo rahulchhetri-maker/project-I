@@ -1593,3 +1593,28 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
 
 .submit-form-btn:active {
     transform: scale(0.98);}
+/* --- Sign Out Dropdown --- */
+.signout-dropdown {
+    position: absolute;
+    top: 70px; /* Adjust based on your header height */
+    right: 20px;
+    background: var(--bg2);
+    border: 1px solid var(--gborder);
+    border-radius: var(--r2);
+    padding: 10px;
+    z-index: 10000;
+    box-shadow: var(--sc);
+}
+
+.dropdown-item {
+    color: var(--tp);
+    font-family: var(--fb);
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: var(--r1);
+    transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+    background: rgba(200, 16, 46, 0.1);
+}
