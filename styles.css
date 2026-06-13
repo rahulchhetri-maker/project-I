@@ -61,6 +61,30 @@ html,body {
   overflow-y: auto;
   scroll-behavior: auto;
 }
+.custom-alert-box {
+  position: fixed;
+  top: -100px; /* Hidden off-screen by default */
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg2);
+  color: var(--tp);
+  font-family: var(--fb);
+  font-size: 14px;
+  font-weight: 500;
+  padding: 14px 28px;
+  border-radius: var(--r2);
+  box-shadow: var(--sg); /* Brand glow depth */
+  z-index: 9999;
+  transition: top 0.4s var(--spring); /* Uses your snappy spring curve */
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+/* Trigger class to animate it into view */
+.custom-alert-box.show {
+  top: 30px; /* Drops down smoothly from the top */
+}
 
 .modal-overlay {
   position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -1017,7 +1041,10 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
 .foot-form-card {
   background: rgba(var(--bg2-rgb, 255, 255, 255), 0.02);
   border: 1px solid var(--gborder);
-  padding: 28px;
+  padding-left: 28px;
+  padding-right: 28px;
+  padding-top: 60px;
+  padding-bottom: 28px;
   border-radius: 45px; 
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
 }
@@ -1028,18 +1055,18 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
 .foot-email-form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 30px;
 }
+/* 1. CRITICAL: Give both groups relative positioning so absolute elements anchor correctly */
 .input-group {
   position: relative;
-  width: 100%;
+  margin-bottom: 30px; /* Gives nice spacing between fields */
 }
 
 /* Form Controls UI layout */
 .foot-email-form input,
-.foot-email-form textarea{
+.foot-email-form textarea {
   width: 100%;
-  padding: 14px 0 14px 0;
   background: transparent;
   border: none;
   border-bottom: 1px solid var(--gborder);
@@ -1048,32 +1075,45 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
   font-family: inherit;
   outline: none;
   transition: border-color 0.3s;
+  display: block;
 }
 
-.foot-email-form textarea {
-  resize: none;
-  height: 75px;
+/* 2. FIX: Standardize the input height and padding */
+.foot-email-form input {
+  padding: 14px 0;
 }
+
+/* 3. FIX: Adjust textarea padding so the text starts right next to the label, 
+   but leaves room at the bottom for multiple lines without pushing the border too far */
+.foot-email-form textarea {
+  padding: 14px 0 6px 0; 
+  height: 45px; /* Keeps the line close to the text, matching the input field */
+  resize: none;
+}
+
+/* 4. FIX: Position labels cleanly over both fields */
 .input-group label {
   position: absolute;
   left: 0;
-  top: 14px;
+  top: 14px; /* Matches the top padding of the inputs exactly */
   color: var(--ts);
   font-size: 14.5px;
   pointer-events: none;
   transition: all 0.25s cubic-bezier(0.2, 0, 0.03, 1);
 }
 
+/* Floating Label Animation */
 .foot-email-form input:focus ~ label,
 .foot-email-form input:not(:placeholder-shown) ~ label,
 .foot-email-form textarea:focus ~ label,
 .foot-email-form textarea:not(:placeholder-shown) ~ label {
-  top: -10px;
+  top: -12px;
   font-size: 12px;
   color: var(--cb);
   font-weight: 500;
 }
 
+/* Animated Bottom Bar */
 .input-bar {
   position: absolute;
   bottom: 0;
@@ -1083,6 +1123,7 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
   background: var(--cb);
   transition: width 0.3s ease;
 }
+
 .foot-email-form input:focus ~ .input-bar,
 .foot-email-form textarea:focus ~ .input-bar {
   width: 100%;

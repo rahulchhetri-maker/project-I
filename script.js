@@ -4,6 +4,34 @@
  */
 
 // Function to toggle the modal visibility
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.querySelector(".foot-email-form") || document.querySelector("form");
+  const customAlert = document.getElementById("custom-alert");
+
+  if (form) {
+    // 1. Prevent the default ugly browser popup from appearing
+    form.addEventListener("invalid", (e) => {
+      e.preventDefault();
+      
+      // Update message context based on which field failed
+      if (e.target.id === "foot-email") {
+        customAlert.textContent = "Please enter a valid email address.";
+      } else if (e.target.id === "foot-msg") {
+        customAlert.textContent = "Please write a message before sending.";
+      } else {
+        customAlert.textContent = "Please fill out all required fields.";
+      }
+
+      // 2. Show your beautiful custom theme alert
+      customAlert.classList.add("show");
+
+      // 3. Automatically hide it after 3.5 seconds
+      setTimeout(() => {
+        customAlert.classList.remove("show");
+      }, 3500);
+    }, true);
+  }
+});
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('auth-modal');
     const loginView = document.getElementById('login-view');
