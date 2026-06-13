@@ -208,8 +208,8 @@
     <p class="hero-sub">Alliance for Blood Operations± connects those in urgent need of blood with local donors — in real time. When every second counts, we make sure you're never alone.</p>
     
 <div class="hero-btns">
-  <button class="btn btn-p ripple-wrap btn-auth">Request Blood Instantly <i class="fa-solid fa-bolt"></i></button>
-  <button class="btn btn-g ripple-wrap btn-auth">Register as Donor <i class="fa-solid fa-shield-heart"></i></button>
+  <button class="btn btn-p ripple-wrap btn-auth" onclick="toggleRequestModal()">Request Blood Instantly <i class="fa-solid fa-bolt"></i></button>
+  <button class="btn btn-g ripple-wrap btn-auth" onclick="toggleDonorModal()">Register as Donor <i class="fa-solid fa-shield-heart"></i></button>
 </div>
   </div>
   <div class="hero-right"></div>
@@ -691,5 +691,169 @@
   
 </footer>
 <script src="script.js"></script>
+<div id="donor-modal" class="modal-overlay" style="display: none;">
+  <div class="auth-car modal-scrollable">
+    <button class="auth-close" onclick="toggleDonorModal()">×</button>
+    <div class="auth-view">
+      <h1 class="form-org-title">ALLIANCE FOR BLOOD OPERATIONS±</h1>
+      <p class="form-subtitle">Register as a Blood Donor</p>
+      <form id="donor-registration-form">
+        
+        <label class="form-label">Full Name <span class="required">*</span></label>
+        <div class="input-row-2">
+          <div class="input-group">
+            <input type="text" placeholder="First Name" required>
+          </div>
+          <div class="input-group">
+            <input type="text" placeholder="Last Name" required>
+          </div>
+        </div>
+
+        <label class="form-label">Date of Birth <span class="required">*</span></label>
+        <div class="input-row-3">
+          <select required>
+            <option value="" disabled selected>Please select a month</option>
+            <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+            <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+            <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+            <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+          </select>
+          <select required>
+            <option value="" disabled selected>Please select a day</option>
+            <option value="1">1</option><option value="2">2</option><option value="15">15</option>
+          </select>
+          <select required>
+            <option value="" disabled selected>Please select a year</option>
+            <option value="2008">2008</option><option value="2000">2000</option><option value="1990">1990</option>
+          </select>
+        </div>
+
+        <label class="form-label">Blood Group <span class="required">*</span></label>
+        <div class="input-group">
+          <select required>
+            <option value="" disabled selected>Please Select</option>
+            <option value="op">O+</option><option value="on">O-</option>
+            <option value="ap">A+</option><option value="an">A-</option>
+            <option value="bp">B+</option><option value="bn">B-</option>
+            <option value="abp">AB+</option><option value="abn">AB-</option>
+          </select>
+        </div>
+
+        <label class="form-label">Last Donate Date</label>
+        <div class="input-row-3">
+          <select>
+            <option value="" selected>Please select a month</option>
+            <option value="1">January</option><option value="2">February</option>
+          </select>
+          <select>
+            <option value="" selected>Please select a day</option>
+          </select>
+          <select>
+            <option value="" selected>Please select a year</option>
+          </select>
+        </div>
+
+        <label class="form-label">Phone Number <span class="required">*</span></label>
+        <div class="input-group">
+          <input type="tel" placeholder="+977" required>
+        </div>
+
+        <label class="form-label">Address <span class="required">*</span></label>
+        <div class="input-group margin-bottom-sm">
+          <input type="text" placeholder="Street Address" required>
+        </div>
+        <div class="input-row-2">
+          <div class="input-group">
+            <input type="text" placeholder="City" required>
+          </div>
+          <div class="input-group">
+            <input type="text" placeholder="District" required>
+          </div>
+        </div>
+        <div class="input-group margin-top-sm">
+          <select required>
+            <option value="Nepal" selected>Nepal</option>
+            <option value="India" >India</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <button type="submit" class="submit-form-btn color-green">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="request-modal" class="modal-overlay" style="display: none;">
+  <div class="auth-car modal-scrollable">
+    <button class="auth-close" onclick="toggleRequestModal()">×</button>
+    <div class="auth-view">
+      <h1 class="form-org-title">ALLIANCE FOR BLOOD OPERATIONS±</h1>
+      <p class="form-subtitle">Emergency Blood Request Pipeline</p>
+      <form id="blood-request-form">
+        
+        <label class="form-label">Patient Full Name <span class="required">*</span></label>
+        <div class="input-group">
+          <input type="text" placeholder="Enter patient name" required>
+        </div>
+
+        <div class="input-row-2">
+          <div>
+            <label class="form-label">Required Blood Group <span class="required">*</span></label>
+            <div class="input-group">
+              <select required>
+                <option value="" disabled selected>Select Profile</option>
+                <option value="op">O+</option><option value="on">O-</option>
+                <option value="ap">A+</option><option value="an">A-</option>
+                <option value="bp">B+</option><option value="bn">B-</option>
+                <option value="abp">AB+</option><option value="abn">AB-</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="form-label">Units Needed (Pints) <span class="required">*</span></label>
+            <div class="input-group">
+              <input type="number" min="1" max="10" placeholder="Quantity" required>
+            </div>
+          </div>
+        </div>
+
+        <label class="form-label">Hospital Name / Target Medical Facility <span class="required">*</span></label>
+        <div class="input-group">
+          <input type="text" placeholder="e.g. Patan Hospital, Emergency Wing" required>
+        </div>
+
+        <label class="form-label">Hospital Address Details <span class="required">*</span></label>
+        <div class="input-group margin-bottom-sm">
+          <input type="text" placeholder="Street Address" required>
+        </div>
+        <div class="input-row-2">
+          <div class="input-group">
+            <input type="text" placeholder="City" required>
+          </div>
+          <div class="input-group">
+            <input type="text" placeholder="District" required>
+          </div>
+        </div>
+
+        <label class="form-label">Point of Contact Phone Number <span class="required">*</span></label>
+        <div class="input-group">
+          <input type="tel" placeholder="+977" required>
+        </div>
+
+        <label class="form-label">Urgency Classification <span class="required">*</span></label>
+        <div class="input-group">
+          <select required>
+            <option value="immediate">Critical (Within 1-2 Hours)</option>
+            <option value="today">Standard (Within 24 Hours)</option>
+            <option value="planned">Scheduled Operation Routine</option>
+          </select>
+        </div>
+
+        <button type="submit" class="submit-form-btn color-red">Submit Emergency Request</button>
+      </form>
+    </div>
+  </div>
+</div>
 </body>
 </html>

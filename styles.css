@@ -68,13 +68,13 @@ html,body {
   transform: translateX(-50%);
   background: var(--bg2);
   color: var(--tp);
-  font-family: var(--fb);
-  font-size: 14px;
-  font-weight: 500;
+  font-family: var(--fd);
+  font-size: 20px;
+  font-weight: 700;
   padding: 14px 28px;
-  border-radius: var(--r2);
+  border-radius: 50px;
   box-shadow: var(--sg); /* Brand glow depth */
-  z-index: 9999;
+  z-index: 99999;
   transition: top 0.4s var(--spring); /* Uses your snappy spring curve */
   pointer-events: none;
   display: flex;
@@ -1425,3 +1425,171 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
 [data-theme="light"] .mob-link {
   border-bottom-color: rgba(200, 16, 46, 0.08) !important;
 }
+/* --- High Fidelity Form Layout Additions --- */
+
+/* Form Sizing Overhaul - Made the card larger and roomier as requested */
+/* --- High Fidelity Form Layout Additions --- */
+
+/* Form Sizing Overhaul - Expanded to 2x width (1000px) */
+.auth-car {
+    position: relative;
+    width: 100%;
+    max-width: 1000px; /* Doubled from 540px to 1000px for a wide layout */
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    padding: 40px; /* Increased inner padding for the wider layout */
+    box-sizing: border-box;
+    background: var(--card);
+    border: 1px solid var(--gborder);
+    border-radius: var(--r3);
+    box-shadow: var(--sc);
+    overflow: visible; /* Allows the close button to anchor cleanly */
+}
+
+/* Close button remains absolutely fixed in its corner position */
+.auth-close {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    z-index: 150; /* Layers above all input content */
+    background: transparent;
+    border: none;
+    color: var(--tp);
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: color 0.2s var(--ease);
+}
+.auth-close:hover {
+    color: var(--cb);
+}
+
+/* Internal view area holding form elements */
+.auth-view {
+    overflow-y: auto;
+    max-height: calc(85vh - 80px);
+    padding-right: 12px; 
+    display: flex;
+    flex-direction: column;
+}
+
+/* Premium custom scrollbar */
+.auth-view::-webkit-scrollbar {
+    width: 6px;
+}
+.auth-view::-webkit-scrollbar-track {
+    background: transparent;
+}
+.auth-view::-webkit-scrollbar-thumb {
+    background: var(--gborder);
+    border-radius: var(--r1);
+}
+.auth-view::-webkit-scrollbar-thumb:hover {
+    background: var(--cg);
+}
+
+.form-org-title {
+    font-family: var(--fd);
+    font-size: 1.6rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--tp);
+    margin-bottom: 4px;
+}
+
+.form-subtitle {
+    font-family: var(--fb);
+    font-size: 1rem;
+    color: var(--ts);
+    margin-bottom: 28px;
+}
+
+.form-label {
+    display: block;
+    font-family: var(--fb);
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--tp);
+    margin-top: 18px;
+    margin-bottom: 8px;
+    text-align: left;
+}
+
+.form-label .required {
+    color: var(--cb);
+}
+
+/* Multi-Column Layout Rows */
+.input-row-2 {
+    display: flex;
+    gap: 16px;
+}
+.input-row-2 > * {
+    flex: 1;
+}
+
+.input-row-3 {
+    display: flex;
+    gap: 12px;
+}
+.input-row-3 > * {
+    flex: 1;
+}
+
+/* Structural Spacing Utilities */
+.margin-bottom-sm { margin-bottom: 10px; }
+.margin-top-sm { margin-top: 10px; }
+
+/* Light Mode & Dark Mode cross-compatibility overhaul for fields and dropdowns */
+.auth-car input,
+.auth-car select {
+    width: 100%;
+    padding: 14px 18px;
+    background: var(--bg2); /* Dynamically scales background to prevent blinding whites */
+    border: 1px solid var(--gborder);
+    border-radius: var(--r1);
+    color: var(--tp) !important; /* Forces responsive contrast text (Dark gray on Light / White on Dark) */
+    font-family: var(--fb);
+    font-size: 0.95rem;
+    transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease);
+    outline: none;
+    box-sizing: border-box;
+}
+
+/* Fixes cross-platform drop-down text clipping on light mode */
+.auth-car select option {
+    background-color: var(--bg2);
+    color: var(--tp); 
+}
+
+.auth-car input:focus,
+.auth-car select:focus {
+    border-color: var(--cb);
+    box-shadow: 0 0 8px var(--cs);
+}
+
+/* Enlarged Brand-Red Action Submit Button (Green option removed) */
+.submit-form-btn {
+    width: 100%;
+    padding: 18px 28px; /* Enlarged touch target sizing */
+    margin-top: 32px;
+    border: none;
+    border-radius: 50px;
+    color: #FFFFFF !important;
+    background-color: var(--c) !important; /* Strict fallback to primary brand red */
+    font-family: var(--fb);
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    box-shadow: 0 4px 14px var(--cs);
+    transition: background-color 0.2s var(--ease), transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+
+.submit-form-btn:hover {
+    background-color: var(--cb) !important; /* Brighter accent red on user hover states */
+    box-shadow: 0 6px 18px var(--cg);
+}
+
+.submit-form-btn:active {
+    transform: scale(0.98);}

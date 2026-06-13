@@ -663,3 +663,86 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 });
+document.addEventListener('DOMContentLoaded', () => {
+    const authModal = document.getElementById('auth-modal');
+    const donorModal = document.getElementById('donor-modal');
+    const requestModal = document.getElementById('request-modal');
+
+    // Safe master closer utility
+    const closeAllActiveModals = () => {
+        if (authModal) authModal.style.display = 'none';
+        if (donorModal) donorModal.style.display = 'none';
+        if (requestModal) requestModal.style.display = 'none';
+    };
+
+    // 1. Existing Authentication Popup Logic
+    window.toggleAuth = () => {
+        const targetState = (authModal.style.display === 'flex') ? 'none' : 'flex';
+        closeAllActiveModals();
+        authModal.style.display = targetState;
+    };
+
+    // 2. New Donor Registration Popup Logic
+    window.toggleDonorModal = () => {
+        const targetState = (donorModal.style.display === 'flex') ? 'none' : 'flex';
+        closeAllActiveModals();
+        donorModal.style.display = targetState;
+    };
+
+    // 3. New Blood Request Popup Logic
+    window.toggleRequestModal = () => {
+        const targetState = (requestModal.style.display === 'flex') ? 'none' : 'flex';
+        closeAllActiveModals();
+        requestModal.style.display = targetState;
+    };
+    
+    // Click Outside to Close Strategy
+    window.addEventListener('click', (e) => {
+        if (e.target === authModal) toggleAuth();
+        if (e.target === donorModal) toggleDonorModal();
+        if (e.target === requestModal) toggleRequestModal();
+    });
+
+    // MOUSE WHEEL SCROLL ENGINE: Forwards wheel events across the card down to the form viewport
+    document.querySelectorAll('.auth-car').forEach(card => {
+        card.addEventListener('wheel', (e) => {
+            const scrollableTarget = card.querySelector('.auth-view');
+            if (scrollableTarget) {
+                // Read horizontal and vertical wheel dynamics smoothly
+                scrollableTarget.scrollTop += e.deltaY;
+                // Prevents the background parent landing screen from scrolling simultaneously
+                e.preventDefault(); 
+            }
+        }, { passive: false });
+    });
+});
+
+// Verification flow handling unauthorized application submissions
+// Verification flow handling unauthorized application submissions
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Target the buttons directly instead of the forms
+    const submitButtons = document.querySelectorAll("#donor-modal .submit-form-btn, #request-modal .submit-form-btn");
+    const customAlert = document.getElementById("custom-alert");
+
+    const blockAndNotifyUser = (event) => {
+        event.preventDefault(); // Halt standard actions and browser validation bubble instantly
+
+        // Route notification seamlessly inside your custom UI alerts system if active
+        if (customAlert) {
+            customAlert.textContent = "Login first.";
+            customAlert.classList.add("show");
+            
+            setTimeout(() => {
+                customAlert.classList.remove("show");
+            }, 3500);
+        } else {
+            // Default browser application alert window fallback mechanism
+            alert("Login first.");
+        }
+    };
+
+    // 2. Attach the listener to the button clicks
+    submitButtons.forEach(button => {
+        button.addEventListener("click", blockAndNotifyUser);
+    });
+});
