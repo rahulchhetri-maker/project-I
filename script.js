@@ -894,7 +894,7 @@ signoutDropdown.style.display = 'block';
             const usernameValue = usernameInput ? usernameInput.value.trim() : '';
             const passwordValue = passwordInput ? passwordInput.value : '';
 
-            if (usernameValue === 'admin' && passwordValue === 'password123') {
+            if (usernameValue === 'admin@gmail.com' && passwordValue === 'Admin@123') {
                 isLoggedIn = true;
                 localStorage.setItem('abo_logged_in', 'true'); // Save persistent state
                 transformToUserCircle(headerLogBtn);
@@ -1094,3 +1094,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+/**
+ * Locks the main page scroll when hovering over a specific element
+ * such as your auth-card or profile-modal.
+ */
+function lockScrollOnHover(element) {
+    element.addEventListener('wheel', (e) => {
+        // Prevent the browser from triggering the main page scroll
+        e.stopPropagation(); 
+        
+        // This is necessary because some browsers handle 'passive' 
+        // events differently
+    }, { passive: false });
+}
+
+// Apply it to your modal container
+const modalCard = document.querySelector('.auth-card');
+if (modalCard) {
+    lockScrollOnHover(modalCard);
+}

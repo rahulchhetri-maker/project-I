@@ -32,23 +32,31 @@
     <button class="auth-close" onclick="toggleAuth()">×</button>
     <div id="login-view" class="auth-view">
       <h2 class="get">Login</h2>
-      <label class="username">Username (Hint: admin)</label>
+      <label class="username">Email or phone number</label>
       <div class="input-group">
         
         <input type="text">
       </div>
-      <label class="password">Password (Hint: password123)</label>
+      <label class="password">Password</label>
       <div class="input-group">
         
         <input type="password">
         <a href="#" class="forgot-link">Forgot password?</a>
       </div>
+<div class="login-hint-box">
+  <div class="hint-row">
+    <span class="label">Email:</span> <code>admin@gmail.com</code>
+  </div>
+  <div class="hint-row">
+    <span class="label">Password:</span> <code>Admin@123</code>
+  </div>
+</div>
       <button class="submit-btnn">Login</button>
       <p class="toggle-text">Don't have an account? <span onclick="switchView('register')">Register</span></p>
     </div>
     <div id="register-view" class="auth-view" style="display: none;">
       <h2 class="get">Register</h2>
-      <label class="username">Username </label>
+      <label class="username">Email or phone number </label>
       <div class="input-group"><input type="text"></div><label class="password">Password </label>
       <div class="input-group"><input type="password"></div>
       <label class="conformpassword">Confirm Password</label>
@@ -889,10 +897,10 @@
     <div class="auth-view profile-view">
       <h2 class="get" style="margin-bottom: 20px;">Personal Information</h2>
       
-      <div class="profile-popup-img-containe">
-        <i id="popup-profile-icon" class="fa-solid fa-user"></i>
-        <img id="popup-profile-img" src="" alt="Profile" style="display: none;">
-      </div>
+  <div class="profile-popup-img-container"> 
+    <i id="popup-profile-icon" class="fa-solid fa-user"></i>
+    <img id="popup-profile-img" src="" alt="Profile" style="display: none;">
+  </div>
       
       <div class="profile-info-grid">
         <div class="profile-info-row">
