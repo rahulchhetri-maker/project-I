@@ -1,6 +1,6 @@
 /**
  * ABO± Network Infrastructure Core Engines
- * Fully Refactored & Optimized Production-Ready Layer
+ * Fully Refactored & Optimized Production-Ready Layer (Session Memory Only)
  */
 
 // Global variable to store the picture temporarily for the session ONLY
@@ -599,6 +599,7 @@ window.addEventListener('DOMContentLoaded', () => {
   runLiveTelemetryFeedStream();
   animatePulseWaveNetwork();
 });
+
 document.documentElement.setAttribute(
   "data-theme",
   localStorage.getItem("theme") || "light"
@@ -702,7 +703,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // FINAL PRODUCTION-READY LOGIN STATE & FORM VALIDATION PIPELINE
 // =========================================================================
 document.addEventListener("DOMContentLoaded", () => {
-    let isLoggedIn = localStorage.getItem('abo_logged_in') === 'true';
+    let isLoggedIn = false; // Initialize to false (no persistence)
     let pendingFormModal = null; 
 
     const authModal = document.getElementById('auth-modal');
@@ -779,29 +780,6 @@ document.addEventListener("DOMContentLoaded", () => {
         btnElement.style.padding = '';
         btnElement.style.cursor = '';
     };
-
-    // Keep logged in status based on previous sessions
-    if (isLoggedIn && headerLogBtn) {
-        const loginText = document.getElementById('login-text');
-        const userIcon = document.getElementById('header-user-icon');
-        const picContainer = document.getElementById('header-pic-container');
-
-        if (loginText) loginText.style.display = 'none';
-        if (picContainer) picContainer.style.display = 'none';
-        if (userIcon) userIcon.style.display = 'block';
-
-        headerLogBtn.style.backgroundColor = 'red';
-        headerLogBtn.style.color = 'white';
-        headerLogBtn.style.borderRadius = '50%';
-        headerLogBtn.style.width = '42px';
-        headerLogBtn.style.height = '42px';
-        headerLogBtn.style.display = 'flex';
-        headerLogBtn.style.alignItems = 'center';
-        headerLogBtn.style.justifyContent = 'center';
-        headerLogBtn.style.border = 'none';
-        headerLogBtn.style.padding = '0';
-        headerLogBtn.style.cursor = 'pointer';
-    }
 
     window.toggleAuth = () => {
         if (isLoggedIn) {
@@ -891,8 +869,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (signoutItem) {
         signoutItem.addEventListener('click', (e) => {
             e.stopPropagation();
-            isLoggedIn = false;
-            localStorage.setItem('abo_logged_in', 'false'); 
+            isLoggedIn = false; // Reset to false
+            
+            // Delete the profile picture from temporary memory
+            window.currentSessionProfilePic = null;
             
             if (signoutDropdown) signoutDropdown.style.display = 'none';
             revertUserCircle(headerLogBtn);
@@ -910,23 +890,15 @@ document.addEventListener("DOMContentLoaded", () => {
             
             const usernameValue = usernameInput ? usernameInput.value.trim() : '';
             const passwordValue = passwordInput ? passwordInput.value : '';
-if (usernameValue === 'admin@gmail.com' && passwordValue === 'Admin@123') {
-    isLoggedIn = true;
-    localStorage.setItem('abo_logged_in', 'true'); 
-    
-    // 1. Trigger the Visual Change (Circle)
-    transformToUserCircle(headerLogBtn);
+            if (usernameValue === 'admin@gmail.com' && passwordValue === 'Admin@123') {
+                isLoggedIn = true;
+                
+                // Trigger the Visual Change (Circle)
+                transformToUserCircle(headerLogBtn);
 
-    // 2. CRITICAL: Force Sync the Profile Picture immediately on Login
-    const savedPic = localStorage.getItem('user_profile_pic');
-    if (savedPic) {
-        window.updateAllProfileUI(savedPic);
-    }
-
-    // 3. Keep your existing logic
-    if (authModal) authModal.style.display = 'none';
-    styleCustomAlert("Login successful", true);
-}else {
+                if (authModal) authModal.style.display = 'none';
+                styleCustomAlert("Login successful", true);
+            } else {
                 styleCustomAlert("Invalid username or password.", false);
             }
         });
@@ -1042,7 +1014,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const imageData = e.target.result;
-                    // Assign to the temporary volatile memory
+                    // Assign to the temporary volatile memory ONLY
                     window.currentSessionProfilePic = imageData;
                     
                     // Live-sync inside dropdown frame
@@ -1080,14 +1052,23 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function lockScrollOnHover(element) {
+    if (!element) return;
     element.addEventListener('wheel', (e) => {
         e.stopPropagation(); 
     }, { passive: false });
 }
 
+// 1. Fix for Modal Cards
 const modalCard = document.querySelector('.auth-card');
 if (modalCard) {
     lockScrollOnHover(modalCard);
+}
+
+// 2. Fix for Eligibility Questions Scrolling
+const questionsList = document.querySelector('.qs-list');
+if (questionsList) {
+    questionsList.setAttribute('data-lenis-prevent', 'true');
+    lockScrollOnHover(questionsList);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -1130,107 +1111,4 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 3500);
     }, true);
   });
-});/**
- * ABO± PERSISTENCE ENGINE (MERGED)
- * Handles uploading, refreshing, and syncing profile pictures across all UI elements.
- */
-
-// 1. RUN ON PAGE LOAD (Handles Refreshing)
-document.addEventListener("DOMContentLoaded", () => {
-    const savedPic = localStorage.getItem('user_profile_pic');
-    if (savedPic) {
-        syncAllProfileImages(savedPic);
-    }
-});
-
-// 2. MASTER SYNC FUNCTION (Updates all locations at once)
-function syncAllProfileImages(imageData) {
-    // Define all target locations where the profile image must appear
-    const targets = [
-        { img: 'header-profile-img', cont: 'header-pic-container', icon: 'header-user-icon' },
-        { img: 'profile-img-preview', cont: 'profile-pic-frame', icon: 'profile-icon' },
-        { img: 'popup-profile-img', cont: 'profile-popup-img-container', icon: 'popup-profile-icon' }
-    ];
-
-    targets.forEach(t => {
-        const img = document.getElementById(t.img);
-        const cont = document.getElementById(t.cont);
-        const icon = document.getElementById(t.icon);
-        
-        // Only update if the element actually exists on the current page
-        if (img) {
-            img.src = imageData;
-            img.style.display = 'block'; 
-        }
-        if (cont) {
-            cont.style.display = 'block'; 
-        }
-        if (icon) {
-            icon.style.display = 'none'; // Hide the user icon/placeholder
-        }
-    });
-}
-
-/**
- * ABO± Network Infrastructure Core Engines
- * PERSISTENT STORAGE ENGINE - FINALIZED
- */
-
-// 1. MASTER SYNC FUNCTION
-// We attach this to 'window' so your login code can access it easily.
-// --- CENTRALIZED PROFILE PERSISTENCE ENGINE ---
-window.updateAllProfileUI = function(imageData) {
-    const targets = [
-        { img: 'header-profile-img', cont: 'header-pic-container', icon: 'header-user-icon' },
-        { img: 'profile-img-preview', cont: 'profile-pic-frame', icon: 'profile-icon' },
-        { img: 'popup-profile-img', cont: 'profile-popup-img-container', icon: 'popup-profile-icon' }
-    ];
-
-    targets.forEach(t => {
-        const img = document.getElementById(t.img);
-        const cont = document.getElementById(t.cont);
-        const icon = document.getElementById(t.icon);
-        
-        if (img && imageData) {
-            img.src = imageData;
-            img.style.display = 'block'; 
-        }
-        if (cont && imageData) {
-            cont.style.display = 'block'; 
-        }
-        if (icon && imageData) {
-            icon.style.display = 'none'; 
-        }
-    });
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-    // A. Load from storage on initial page load (Refresh)
-    const savedPic = localStorage.getItem('user_profile_pic');
-    if (savedPic) {
-        window.updateAllProfileUI(savedPic);
-    }
-
-    // B. Handle Image Upload
-    const picUploadInput = document.getElementById('pic-upload-input');
-    const changePicBtn = document.getElementById('change-pic-btn');
-    
-    if (changePicBtn && picUploadInput) {
-        changePicBtn.addEventListener('click', () => picUploadInput.click());
-    }
-    
-    if (picUploadInput) {
-        picUploadInput.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const imageData = e.target.result;
-                    localStorage.setItem('user_profile_pic', imageData); // Persist
-                    window.updateAllProfileUI(imageData); // Update UI
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-    }
 });
