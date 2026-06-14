@@ -910,21 +910,23 @@ document.addEventListener("DOMContentLoaded", () => {
             
             const usernameValue = usernameInput ? usernameInput.value.trim() : '';
             const passwordValue = passwordInput ? passwordInput.value : '';
+if (usernameValue === 'admin@gmail.com' && passwordValue === 'Admin@123') {
+    isLoggedIn = true;
+    localStorage.setItem('abo_logged_in', 'true'); 
+    
+    // 1. Trigger the Visual Change (Circle)
+    transformToUserCircle(headerLogBtn);
 
-            if (usernameValue === 'admin@gmail.com' && passwordValue === 'Admin@123') {
-                isLoggedIn = true;
-                localStorage.setItem('abo_logged_in', 'true'); 
-                transformToUserCircle(headerLogBtn);
+    // 2. CRITICAL: Force Sync the Profile Picture immediately on Login
+    const savedPic = localStorage.getItem('user_profile_pic');
+    if (savedPic) {
+        window.updateAllProfileUI(savedPic);
+    }
 
-                if (pendingFormModal) {
-                    if (authModal) authModal.style.display = 'none';
-                    pendingFormModal.style.display = 'flex';
-                    pendingFormModal = null; 
-                } else {
-                    if (authModal) authModal.style.display = 'none';
-                    styleCustomAlert("Login successful", true);
-                }
-            } else {
+    // 3. Keep your existing logic
+    if (authModal) authModal.style.display = 'none';
+    styleCustomAlert("Login successful", true);
+}else {
                 styleCustomAlert("Invalid username or password.", false);
             }
         });
@@ -1169,17 +1171,54 @@ function syncAllProfileImages(imageData) {
     });
 }
 
-// 3. UPLOAD HANDLER (Triggers, Saves, and Syncs)
+/**
+ * ABO± Network Infrastructure Core Engines
+ * PERSISTENT STORAGE ENGINE - FINALIZED
+ */
+
+// 1. MASTER SYNC FUNCTION
+// We attach this to 'window' so your login code can access it easily.
+// --- CENTRALIZED PROFILE PERSISTENCE ENGINE ---
+window.updateAllProfileUI = function(imageData) {
+    const targets = [
+        { img: 'header-profile-img', cont: 'header-pic-container', icon: 'header-user-icon' },
+        { img: 'profile-img-preview', cont: 'profile-pic-frame', icon: 'profile-icon' },
+        { img: 'popup-profile-img', cont: 'profile-popup-img-container', icon: 'popup-profile-icon' }
+    ];
+
+    targets.forEach(t => {
+        const img = document.getElementById(t.img);
+        const cont = document.getElementById(t.cont);
+        const icon = document.getElementById(t.icon);
+        
+        if (img && imageData) {
+            img.src = imageData;
+            img.style.display = 'block'; 
+        }
+        if (cont && imageData) {
+            cont.style.display = 'block'; 
+        }
+        if (icon && imageData) {
+            icon.style.display = 'none'; 
+        }
+    });
+};
+
 document.addEventListener('DOMContentLoaded', () => {
+    // A. Load from storage on initial page load (Refresh)
+    const savedPic = localStorage.getItem('user_profile_pic');
+    if (savedPic) {
+        window.updateAllProfileUI(savedPic);
+    }
+
+    // B. Handle Image Upload
     const picUploadInput = document.getElementById('pic-upload-input');
     const changePicBtn = document.getElementById('change-pic-btn');
     
-    // Trigger the hidden file input when user clicks "Change Picture"
     if (changePicBtn && picUploadInput) {
         changePicBtn.addEventListener('click', () => picUploadInput.click());
     }
     
-    // Handle the actual image selection
     if (picUploadInput) {
         picUploadInput.addEventListener('change', function() {
             const file = this.files[0];
@@ -1187,12 +1226,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const imageData = e.target.result;
-                    
-                    // Save to localStorage (this makes it persist on refresh)
-                    localStorage.setItem('user_profile_pic', imageData);
-                    
-                    // Update all UI sections immediately
-                    syncAllProfileImages(imageData);
+                    localStorage.setItem('user_profile_pic', imageData); // Persist
+                    window.updateAllProfileUI(imageData); // Update UI
                 };
                 reader.readAsDataURL(file);
             }
