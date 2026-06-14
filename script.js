@@ -3,17 +3,57 @@
  * Fully Refactored & Optimized Production-Ready Layer
  */
 
+// Global variable to store the picture temporarily for the session ONLY
+window.currentSessionProfilePic = null;
+
+// Global Notification Trigger Engine
+window.addNotification = (msg) => {
+    const noNotifMsg = document.getElementById('no-notif-msg');
+    const notifDot = document.getElementById('notif-dot');
+    const notifDropdown = document.getElementById('notif-dropdown');
+    const notifBody = document.getElementById('notif-body');
+
+    if (noNotifMsg) noNotifMsg.style.display = 'none';
+    if (notifDot && notifDropdown && notifDropdown.style.display !== 'flex') {
+        notifDot.style.display = 'block';
+    }
+
+    const notifItem = document.createElement('div');
+    notifItem.className = 'notif-item';
+    notifItem.innerHTML = `<strong>System Alert:</strong><br>${msg}`;
+    if (notifBody) notifBody.prepend(notifItem);
+};
+
+// Notification Dropdown Click Handler
+document.addEventListener("DOMContentLoaded", () => {
+    const notifBtn = document.getElementById('notif-btn');
+    const notifDropdown = document.getElementById('notif-dropdown');
+    const notifDot = document.getElementById('notif-dot');
+    
+    if (notifBtn && notifDropdown) {
+        notifBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isHidden = notifDropdown.style.display === 'none' || notifDropdown.style.display === '';
+            
+            // Close signout dropdown if it is open
+            const signoutDrop = document.getElementById('custom-signout-dropdown');
+            if (signoutDrop) signoutDrop.style.display = 'none';
+
+            notifDropdown.style.display = isHidden ? 'flex' : 'none';
+            if (isHidden && notifDot) notifDot.style.display = 'none'; // Clear the red dot when reading
+        });
+    }
+});
+
 // Function to toggle the modal visibility
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.querySelector(".foot-email-form") || document.querySelector("form");
   const customAlert = document.getElementById("custom-alert");
 
   if (form) {
-    // 1. Prevent the default ugly browser popup from appearing
     form.addEventListener("invalid", (e) => {
       e.preventDefault();
       
-      // Update message context based on which field failed
       if (e.target.id === "foot-email") {
         customAlert.textContent = "Please enter a valid email address.";
       } else if (e.target.id === "foot-msg") {
@@ -22,16 +62,15 @@ document.addEventListener("DOMContentLoaded", () => {
         customAlert.textContent = "Please fill out all required fields.";
       }
 
-      // 2. Show your beautiful custom theme alert
       customAlert.classList.add("show");
 
-      // 3. Automatically hide it after 3.5 seconds
       setTimeout(() => {
         customAlert.classList.remove("show");
       }, 3500);
     }, true);
   }
 });
+
 document.addEventListener('DOMContentLoaded', () => {
     const modal = document.getElementById('auth-modal');
     const loginView = document.getElementById('login-view');
@@ -39,19 +78,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const tabLogin = document.getElementById('tab-login');
     const tabRegister = document.getElementById('tab-register');
 
-    // 1. Unified toggle function
     window.toggleAuth = () => {
         modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
     };
 
-    // 2. Bind only the dedicated login button to open the modal
     const loginButton = document.getElementById('log');
     if (loginButton) {
-        // FIX 1: Evaluate the global toggleAuth dynamically so it picks up the login state checking logic
         loginButton.addEventListener('click', () => window.toggleAuth());
     }
 
-    // 3. View Switcher
     window.switchView = (view) => {
         if (view === 'login') {
             loginView.style.display = 'block';
@@ -67,10 +102,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 });
 
-// Global state tracking variables
 /**
  * BloodFlowController: High-performance animation engine
- * Manages the fluid flow, pulse rhythms, and bag levels programmatically.
  */
 class BloodFlowController {
     constructor(svgElement) {
@@ -78,7 +111,7 @@ class BloodFlowController {
         this.fluid = this.svg.querySelector('.liquid-wave-element');
         this.pulseRings = this.svg.querySelectorAll('.pulse-ring');
         this.startTime = performance.now();
-        this.bloodLevel = 0; // 0 to 100
+        this.bloodLevel = 0; 
         
         this.init();
     }
@@ -87,7 +120,6 @@ class BloodFlowController {
         this.animate();
     }
 
-    // Update the fluid level dynamically
     setBloodLevel(percent) {
         this.bloodLevel = Math.min(100, Math.max(0, percent));
     }
@@ -95,12 +127,10 @@ class BloodFlowController {
     animate(currentTime) {
         const elapsed = (currentTime - this.startTime) / 1000;
 
-        // 1. Precise Fluid Wave Motion
         const wave = Math.sin(elapsed * 2.5) * 5;
         const fillOffset = 120 - (this.bloodLevel * 1.35);
         this.fluid.setAttribute('transform', `translate(${wave}, ${fillOffset})`);
 
-        // 2. Pulse Rhythm Engine (Lub-Dub variation)
         const pulse = Math.sin(elapsed * 4) > 0.9 ? 1 : 0;
         this.pulseRings.forEach(ring => {
             ring.style.opacity = pulse ? 0.6 : 0;
@@ -111,12 +141,10 @@ class BloodFlowController {
     }
 }
 
-// Initialization
 document.addEventListener("DOMContentLoaded", () => {
     const svg = document.querySelector('.donation-svg-engine');
     const engine = new BloodFlowController(svg);
     
-    // Example: Gradually fill the bag over time
     let progress = 0;
     const interval = setInterval(() => {
         progress += 0.5;
@@ -128,12 +156,10 @@ document.addEventListener("DOMContentLoaded", () => {
 const PLATFORM_STATE = {
   currentTheme: 'dark',
   isMenuOpen: false,
-  // expanded eligibility weights (keys are question data-weight values)
   eligibilityWeights: { 1: null, 2: null, 3: null, 4: null, 5: null, 6: null, 7: null },
   activeFeedIndex: 0
 };
 
-// Simulated Real-Time Telemetry Event Log Matrix
 const FIELD_TELEMETRY_STREAM = [
   { c: 'green', t: 'Anil Kumar registered as A+ active donor pool node' },
   { c: 'red', t: 'Emergency Broadcast Broadcasted: O− requested at Patan Hospital' },
@@ -142,7 +168,6 @@ const FIELD_TELEMETRY_STREAM = [
   { c: 'green', t: 'Spatial tracking matched 4 active nodes in Bhaktapur vicinity' }
 ];
 
-// Database Matrix for Cross-Matching Visualizer
 const CROSS_MATCH_MATRIX = {
   op:  { give: "All Blood Profiles (Universal Donor Node)", receive: "O+ Profile , O− Profile" },
   on:  { give: "Absolute Universal Distribution Profile Stack", receive: "O− Matrix Node Exclusively" },
@@ -154,7 +179,6 @@ const CROSS_MATCH_MATRIX = {
   abn: { give: "AB+ Profile , AB− Profile Components", receive: "AB− , A− , B− , O− Profile Pools" }
 };
 
-// Globally cached DOM references
 const DOM = {
   html: document.documentElement,
   navbar: document.getElementById('navbar'),
@@ -176,10 +200,6 @@ const DOM = {
   testimonialTrack: document.getElementById('testimonial-track')
 };
 
-/**
- * MODULE 1: LENIS SMOOTH SCROLL INTEGRATION
- * Unlocked native momentum parameters by releasing strict HTML/CSS containment rules
- */
 const initLenisScrollEngine = () => {
   const lenis = new Lenis({
     duration: 1.2,
@@ -199,7 +219,6 @@ const runScrollLoop = (time) => {
 
 requestAnimationFrame(runScrollLoop);
 
-  // High-performance smooth scrolling matrix link router
   document.querySelectorAll('.nav-links a, .mob-menu a').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       e.preventDefault();
@@ -217,9 +236,6 @@ requestAnimationFrame(runScrollLoop);
   });
 };
 
-/**
- * MODULE 2: GRAPHICAL TELEMETRY & BOOT SEQUENCE HANDLERS
- */
 const initPreloaderSequence = () => {
   let loadProgress = 0;
   
@@ -284,21 +300,15 @@ const initScrollTriggers = () => {
   });
 };
 
-/**
- * MODULE 3: INTERACTIVE USER INTERFACE MECHANISMS
- */
 const initUserInterfaceControllers = () => {
   const applyTheme = (theme) => {
-    // 1. Set global theme
     DOM.html.setAttribute("data-theme", theme);
     PLATFORM_STATE.currentTheme = theme;
 
-    // 2. Sync toggle safely (single source of truth = HTML attribute)
     if (DOM.themeToggle) {
       DOM.themeToggle.checked = theme === "light";
     }
 
-    // 3. Sync icon
     if (DOM.themeIcon) {
       DOM.themeIcon.className =
         theme === "light"
@@ -306,20 +316,16 @@ const initUserInterfaceControllers = () => {
           : "fa-solid fa-moon";
     }
 
-    // 4. Prevent visual glitches after theme switch
     requestAnimationFrame(() => {
       if (window.ScrollTrigger) ScrollTrigger.refresh();
     });
 
-    // 5. Persist theme
     localStorage.setItem("theme", theme);
   };
 
-  // Load saved theme ONCE (prevents mismatch bug)
   const savedTheme = localStorage.getItem("theme") || "light";
   applyTheme(savedTheme);
 
-  // Toggle handler
   if (DOM.themeToggle) {
     DOM.themeToggle.addEventListener("change", () => {
       const newTheme =
@@ -332,7 +338,6 @@ const initUserInterfaceControllers = () => {
   }
 };
 
-  // Mobile Overlay Toggle Module
   if (DOM.menuBtn && DOM.mobileMenu) {
     DOM.menuBtn.addEventListener('click', () => {
       PLATFORM_STATE.isMenuOpen = !PLATFORM_STATE.isMenuOpen;
@@ -347,7 +352,6 @@ const initUserInterfaceControllers = () => {
     });
   }
 
-  // High-Fidelity Custom Pointer Mechanics
   if (DOM.curDot && DOM.curRing && window.matchMedia('(pointer: fine)').matches) {
     window.addEventListener('mousemove', (e) => {
       gsap.to(DOM.curDot, { x: e.clientX, y: e.clientY, duration: 0.05 });
@@ -360,7 +364,6 @@ const initUserInterfaceControllers = () => {
     });
   }
 
-  // Magnetic Click Ripples 
   document.querySelectorAll('.ripple-wrap').forEach(btn => {
     btn.addEventListener('click', function(e) {
       const ripple = document.createElement('span');
@@ -374,10 +377,6 @@ const initUserInterfaceControllers = () => {
     });
   });
 
-
-/**
- * MODULE 4: PIPELINE CALCULATIONS & CAROUSEL DRIVERS
- */
 const initDataCalculatorsAndSliders = () => {
   document.querySelectorAll('.bnode').forEach(node => {
     node.addEventListener('click', function() {
@@ -405,7 +404,6 @@ const initDataCalculatorsAndSliders = () => {
   });
 };
 
-// Diagnostic Metric Matrix Updates
 window.answerQ = (btn, selectionValue) => {
   const itemNode = btn.closest('.q-item');
   if (!itemNode) return;
@@ -424,7 +422,6 @@ const recomputeEligibilityIndex = () => {
 
   const w = PLATFORM_STATE.eligibilityWeights;
 
-  // Immediate disqualifiers
   if (w['1'] === false) {
     DOM.eligScore.innerText = `0%`;
     DOM.eligFeedback.innerText = 'Not Eligible: Below minimum weight requirement.';
@@ -450,7 +447,6 @@ const recomputeEligibilityIndex = () => {
     return;
   }
 
-  // Start from 100 and apply soft penalties
   let score = 100;
   const notes = [];
   if (w['2'] === true) { score -= 60; notes.push('Tattoo/piercing within 6 months'); }
@@ -468,7 +464,6 @@ const recomputeEligibilityIndex = () => {
   gsap.from(DOM.eligScore, { scale: 0.7, duration: 0.3, ease: 'back.out' });
 };
 
-// Continuous Live Data Telemetry Generator Loop
 const runLiveTelemetryFeedStream = () => {
   if (!DOM.activityFeed) return;
   
@@ -494,7 +489,6 @@ const runLiveTelemetryFeedStream = () => {
   }, 3500);
 };
 
-// Procedural Dynamic Amplitude Canvas Path Wave Loops
 let pulsePhaseShift = 0;
 const animatePulseWaveNetwork = () => {
   if (!DOM.pulsePath) return;
@@ -515,7 +509,6 @@ const animatePulseWaveNetwork = () => {
   requestAnimationFrame(animatePulseWaveNetwork);
 };
 
-// Testimonial Layer Slide Matrix Rotator logic
 let activeSlideIndex = 0;
 let _testimonialTimer = null;
 let _sliderLock = false;
@@ -533,7 +526,7 @@ const initTestimonialCarousel = () => {
   if (!track) return;
 
   const slides = Array.from(track.children);
-  if (slides.length < 2) return; // nothing to do
+  if (slides.length < 2) return; 
 
   _realSlideCount = slides.length;
   activeSlideIndex = 0;
@@ -544,9 +537,9 @@ const initTestimonialCarousel = () => {
   requestAnimationFrame(() => {
     const slideWidth = getTestimonialSlideWidth(track);
     if (!slideWidth) {
-      track.style.visibility = 'visible';
-      track.style.opacity = '1';
-      return;
+        track.style.visibility = 'visible';
+        track.style.opacity = '1';
+        return;
     }
 
     gsap.set(track, { x: -slideWidth * activeSlideIndex });
@@ -593,14 +586,10 @@ window.shiftSlider = (movementDirection) => {
   });
 };
 
-// initialize carousel when DOM ready
 document.addEventListener('DOMContentLoaded', () => {
   initTestimonialCarousel();
 });
 
-/**
- * LIFE-CYCLE INITIALIZATION EXECUTION OVERLAY MANIFEST
- */
 window.addEventListener('DOMContentLoaded', () => {
   initLenisScrollEngine();
   initPreloaderSequence();
@@ -614,6 +603,7 @@ document.documentElement.setAttribute(
   "data-theme",
   localStorage.getItem("theme") || "light"
 );
+
 document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("footer-contact-form");
   const statusMsg = document.getElementById("form-status");
@@ -644,6 +634,9 @@ document.addEventListener("DOMContentLoaded", function() {
           statusText.textContent = "Data payload delivered successfully! We'll sync up shortly.";
           statusMsg.classList.add("show", "success");
           form.reset(); 
+          if (typeof window.addNotification === 'function') {
+              window.addNotification("Message delivered successfully. A representative will reach out to you within 24 hours.");
+          }
         } else {
           const result = await response.json();
           if (result.errors) {
@@ -664,72 +657,54 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 });
+
 document.addEventListener('DOMContentLoaded', () => {
     const authModal = document.getElementById('auth-modal');
     const donorModal = document.getElementById('donor-modal');
     const requestModal = document.getElementById('request-modal');
 
-    // Safe master closer utility
     const closeAllActiveModals = () => {
         if (authModal) authModal.style.display = 'none';
         if (donorModal) donorModal.style.display = 'none';
         if (requestModal) requestModal.style.display = 'none';
     };
 
-    // 1. Existing Authentication Popup Logic
     window.toggleAuth = () => {
         const targetState = (authModal.style.display === 'flex') ? 'none' : 'flex';
         closeAllActiveModals();
         authModal.style.display = targetState;
     };
 
-    // 2. New Donor Registration Popup Logic
     window.toggleDonorModal = () => {
         const targetState = (donorModal.style.display === 'flex') ? 'none' : 'flex';
         closeAllActiveModals();
         donorModal.style.display = targetState;
     };
 
-    // 3. New Blood Request Popup Logic
     window.toggleRequestModal = () => {
         const targetState = (requestModal.style.display === 'flex') ? 'none' : 'flex';
         closeAllActiveModals();
         requestModal.style.display = targetState;
     };
     
-    // Click Outside to Close Strategy
-    window.addEventListener('click', (e) => {
-        if (e.target === authModal) toggleAuth();
-        if (e.target === donorModal) toggleDonorModal();
-        if (e.target === requestModal) toggleRequestModal();
-    });
-
-    // MOUSE WHEEL SCROLL ENGINE: Forwards wheel events across the card down to the form viewport
     document.querySelectorAll('.auth-car').forEach(card => {
         card.addEventListener('wheel', (e) => {
             const scrollableTarget = card.querySelector('.auth-view');
             if (scrollableTarget) {
-                // Read horizontal and vertical wheel dynamics smoothly
                 scrollableTarget.scrollTop += e.deltaY;
-                // Prevents the background parent landing screen from scrolling simultaneously
                 e.preventDefault(); 
             }
         }, { passive: false });
     });
 });
 
-// FIX 2 & 3: We have cleanly removed the block labeled "// Verification flow handling unauthorized application submissions" 
-// Because it was attaching click listeners that halted HTML5 validation entirely via event.preventDefault().
-
 /// =========================================================================
 // FINAL PRODUCTION-READY LOGIN STATE & FORM VALIDATION PIPELINE
 // =========================================================================
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Persist Login State securely across page refreshes
     let isLoggedIn = localStorage.getItem('abo_logged_in') === 'true';
-    let pendingFormModal = null; // Remembers which form the guest was filling out
+    let pendingFormModal = null; 
 
-    // DOM Element Matrix Caching
     const authModal = document.getElementById('auth-modal');
     const donorModal = document.getElementById('donor-modal');
     const requestModal = document.getElementById('request-modal');
@@ -743,8 +718,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const signoutDropdown = document.getElementById('custom-signout-dropdown');
     const signoutItem = document.getElementById('signout-item');
 
-    const originalHeaderLogBtnHTML = headerLogBtn ? headerLogBtn.innerHTML : 'Login';
-
     const closeAllActiveModals = () => {
         if (authModal) authModal.style.display = 'none';
         if (donorModal) donorModal.style.display = 'none';
@@ -753,7 +726,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const transformToUserCircle = (btnElement) => {
         if (!btnElement) return;
-        btnElement.innerHTML = '<i class="fa-solid fa-user"></i>';
+        const loginText = document.getElementById('login-text');
+        const userIcon = document.getElementById('header-user-icon');
+        const picContainer = document.getElementById('header-pic-container');
+
+        if (loginText) loginText.style.display = 'none';
+
+        if (window.currentSessionProfilePic) {
+            if (picContainer) picContainer.style.display = 'block';
+            if (userIcon) userIcon.style.display = 'none';
+        } else {
+            if (picContainer) picContainer.style.display = 'none';
+            if (userIcon) userIcon.style.display = 'block';
+        }
+
         btnElement.style.backgroundColor = 'red';
         btnElement.style.color = 'white';
         btnElement.style.borderRadius = '50%';
@@ -765,11 +751,22 @@ document.addEventListener("DOMContentLoaded", () => {
         btnElement.style.border = 'none';
         btnElement.style.padding = '0';
         btnElement.style.cursor = 'pointer';
+
+        if (typeof window.addNotification === 'function') {
+            window.addNotification("Welcome back! You have successfully logged into your account.");
+        }
     };
 
     const revertUserCircle = (btnElement) => {
         if (!btnElement) return;
-        btnElement.innerHTML = originalHeaderLogBtnHTML;
+        const loginText = document.getElementById('login-text');
+        const userIcon = document.getElementById('header-user-icon');
+        const picContainer = document.getElementById('header-pic-container');
+
+        if (loginText) loginText.style.display = 'block';
+        if (userIcon) userIcon.style.display = 'none';
+        if (picContainer) picContainer.style.display = 'none';
+
         btnElement.style.backgroundColor = '';
         btnElement.style.color = '';
         btnElement.style.borderRadius = '';
@@ -783,25 +780,41 @@ document.addEventListener("DOMContentLoaded", () => {
         btnElement.style.cursor = '';
     };
 
-    // Initialize UI on page load based on persistent state
+    // Keep logged in status based on previous sessions
     if (isLoggedIn && headerLogBtn) {
-        transformToUserCircle(headerLogBtn);
+        const loginText = document.getElementById('login-text');
+        const userIcon = document.getElementById('header-user-icon');
+        const picContainer = document.getElementById('header-pic-container');
+
+        if (loginText) loginText.style.display = 'none';
+        if (picContainer) picContainer.style.display = 'none';
+        if (userIcon) userIcon.style.display = 'block';
+
+        headerLogBtn.style.backgroundColor = 'red';
+        headerLogBtn.style.color = 'white';
+        headerLogBtn.style.borderRadius = '50%';
+        headerLogBtn.style.width = '42px';
+        headerLogBtn.style.height = '42px';
+        headerLogBtn.style.display = 'flex';
+        headerLogBtn.style.alignItems = 'center';
+        headerLogBtn.style.justifyContent = 'center';
+        headerLogBtn.style.border = 'none';
+        headerLogBtn.style.padding = '0';
+        headerLogBtn.style.cursor = 'pointer';
     }
 
-    // Global Router Handler for Auth button click
     window.toggleAuth = () => {
         if (isLoggedIn) {
-            // Dropdown Menu Controller Toggle Mechanism
             if (signoutDropdown) {
                 if (signoutDropdown.style.display === 'block') {
                     signoutDropdown.style.display = 'none';
                 } else {
-const rect = headerLogBtn.getBoundingClientRect();
-signoutDropdown.style.position = 'fixed';
-signoutDropdown.style.top = `${rect.bottom + 20}px`;
-signoutDropdown.style.left = 'auto'; // Reset left alignment
-signoutDropdown.style.right = `${window.innerWidth - rect.right}px`; // Anchor securely to the right
-signoutDropdown.style.display = 'block';
+                    const rect = headerLogBtn.getBoundingClientRect();
+                    signoutDropdown.style.position = 'fixed';
+                    signoutDropdown.style.top = `${rect.bottom + 20}px`;
+                    signoutDropdown.style.left = 'auto'; 
+                    signoutDropdown.style.right = `${window.innerWidth - rect.right}px`; 
+                    signoutDropdown.style.display = 'block';
                 }
             }
             return;
@@ -830,7 +843,7 @@ signoutDropdown.style.display = 'block';
         }
     };
     
-    // Outside Modal and drop menu click dismiss actions
+    // Outside click management including Notification box
     window.addEventListener('click', (e) => {
         if (e.target === authModal) toggleAuth();
         if (e.target === donorModal) toggleDonorModal();
@@ -838,6 +851,12 @@ signoutDropdown.style.display = 'block';
         
         if (signoutDropdown && headerLogBtn && !headerLogBtn.contains(e.target) && !signoutDropdown.contains(e.target)) {
             signoutDropdown.style.display = 'none';
+        }
+
+        const notifDropdown = document.getElementById('notif-dropdown');
+        const notifBtn = document.getElementById('notif-btn');
+        if (notifDropdown && notifBtn && !notifBtn.contains(e.target) && !notifDropdown.contains(e.target)) {
+            notifDropdown.style.display = 'none';
         }
     });
 
@@ -869,12 +888,11 @@ signoutDropdown.style.display = 'block';
         }, 3500);
     };
 
-    // Handle Sign Out Pipeline
     if (signoutItem) {
         signoutItem.addEventListener('click', (e) => {
             e.stopPropagation();
             isLoggedIn = false;
-            localStorage.setItem('abo_logged_in', 'false'); // Clear persistent state
+            localStorage.setItem('abo_logged_in', 'false'); 
             
             if (signoutDropdown) signoutDropdown.style.display = 'none';
             revertUserCircle(headerLogBtn);
@@ -886,7 +904,6 @@ signoutDropdown.style.display = 'block';
         });
     }
 
-    // Handle Login Pipeline
     if (loginSubmitBtn) {
         loginSubmitBtn.addEventListener('click', (event) => {
             event.preventDefault();
@@ -896,17 +913,14 @@ signoutDropdown.style.display = 'block';
 
             if (usernameValue === 'admin@gmail.com' && passwordValue === 'Admin@123') {
                 isLoggedIn = true;
-                localStorage.setItem('abo_logged_in', 'true'); // Save persistent state
+                localStorage.setItem('abo_logged_in', 'true'); 
                 transformToUserCircle(headerLogBtn);
 
-                // 3. Guest Submission Recovery 
                 if (pendingFormModal) {
-                    // They logged in while trying to submit a form. Return them to it.
                     if (authModal) authModal.style.display = 'none';
                     pendingFormModal.style.display = 'flex';
-                    pendingFormModal = null; // Clear queue
+                    pendingFormModal = null; 
                 } else {
-                    // Standard login behavior
                     if (authModal) authModal.style.display = 'none';
                     styleCustomAlert("Login successful", true);
                 }
@@ -916,24 +930,57 @@ signoutDropdown.style.display = 'block';
         });
     }
 
-    // 2. Form Validation Fixes
-    // Listen to 'submit' instead of 'click' so HTML5 validators can run first
+    // --- SECURE FORMSPREE SUBMISSION ENGINE ---
     const donorForm = document.getElementById("donor-registration-form");
     const requestForm = document.getElementById("blood-request-form");
 
-    const handleSecureFormSubmit = (event, modalElement) => {
-        event.preventDefault(); // Prevents actual HTTP reload since forms are client-side
+    const handleSecureFormSubmit = async (event, modalElement) => {
+        event.preventDefault(); 
 
         if (!isLoggedIn) {
-            // Not logged in: queue the form, open auth modal automatically
             pendingFormModal = modalElement;
             closeAllActiveModals();
             if (authModal) authModal.style.display = 'flex';
-        } else {
-            // Logged in: submit successfully
-            closeAllActiveModals();
-            styleCustomAlert("Submitted Successfully!", true);
-            event.target.reset(); // Clear form data
+            return; 
+        }
+
+        const form = event.target;
+        const submitBtn = form.querySelector('.submit-form-btn');
+        const originalBtnText = submitBtn.innerText;
+
+        submitBtn.innerText = "Encrypting & Sending...";
+        submitBtn.style.pointerEvents = "none";
+        submitBtn.style.opacity = "0.7";
+
+        try {
+            const response = await fetch(form.action, {
+                method: form.method,
+                body: new FormData(form),
+                headers: {
+                    'Accept': 'application/json' 
+                }
+            });
+
+            if (response.ok) {
+                closeAllActiveModals();
+                styleCustomAlert("Data Transmitted Successfully!", true);
+                
+                if (form.id === "donor-registration-form") {
+                    if (typeof window.addNotification === 'function') window.addNotification("Thank you for registering. Our team will contact you within 24 hours regarding your donor status.");
+                } else if (form.id === "blood-request-form") {
+                    if (typeof window.addNotification === 'function') window.addNotification("Emergency request logged. We are routing matches and will reach out to you within 24 hours.");
+                }
+                
+                form.reset(); 
+            } else {
+                styleCustomAlert("Network rejected the payload. Please check your inputs.", false);
+            }
+        } catch (error) {
+            styleCustomAlert("Connection interrupted. Please try again.", false);
+        } finally {
+            submitBtn.innerText = originalBtnText;
+            submitBtn.style.pointerEvents = "auto";
+            submitBtn.style.opacity = "1";
         }
     };
 
@@ -944,7 +991,6 @@ signoutDropdown.style.display = 'block';
         requestForm.addEventListener("submit", (e) => handleSecureFormSubmit(e, requestModal));
     }
 
-    // Maintain mouse wheel scrolling isolation logic
     document.querySelectorAll('.auth-car').forEach(card => {
         card.addEventListener('wheel', (e) => {
             const scrollableTarget = card.querySelector('.auth-view');
@@ -955,79 +1001,7 @@ signoutDropdown.style.display = 'block';
         }, { passive: false });
     });
 });
-// Add these logic blocks to your existing script:
 
-// 1. Handle Profile Details Popup
-// Example JS logic to handle the swap
-const uploadInput = document.getElementById('pic-upload-input');
-const profileIcon = document.getElementById('profile-icon');
-const profileImg = document.getElementById('profile-img-preview');
-const changeBtn = document.getElementById('change-pic-btn');
-
-// Trigger file input
-changeBtn.addEventListener('click', () => uploadInput.click());
-
-// Handle file selection
-uploadInput.addEventListener('change', function() {
-    const file = this.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            // Set the image source
-            profileImg.src = e.target.result;
-            // Hide the default icon
-            profileIcon.style.display = 'none';
-            // Show the image element
-            profileImg.style.display = 'block';
-        }
-        reader.readAsDataURL(file);
-    }
-});
-document.addEventListener('DOMContentLoaded', () => {
-    const loginButton = document.getElementById('log');
-    const loginText = document.getElementById('login-text');
-    const headerPicContainer = document.getElementById('header-pic-container');
-    const headerProfileImg = document.getElementById('header-profile-img');
-
-    // Function to update header based on Login State
-    const updateHeaderUI = () => {
-        const isLoggedIn = localStorage.getItem('abo_logged_in') === 'true';
-        const savedImg = localStorage.getItem('profile_pic');
-
-        if (isLoggedIn) {
-            // Show Profile Picture if exists
-            if (savedImg) {
-                loginText.style.display = 'none';
-                headerPicContainer.style.display = 'block';
-                headerProfileImg.src = savedImg;
-            } else {
-                // If logged in but no image, maybe just change text to "Profile"
-                loginText.textContent = "Profile";
-                headerPicContainer.style.display = 'none';
-            }
-        } else {
-            // Reset to default
-            loginText.textContent = "Log In";
-            loginText.style.display = 'block';
-            headerPicContainer.style.display = 'none';
-        }
-    };
-
-    // Run on load
-    updateHeaderUI();
-
-    // Listen for storage changes (in case user uploads pic in dropdown)
-    window.addEventListener('storage', updateHeaderUI);
-
-    // If your file upload triggers in the dropdown, refresh the header
-    const picUpload = document.getElementById('pic-upload-input');
-    if (picUpload) {
-        picUpload.addEventListener('change', () => {
-            // Give it a brief moment to save to localstorage
-            setTimeout(updateHeaderUI, 100);
-        });
-    }
-});
 // --- Dashboard Interactions & Image Live-Sync Engine ---
 document.addEventListener('DOMContentLoaded', () => {
     const profileOption = document.getElementById('profile-option');
@@ -1038,29 +1012,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (profileOption) {
         profileOption.addEventListener('click', () => {
             const dropdown = document.getElementById('custom-signout-dropdown');
-            if (dropdown) dropdown.style.display = 'none'; // Hide dropdown
+            if (dropdown) dropdown.style.display = 'none'; 
             
             const profileModal = document.getElementById('profile-modal');
-            if (profileModal) profileModal.style.display = 'flex'; // Show modal
+            if (profileModal) profileModal.style.display = 'flex'; 
             
-            // Auto-load current image into the personal information popup
-            const savedImg = localStorage.getItem('profile_pic');
+            // Auto-load current image into the personal information popup directly from session window state
             const popupImg = document.getElementById('popup-profile-img');
             const popupIcon = document.getElementById('popup-profile-icon');
-            if (savedImg && popupImg && popupIcon) {
-                popupImg.src = savedImg;
+            if (window.currentSessionProfilePic && popupImg && popupIcon) {
+                popupImg.src = window.currentSessionProfilePic;
                 popupImg.style.display = 'block';
                 popupIcon.style.display = 'none';
             }
         });
     }
 
-    // 2. Link the "Change Picture" button directly to the hidden file input field
     if (changePicBtn && picUploadInput) {
         changePicBtn.addEventListener('click', () => picUploadInput.click());
     }
 
-    // 3. Live-sync image uploads across both dashboards and memory slots instantly
+    // 3. Live-sync image uploads across both dashboards and memory slots instantly for THIS SESSION
     if (picUploadInput) {
         picUploadInput.addEventListener('change', function() {
             const file = this.files[0];
@@ -1068,7 +1040,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const imageData = e.target.result;
-                    localStorage.setItem('profile_pic', imageData);
+                    // Assign to the temporary volatile memory
+                    window.currentSessionProfilePic = imageData;
                     
                     // Live-sync inside dropdown frame
                     const dropImg = document.getElementById('profile-img-preview');
@@ -1082,11 +1055,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Live-sync navbar user icon button
                     const headerImg = document.getElementById('header-profile-img');
                     const headerContainer = document.getElementById('header-pic-container');
-                    const loginText = document.getElementById('login-text');
-                    if (headerImg && headerContainer && loginText) {
-                        loginText.style.display = 'none';
+                    const userIcon = document.getElementById('header-user-icon');
+                    if (headerImg && headerContainer) {
+                        if (userIcon) userIcon.style.display = 'none';
                         headerContainer.style.display = 'block';
                         headerImg.src = imageData;
+                    }
+                    
+                    // Update the popup modal instantly if it is open
+                    const popupImg = document.getElementById('popup-profile-img');
+                    const popupIcon = document.getElementById('popup-profile-icon');
+                    if (popupImg && popupIcon) {
+                        popupImg.src = imageData;
+                        popupImg.style.display = 'block';
+                        popupIcon.style.display = 'none';
                     }
                 };
                 reader.readAsDataURL(file);
@@ -1094,22 +1076,126 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-/**
- * Locks the main page scroll when hovering over a specific element
- * such as your auth-card or profile-modal.
- */
+
 function lockScrollOnHover(element) {
     element.addEventListener('wheel', (e) => {
-        // Prevent the browser from triggering the main page scroll
         e.stopPropagation(); 
-        
-        // This is necessary because some browsers handle 'passive' 
-        // events differently
     }, { passive: false });
 }
 
-// Apply it to your modal container
 const modalCard = document.querySelector('.auth-card');
 if (modalCard) {
     lockScrollOnHover(modalCard);
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const formsToValidate = [
+    document.getElementById("donor-registration-form"),
+    document.getElementById("emergency-request-form")
+  ];
+  
+  const customAlert = document.getElementById("custom-alert");
+  let alertTimeout = null;
+
+  formsToValidate.forEach((form) => {
+    if (!form || !customAlert) return;
+
+    form.addEventListener("invalid", (e) => {
+      e.preventDefault();
+      
+      const failedField = e.target;
+      let alertMessage = "Please fill out all required fields.";
+
+      if (failedField.placeholder) {
+        alertMessage = `Please enter a valid ${failedField.placeholder.toLowerCase()}.`;
+      } else if (failedField.tagName === "SELECT") {
+        if (failedField.closest('.input-row-3')) {
+          alertMessage = "Please select a complete and valid date profile.";
+        } else {
+          alertMessage = "Please make a selection for all required options.";
+        }
+      } else if (failedField.type === "tel") {
+        alertMessage = "Please provide a valid contact phone number.";
+      }
+
+      customAlert.textContent = alertMessage;
+      customAlert.classList.add("show");
+
+      if (alertTimeout) clearTimeout(alertTimeout);
+      
+      alertTimeout = setTimeout(() => {
+        customAlert.classList.remove("show");
+      }, 3500);
+    }, true);
+  });
+});/**
+ * ABO± PERSISTENCE ENGINE (MERGED)
+ * Handles uploading, refreshing, and syncing profile pictures across all UI elements.
+ */
+
+// 1. RUN ON PAGE LOAD (Handles Refreshing)
+document.addEventListener("DOMContentLoaded", () => {
+    const savedPic = localStorage.getItem('user_profile_pic');
+    if (savedPic) {
+        syncAllProfileImages(savedPic);
+    }
+});
+
+// 2. MASTER SYNC FUNCTION (Updates all locations at once)
+function syncAllProfileImages(imageData) {
+    // Define all target locations where the profile image must appear
+    const targets = [
+        { img: 'header-profile-img', cont: 'header-pic-container', icon: 'header-user-icon' },
+        { img: 'profile-img-preview', cont: 'profile-pic-frame', icon: 'profile-icon' },
+        { img: 'popup-profile-img', cont: 'profile-popup-img-container', icon: 'popup-profile-icon' }
+    ];
+
+    targets.forEach(t => {
+        const img = document.getElementById(t.img);
+        const cont = document.getElementById(t.cont);
+        const icon = document.getElementById(t.icon);
+        
+        // Only update if the element actually exists on the current page
+        if (img) {
+            img.src = imageData;
+            img.style.display = 'block'; 
+        }
+        if (cont) {
+            cont.style.display = 'block'; 
+        }
+        if (icon) {
+            icon.style.display = 'none'; // Hide the user icon/placeholder
+        }
+    });
+}
+
+// 3. UPLOAD HANDLER (Triggers, Saves, and Syncs)
+document.addEventListener('DOMContentLoaded', () => {
+    const picUploadInput = document.getElementById('pic-upload-input');
+    const changePicBtn = document.getElementById('change-pic-btn');
+    
+    // Trigger the hidden file input when user clicks "Change Picture"
+    if (changePicBtn && picUploadInput) {
+        changePicBtn.addEventListener('click', () => picUploadInput.click());
+    }
+    
+    // Handle the actual image selection
+    if (picUploadInput) {
+        picUploadInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const imageData = e.target.result;
+                    
+                    // Save to localStorage (this makes it persist on refresh)
+                    localStorage.setItem('user_profile_pic', imageData);
+                    
+                    // Update all UI sections immediately
+                    syncAllProfileImages(imageData);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+});

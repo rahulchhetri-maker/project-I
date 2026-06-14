@@ -70,7 +70,7 @@ html,body {
   background: var(--bg2);
   color: var(--tp);
   font-family: var(--fd);
-  font-size: 20px;
+  font-size: 12px;
   font-weight: 700;
   padding: 14px 28px;
   border-radius: 50px;
@@ -1043,50 +1043,132 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
 #header-pic-container img:hover { transform: scale(1.1); transition: transform 0.3s ease; }
 
 /* --- Clean Personal Info Dashboard Styles --- */
+/* --- Redesigned & Enlarged Profile Card Base --- */
 .profile-modal-card {
-  max-width: 440px !important; background: var(--bg1, #ffffff); border-radius: 24px; padding: 32px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1); border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 550px !important; /* Increased from 400px to make the entire modal layout bigger */
+  background: var(--bg2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 36px !important; /* Slightly larger radius to match the new scale */
+  padding: 40px !important; /* Added more internal breathing room */
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--sg) !important; /* Uses your theme's deep premium shadow drop */
 }
-.profile-view { display: flex; flex-direction: column; align-items: center; text-align: center; }
 
-/* Fixed Typo & Cleaned duplicate */
+/* --- Layout Header Spacing --- */
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 30px; /* Increased space between the profile image and name text */
+  margin-bottom: 40px; /* More separation down to the information grid */
+  width: 100%;
+}
+
+/* --- Profile Photo: Perfect Circle & 1.5x Bigger --- */
 .profile-popup-img-container {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  border: 3px solid var(--c);
-  background: var(--bg2);
+  width: 120px !important;  /* 80px multiplied by 1.5 = 120px */
+  height: 120px !important; /* 80px multiplied by 1.5 = 120px */
+  border-radius: 50% !important; /* Strict circular clip-path shape */
+  border: 3px solid var(--c) !important; /* Slightly thicker border line for the scale */
+  background: rgba(255, 255, 255, 0.02);
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden; /* This crops the image to the circle */
+  overflow: hidden; /* Guarantees the injected image cuts into a perfect circle */
   flex-shrink: 0;
-  margin-bottom: 30px;
+  margin-bottom: 0; /* Keeps it perfectly aligned with the text next to it */
+  padding: 0;
+  box-shadow: 0 8px 24px rgba(200, 16, 46, 0.2); /* Soft radiant glow under the picture */
 }
 
+/* Forces the uploaded picture to occupy the circle beautifully without stretching */
 .profile-popup-img-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;      /* This is the key: forces the image to fill the circle */
-  object-position: center;
-  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  display: block !important;
+  border-radius: 50% !important;
 }
 
-.profile-info-row { margin-bottom: 24px; width: 100%; text-align: left; }
-.profile-info-label { font-size: 0.70rem; color: var(--tm); font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; display: block; }
+/* Default icon backup sizing scaled up to fit the new container nicely */
+.profile-popup-img-container .fa-user {
+  font-size: 3.5rem !important;
+  color: var(--tm);
+}
 
-/* Close Button (Left Aligned as requested) */
-.close-btn {
-  position: absolute; top: 1px; left: 10px; right: auto; z-index: 10;
-  background: rgba(0, 0, 0, 0.1); border-radius: 50%; cursor: pointer;  
-  margin-bottom: 20px;
+/* --- Identity Information Details --- */
+.profile-identity {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px; /* Spacing between the user's name and their ID badge */
+}
+
+.profile-name { 
+  font-size: 1.8rem !important; /* Made the name larger to fit the modal scale */
+  font-weight: 800;
+  margin: 0; 
+  color: var(--tp); 
+}
+
+.profile-id-tag { 
+  background: var(--cs) !important;
+  color: var(--cb) !important;
+  border: 1px solid rgba(200, 16, 46, 0.3);
+  padding: 6px 14px; 
+  border-radius: 8px; 
+  font-size: 0.75rem; 
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+/* --- Information Data Grid Panels --- */
+.profile-info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px; /* Added extra padding gaps between data block frames */
+  width: 100%;
+}
+
+.info-cell {
+  background: rgba(255, 255, 255, 0.03) !important;
+  padding: 18px 22px !important; /* Increased structural padding inside information blocks */
+  border-radius: 20px !important;
+  border: 1px solid var(--gborder);
+  transition: border-color 0.3s ease;
+}
+
+.info-cell:hover {
+  border-color: rgba(200, 16, 46, 0.2);
+}
+
+.info-cell.full-width { 
+  grid-column: span 2; 
+}
+
+.profile-info-label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 900;
+  color: var(--tm);
+  text-transform: uppercase;
+  margin-bottom: 8px; /* Extra separation down to the dynamic values */
+  letter-spacing: 0.06em;
 }
 
 .profile-info-value {
-  padding: 4px 0 8px 0; border-bottom: 2px solid var(--gborder); color: var(--tp);
-  font-size: 1.1rem; font-weight: 600; transition: border-color 0.3s ease;
+  font-size: 1.05rem !important; /* Increased font scale for visibility */
+  font-weight: 600;
+  color: var(--tp);
+  line-height: 1.5;
 }
-.profile-info-row:hover .profile-info-value { border-bottom-color: var(--c); }
+
+.accent-text {
+  color: var(--cb) !important;
+  font-size: 1.4rem !important; /* Makes the Blood Group type clearly distinct */
+  font-weight: 900;
+}
 .login-hint-box {
   background: rgba(200, 16, 46, 0.05); /* Very subtle red background */
   border: 1px solid var(--c);        /* Your primary red brand color */
@@ -1116,3 +1198,33 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
   color: var(--tm);                  /* Text color */
   font-family: monospace;
 }
+/* ═══════════════════════════════════════
+   NOTIFICATION SYSTEM
+═══════════════════════════════════════ */
+.notif-wrapper { position: relative; display: flex; align-items: center; }
+.notif-btn { 
+  width: 40px; height: 40px; border-radius: 50%; background: var(--glass); 
+  border: 1px solid var(--gborder); color: var(--tp); display: flex; 
+  align-items: center; justify-content: center; position: relative; transition: 0.3s; 
+}
+.notif-btn:hover { background: var(--gborder); transform: scale(1.05); }
+.notif-dot { 
+  position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; 
+  background: var(--cb); border-radius: 50%; display: none; box-shadow: 0 0 8px var(--cb); 
+}
+.notif-dropdown { 
+  position: absolute; top: 60px; right: -60px; width: 320px; background: var(--bg2); 
+  border: 1px solid var(--gborder); border-radius: var(--r2); box-shadow: var(--sc); 
+  z-index: 10000; overflow: hidden; display: none; flex-direction: column; 
+}
+.notif-head { padding: 16px; font-family: var(--fd); font-weight: 700; border-bottom: 1px solid var(--gborder); color: var(--tp); }
+.notif-body { max-height: 300px; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+.notif-item { 
+  padding: 12px; background: rgba(255,255,255,0.03); border-radius: 8px; font-size: 0.85rem; 
+  color: var(--ts); line-height: 1.5; border-left: 3px solid var(--cb); animation: fadeIn 0.3s ease; 
+}
+.no-notif { padding: 20px; text-align: center; color: var(--tm); font-size: 0.85rem; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+[data-theme="light"] .notif-dropdown { background: #ffffff; }
+[data-theme="light"] .notif-item { background: rgba(200, 16, 46, 0.04); }
