@@ -1112,3 +1112,35 @@ document.addEventListener("DOMContentLoaded", () => {
     }, true);
   });
 });
+// =========================================================================
+// LANGUAGE TRANSLATION ENGINE CONTROLLER
+// =========================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    const langBtn = document.querySelector('.lang-translate-btn');
+    
+    if (langBtn) {
+        langBtn.addEventListener('click', function() {
+            const langText = this.querySelector('.translate-text');
+            // Find the hidden Google Translate select element
+            const googleSelect = document.querySelector('.goog-te-combo');
+            
+            if (!googleSelect) {
+                console.warn("Translation engine not fully loaded yet.");
+                return;
+            }
+
+            if (langText.innerText === 'EN') {
+                // Switch UI to NE and trigger translation to Nepali
+                langText.innerText = 'NE';
+                googleSelect.value = 'ne';
+            } else {
+                // Switch UI to EN and trigger translation to English
+                langText.innerText = 'EN';
+                googleSelect.value = 'en';
+            }
+
+            // Dispatch a change event so Google Translate catches the update
+            googleSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+    }
+});

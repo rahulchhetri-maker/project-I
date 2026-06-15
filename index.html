@@ -27,6 +27,14 @@
 <link rel="stylesheet" href="styles.css">
 
 </head>
+<button class="lang-translate-btn" aria-label="Change Language">
+  <svg class="translate-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="2" y1="12" x2="22" y2="12"></line>
+    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+  </svg>
+  <span class="translate-text">EN</span>
+</button>
 <div id="auth-modal" class="modal-overlay">
   <div class="auth-card">
     <button class="auth-close" onclick="toggleAuth()">×</button>
@@ -1244,6 +1252,18 @@
     </div>
   </div>
 </div>
+<div id="google_translate_element" style="display:none;"></div>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en', 
+      includedLanguages: 'en,ne', // Only allow English and Nepali
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+</script>
+<script type="text/javascript" src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 <script src="script.js"></script>
 </body>
 </html>

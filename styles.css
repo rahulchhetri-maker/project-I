@@ -1188,7 +1188,7 @@ body { cursor: auto; }
 
 .nav-inner {
 
-  max-width: 1100px; margin: 24px auto; padding: 12px 32px;
+  max-width: 1100px; margin: 24px auto; padding: 12px 24px;
 
   display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
 
@@ -2817,3 +2817,104 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
 [data-theme="light"] .notif-dropdown { background: #ffffff; }
 
 [data-theme="light"] .notif-item { background: rgba(200, 16, 46, 0.04); }
+
+.lang-translate-btn {
+  /* Positioning & Layering */
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+
+  /* Flexbox Alignment */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+
+  /* Premium Glassmorphism from tokens */
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--gborder);
+  border-radius: var(--r3); /* Using your 24px pill radius */
+  box-shadow: var(--sc);
+
+  /* Typography */
+  color: var(--tp);
+  font-family: var(--fb);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+
+  /* Smooth Transitions */
+  transition: 
+    transform var(--spring), 
+    box-shadow var(--ease), 
+    border-color var(--ease), 
+    background-color var(--ease);
+}
+
+/* Icon styling using brand colors */
+.lang-translate-btn .translate-icon {
+  width: 18px;
+  height: 18px;
+  color: var(--c); /* Primary Red */
+  transition: color var(--ease), transform var(--spring);
+}
+
+.lang-translate-btn .translate-text {
+  color: var(--tp);
+  transition: color var(--ease);
+}
+
+/* ═══════════════════════════════════════
+   HOVER & INTERACTIVE STATES
+   ═══════════════════════════════════════ */
+
+@media (hover: hover) {
+  .lang-translate-btn:hover {
+    transform: translateY(-4px) scale(1.02);
+    border-color: rgba(200, 16, 46, 0.4); /* Subtle tint of your brand red */
+    box-shadow: var(--sg); /* Unleash your premium glow shadow */
+    background: var(--glass);
+  }
+
+  /* Playful twist on the globe icon and color change on hover */
+  .lang-translate-btn:hover .translate-icon {
+    color: var(--cb); /* Bright Red Accent */
+    transform: rotate(15deg);
+  }
+}
+
+/* Micro-interaction when clicked */
+.lang-translate-btn:active {
+  transform: translateY(-1px) scale(0.98);
+}
+/* ═══════════════════════════════════════
+   GOOGLE TRANSLATE OVERRIDES
+   ═══════════════════════════════════════ */
+/* Hide the Google Translate dropdown element */
+#google_translate_element { 
+  display: none !important; 
+}
+
+/* Hide the top banner frame that Google injects */
+.goog-te-banner-frame.skiptranslate { 
+  display: none !important; 
+}
+
+/* Prevent Google from pushing the body down */
+body { 
+  top: 0px !important; 
+  position: relative !important;
+}
+
+/* Hide Google's popup tooltip box when hovering over translated text */
+.VIpgJd-ZVi9od-ORHb-OEVmcd,
+.goog-text-highlight {
+  display: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
