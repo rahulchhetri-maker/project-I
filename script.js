@@ -935,10 +935,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     transformToUserCircle(headerLogBtn);
                 }
                 if (authModal) authModal.style.display = 'none';
-                alert("Login successful!");
-            } else {
-                alert("Invalid username or password. Please try again.");
-            }
+               
+            } 
+            
         });
     }
 
@@ -1213,171 +1212,363 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
-// ============================================================
-// FIX: REGISTRATION SUBMISSION LAYER & RUNTIME STATE HYDRATION
-// ============================================================
+/// =========================================================================
+/// NEW PERSISTENT AUTHENTICATION, REGISTRATION & PROFILE SYSTEM (LOCAL STORAGE)
+/// =========================================================================
+document.addEventListener("DOMContentLoaded", () => {
+    // UI Elements
+    const authModal = document.getElementById('auth-modal');
+    const setupModal = document.getElementById('profile-setup-modal');
+    const profileModal = document.getElementById('profile-modal');
+    const signoutDropdown = document.getElementById('custom-signout-dropdown');
 
-// A. RE-LOAD RENDER ENGINE (Hydrates personal info fields automatically after refresh)
-const hydrateProfileDashboard = () => {
-    try {
-        const savedUserRaw = localStorage.getItem('abo_user_data');
-        if (!savedUserRaw) return; // Exit if no user is registered yet
+    const loginSubmitBtn = document.querySelector('.submit-btnn'); 
+    const regSubmitBtn = document.getElementById('reg-submit-btn'); 
+    const setupSubmitBtn = document.getElementById('setup-submit-btn'); 
+    const signoutItem = document.getElementById('signout-item');
+    const headerLogBtn = document.getElementById('log');
+    const customAlert = document.getElementById("custom-alert");
 
-        const savedUser = JSON.parse(savedUserRaw);
-        
-        // Target dashboard UI layout element classes from index.html
-        const nameEl = document.querySelector('.profile-name');
-        const allInfoValues = document.querySelectorAll('.profile-info-value');
-        
-        // Populate name field
-        if (nameEl && savedUser.name) {
-            nameEl.innerText = savedUser.name;
+    const picUploadInput = document.getElementById('pic-upload-input');
+    const changePicBtn = document.getElementById('change-pic-btn');
+
+    // --- HELPER: Custom Alert System ---
+    const showAlert = (text, isSuccess) => {
+        if (!customAlert) return alert(text);
+        customAlert.textContent = text;
+        customAlert.style.background = isSuccess ? "rgba(46, 164, 79, 0.95)" : "rgba(224, 36, 36, 0.95)";
+        customAlert.classList.add("show");
+        setTimeout(() => customAlert.classList.remove("show"), 3500);
+    };
+
+    // --- HELPER: Update UI for Logged In User ---
+    const setLoggedInUI = (userData) => {
+        const loginText = document.getElementById('login-text');
+        const userIcon = document.getElementById('header-user-icon');
+        const picContainer = document.getElementById('header-pic-container');
+        const headerImg = document.getElementById('header-profile-img');
+
+        if (loginText) loginText.style.display = 'none';
+        headerLogBtn.style.cssText = "background-color: red; color: white; border-radius: 50%; width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; border: none; padding: 0; cursor: pointer;";
+
+        if (userData.profilePic) {
+            if (picContainer) picContainer.style.display = 'block';
+            if (userIcon) userIcon.style.display = 'none';
+            if (headerImg) headerImg.src = userData.profilePic;
+        } else {
+            if (picContainer) picContainer.style.display = 'none';
+            if (userIcon) userIcon.style.display = 'block';
         }
-        
-        // Hydrate grid info cells sequentially based on their index positions
-        if (allInfoValues && allInfoValues.length >= 4) {
-            // Index 0: Blood Group field
-            if (savedUser.bloodGroup) {
-                allInfoValues[0].innerText = savedUser.bloodGroup;
-            }
-            
-            // Index 1: Age / Gender combo field
-            if (savedUser.age || savedUser.gender) {
-                allInfoValues[1].innerText = `${savedUser.age || 'N/A'} / ${savedUser.gender || 'N/A'}`;
-            }
-            
-            // Index 2: Contact Methods (combines Phone & Staging Email values)
-            const userPhone = savedUser.phone || "Not Provided";
-            const userEmail = savedUser.email || "N/A";
-            allInfoValues[2].innerHTML = `${userPhone} <br> ${userEmail}`;
-            
-            // Index 3: Geographic Location mapping field
-            if (savedUser.location) {
-                allInfoValues[3].innerText = savedUser.location;
-            }
-        }
-    } catch (err) {
-        console.error("Critical Profile Hydration Exception Handler:", err);
+    };
+
+    const setLoggedOutUI = () => {
+        const loginText = document.getElementById('login-text');
+        const userIcon = document.getElementById('header-user-icon');
+        const picContainer = document.getElementById('header-pic-container');
+
+        if (loginText) loginText.style.display = 'block';
+        if (userIcon) userIcon.style.display = 'none';
+        if (picContainer) picContainer.style.display = 'none';
+        headerLogBtn.style.cssText = ""; // Reset to default
+    };
+
+    // --- 1. INITIAL LOAD (PERSISTENCE) ---
+    const activeSession = localStorage.getItem('abo_active_session');
+    const allUsers = JSON.parse(localStorage.getItem('abo_users') || '{}');
+
+    // Generate Demo Account automatically if it doesn't exist
+    if (!allUsers['admin@gmail.com']) {
+        allUsers['admin@gmail.com'] = {
+            email: 'admin@gmail.com', pass: 'Admin@123', name: 'Admin User', age: '19',
+            gender: 'Other', bloodGroup: 'O-', location: 'Kathmandu, Nepal', phone: '+977 9800000000', profilePic: null
+        };
+        localStorage.setItem('abo_users', JSON.stringify(allUsers));
     }
-};
 
-// Execute profile data mapping instantly on load script initialization
-document.addEventListener("DOMContentLoaded", hydrateProfileDashboard);
+    if (activeSession && allUsers[activeSession]) {
+        setLoggedInUI(allUsers[activeSession]);
+    } else {
+        setLoggedOutUI();
+    }
 
+    // --- 2. REGISTRATION (STEP 1 - EMAIL/PASS VERIFICATION) ---
+    if (regSubmitBtn) {
+        regSubmitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('reg-email').value.trim();
+            const pass = document.getElementById('reg-password').value;
+            const confirmPass = document.getElementById('reg-confirm').value;
 
-// B. REGISTRATION PROCESS SUBMIT BUTTON HANDLER
-if (typeof setupSubmitBtn !== 'undefined' || document.getElementById('setup-submit-btn')) {
-    const activeSetupBtn = document.getElementById('setup-submit-btn');
-    
-    if (activeSetupBtn) {
-        activeSetupBtn.addEventListener('click', function(e) {
-            e.preventDefault(); 
-            console.log("Complete registration button clicked! Compiling profile details...");
+            // Strict Email Validation Regex
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) return showAlert("Please enter a valid email address.", false);
+            if (pass !== confirmPass || pass.length < 6) return showAlert("Passwords must match and be at least 6 characters.", false);
+            if (allUsers[email]) return showAlert("An account with this email already exists.", false);
 
-            // Extract input fields cleanly
-            const nameEl = document.getElementById('setup-name');
-            const ageEl = document.getElementById('setup-age');
-            const genderEl = document.getElementById('setup-gender');
-            const bloodGroupEl = document.getElementById('setup-blood-group');
-            const locationEl = document.getElementById('setup-location');
-            const phoneEl = document.getElementById('setup-phone');
-            const picInput = document.getElementById('setup-pic');
+            // Save temporarily to pass to the next modal
+            localStorage.setItem('abo_temp_reg_data', JSON.stringify({ email, pass }));
+            if (authModal) authModal.style.display = 'none';
+            if (setupModal) setupModal.style.display = 'flex';
+        });
+    }
 
-            const name = nameEl ? nameEl.value.trim() : '';
-            const age = ageEl ? ageEl.value.trim() : '';
-            const gender = genderEl ? genderEl.value : '';
-            const bloodGroup = bloodGroupEl ? bloodGroupEl.value : '';
-            const location = locationEl ? locationEl.value.trim() : '';
-            const phone = phoneEl ? phoneEl.value.trim() : '';
+    // --- 3. PROFILE SETUP (STEP 2 - DETAILS & PICTURE) ---
+    if (setupSubmitBtn) {
+        setupSubmitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('setup-name').value.trim();
+            const age = document.getElementById('setup-age').value.trim();
+            const gender = document.getElementById('setup-gender').value;
+            const bloodGroup = document.getElementById('setup-blood-group').value;
+            const location = document.getElementById('setup-location').value.trim();
+            const phone = document.getElementById('setup-phone').value.trim(); // Optional
+            const picInput = document.getElementById('setup-pic'); // Optional
 
-            // Strict validation check
+            // Enforce required fields
             if (!name || !age || !gender || !bloodGroup || !location) {
-                if (typeof styleCustomAlert === 'function') {
-                    return styleCustomAlert("Please fill out all required fields (including Blood Group).", false);
-                } else {
-                    return alert("Please fill out all required fields (including Blood Group).");
-                }
+                return showAlert("Please fill out all required fields.", false);
             }
 
-            // Data consolidation and saving mechanism
-            const saveUser = (picBase64) => {
-                let initialCredentials = {};
-                
-                if (typeof tempRegData !== 'undefined' && tempRegData && tempRegData.email) {
-                    initialCredentials = { ...tempRegData };
-                } else {
-                    try {
-                        const storedTemp = localStorage.getItem('abo_temp_reg_data');
-                        if (storedTemp) initialCredentials = JSON.parse(storedTemp);
-                    } catch (err) {
-                        console.error("Error reading staging metadata:", err);
-                    }
-                }
+            const tempRegData = JSON.parse(localStorage.getItem('abo_temp_reg_data') || '{}');
+            if (!tempRegData.email) return showAlert("Session expired. Please start registration again.", false);
 
-                // Build unified user account data packet
-                const finalUserData = {
-                    ...initialCredentials,
-                    name: name,
-                    age: age,
-                    gender: gender,
-                    bloodGroup: bloodGroup, 
-                    location: location,
-                    phone: phone || "Not Provided",
-                    profilePic: picBase64 || null
-                };
+            const saveFinalUser = (base64Pic) => {
+                const newUser = { ...tempRegData, name, age, gender, bloodGroup, location, phone, profilePic: base64Pic };
                 
-                // Commit directly to local storage
-                localStorage.setItem('abo_user_data', JSON.stringify(finalUserData));
-                localStorage.removeItem('abo_temp_reg_data'); // Clear staging cache
-                
-                // FORCE IMMEDIATE CLOSURE BEFORE REFRESH RE-RENDER
-                const modalOverlay = document.getElementById('profile-setup-modal');
-                const authOverlay = document.getElementById('auth-modal');
-                if (modalOverlay) modalOverlay.style.setProperty('display', 'none', 'important');
-                if (authOverlay) authOverlay.style.setProperty('display', 'none', 'important');
-                
-                // Toggle local runtime states
-                window.isLoggedIn = true;
-                window.currentSessionProfilePic = picBase64 || null;
-                
-                // Transform nav header state if execution exists
-                const headerLogBtn = document.getElementById('header-log-btn') || document.querySelector('.log-in-btn');
-                if (typeof transformToUserCircle === 'function' && headerLogBtn) {
-                    transformToUserCircle(headerLogBtn);
-                }
-                
-                // Dispatch Alert Notification
-                if (typeof styleCustomAlert === 'function') {
-                    styleCustomAlert("Registration complete! Welcome to ABO±.", true);
-                } else {
-                    alert("Registration complete! Welcome to ABO±.");
-                }
+                // Save to main user database and set active session
+                allUsers[newUser.email] = newUser;
+                localStorage.setItem('abo_users', JSON.stringify(allUsers));
+                localStorage.setItem('abo_active_session', newUser.email);
+                localStorage.removeItem('abo_temp_reg_data');
 
-                // Force dynamic layout synchronization refresh cleanly
-                console.log("Forcing layout synchronization refresh...");
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
+                showAlert("Registration Successful!", true);
+                if (setupModal) setupModal.style.display = 'none';
+
+                // Auto reload to apply all UI changes natively
+                setTimeout(() => window.location.reload(), 1500);
             };
 
-            // Base64 profile picture reader execution layer
-            if (picInput && picInput.files && picInput.files[0]) {
+            // Process image into base64 for local storage, or save null if skipped
+// Process image, auto-crop into a clean 1:1 aspect ratio square, and save
+            if (picInput.files && picInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = (event) => saveUser(event.target.result);
-                reader.onerror = () => saveUser(null);
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        // Create an in-memory canvas
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Set standard clear target dimension for local storage efficiency
+                        const size = 300; 
+                        canvas.width = size;
+                        canvas.height = size;
+                        
+                        // Calculate center crop metrics (1:1 aspect calculation)
+                        let sourceX = 0;
+                        let sourceY = 0;
+                        let sourceWidth = img.width;
+                        let sourceHeight = img.height;
+                        
+                        if (img.width > img.height) {
+                            sourceWidth = img.height;
+                            sourceX = (img.width - img.height) / 2;
+                        } else if (img.height > img.width) {
+                            sourceHeight = img.width;
+                            sourceY = (img.height - img.width) / 2;
+                        }
+                        
+                        // Draw cropped square matrix
+                        ctx.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, size, size);
+                        
+                        // Convert to lightweight base64 string
+                        const base64CroppedPic = canvas.toDataURL('image/jpeg', 0.85);
+                        saveFinalUser(base64CroppedPic);
+                    };
+                    img.src = e.target.result;
+                };
                 reader.readAsDataURL(picInput.files[0]);
             } else {
-                saveUser(null);
+                saveFinalUser(null);
             }
         });
     }
-}
-// 5. Force Mouse Wheel Scrolling on Profile Modal
+
+    // --- 4. LOGIN ---
+    if (loginSubmitBtn && loginSubmitBtn.closest('#login-view')) {
+        loginSubmitBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const email = document.querySelector('#login-view input[type="text"]').value.trim();
+            const pass = document.querySelector('#login-view input[type="password"]').value;
+
+            if (allUsers[email] && allUsers[email].pass === pass) {
+                localStorage.setItem('abo_active_session', email);
+                setLoggedInUI(allUsers[email]);
+                if (authModal) authModal.style.display = 'none';
+                showAlert("Login successful!", true);
+            } else {
+                showAlert("Invalid email or password. Please try again.", false);
+            }
+        });
+    }
+
+    // --- 5. LOGOUT ---
+    if (signoutItem) {
+        signoutItem.addEventListener('click', (e) => {
+            e.stopPropagation();
+            localStorage.removeItem('abo_active_session');
+            setLoggedOutUI();
+            if (signoutDropdown) signoutDropdown.style.display = 'none';
+            document.querySelector('#login-view input[type="text"]').value = '';
+            document.querySelector('#login-view input[type="password"]').value = '';
+            showAlert("Signed out successfully", true);
+        });
+    }
+
+    // --- 6. SMART HEADER CLICK CONTROLLER ---
+    // Overwrites the old toggle function to determine if it should open the Login Modal OR the User Dropdown
+    window.toggleAuth = () => {
+        const currentSession = localStorage.getItem('abo_active_session');
+        if (currentSession) {
+            // User is logged in -> Control the dropdown
+            if (signoutDropdown) {
+                const isHidden = signoutDropdown.style.display === 'none' || signoutDropdown.style.display === '';
+                if (isHidden) {
+                    const rect = headerLogBtn.getBoundingClientRect();
+                    signoutDropdown.style.position = 'fixed';
+                    signoutDropdown.style.top = `${rect.bottom + 15}px`;
+                    signoutDropdown.style.right = `${window.innerWidth - rect.right}px`;
+                    signoutDropdown.style.left = 'auto';
+                    signoutDropdown.style.display = 'block';
+
+                    // Sync Dropdown Profile Picture specific to this account
+                    const user = allUsers[currentSession];
+                    const dropImg = document.getElementById('profile-img-preview');
+                    const dropIcon = document.getElementById('profile-icon');
+                    if (user.profilePic && dropImg && dropIcon) {
+                        dropImg.src = user.profilePic;
+                        dropImg.style.display = 'block';
+                        dropIcon.style.display = 'none';
+                    } else if (dropImg && dropIcon) {
+                        dropImg.style.display = 'none';
+                        dropIcon.style.display = 'block';
+                    }
+                } else {
+                    signoutDropdown.style.display = 'none';
+                }
+            }
+        } else {
+            // User is logged out -> Open login modal
+            if (authModal) authModal.style.display = (authModal.style.display === 'flex') ? 'none' : 'flex';
+        }
+    };
+
+    // Close dropdown if clicking outside of it
+    window.addEventListener('click', (e) => {
+        if (signoutDropdown && headerLogBtn && !headerLogBtn.contains(e.target) && !signoutDropdown.contains(e.target)) {
+            signoutDropdown.style.display = 'none';
+        }
+    });
+
+    // --- 7. PERSONAL INFORMATION MODAL HYDRATION ---
+    const profileOption = document.getElementById('profile-option');
+    if (profileOption) {
+        profileOption.addEventListener('click', () => {
+            if (signoutDropdown) signoutDropdown.style.display = 'none';
+            const currentSession = localStorage.getItem('abo_active_session');
+            if (!currentSession) return;
+
+            const user = allUsers[currentSession];
+            if (profileModal) {
+                // Map Data strictly from local storage to the modal UI
+                document.querySelector('.profile-name').innerText = user.name;
+                const infoCells = document.querySelectorAll('.profile-info-value');
+                if (infoCells.length >= 4) {
+                    infoCells[0].innerText = user.bloodGroup;
+                    infoCells[1].innerText = `${user.age} / ${user.gender}`;
+                    infoCells[2].innerHTML = `${user.phone || 'Not Provided'} <br> ${user.email}`;
+                    infoCells[3].innerText = user.location;
+                }
+
+                // Sync 3rd Picture Section
+                const popupImg = document.getElementById('popup-profile-img');
+                const popupIcon = document.getElementById('popup-profile-icon');
+                if (user.profilePic && popupImg && popupIcon) {
+                    popupImg.src = user.profilePic;
+                    popupImg.style.display = 'block';
+                    popupIcon.style.display = 'none';
+                } else if (popupImg && popupIcon) {
+                    popupImg.style.display = 'none';
+                    popupIcon.style.display = 'block';
+                }
+
+                profileModal.style.display = 'flex';
+            }
+        });
+    }
+
+    // --- 8. CHANGE PROFILE PICTURE BUTTON (PERSISTS INSTANTLY) ---
+    if (changePicBtn && picUploadInput) {
+        changePicBtn.onclick = () => picUploadInput.click();
+        picUploadInput.onchange = function() {
+            const file = this.files[0];
+            const currentSession = localStorage.getItem('abo_active_session');
+            if (file && currentSession) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const newPic = e.target.result;
+                    // Update user database and save
+                    allUsers[currentSession].profilePic = newPic;
+                    localStorage.setItem('abo_users', JSON.stringify(allUsers));
+                    
+                    // Live update header & dropdown UI
+                    setLoggedInUI(allUsers[currentSession]); 
+                    const dropImg = document.getElementById('profile-img-preview');
+                    const dropIcon = document.getElementById('profile-icon');
+                    if (dropImg && dropIcon) {
+                        dropImg.src = newPic;
+                        dropImg.style.display = 'block';
+                        dropIcon.style.display = 'none';
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        };
+    }
+});
+// --- MOUSE WHEEL SCROLL OVERRIDE FOR THE FORM FIELDS ---
+// Ensure precise wheel event distribution inside your modal structure
+const setupScrollFields = document.querySelector('.setup-scrollable-form-fields');
 if (setupScrollFields) {
     setupScrollFields.addEventListener('wheel', function(event) {
-        if (this.scrollHeight > this.clientHeight) {
+        const isScrollable = this.scrollHeight > this.clientHeight;
+        if (isScrollable) {
             this.scrollTop += event.deltaY;
-            event.preventDefault(); // Lock background canvas actions
+            // Interrupt wheel action bubbling to safeguard the master body container
+            event.preventDefault();
         }
     }, { passive: false });
 }
+
+    // --- INSTANT CROP & LIVE PREVIEW CONTROLLER ---
+    const setupPicInput = document.getElementById('setup-pic');
+    const setupPreviewImg = document.getElementById('setup-avatar-preview-img');
+    const setupFallbackIcon = document.getElementById('setup-avatar-fallback');
+
+    if (setupPicInput) {
+        setupPicInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    if (setupPreviewImg && setupFallbackIcon) {
+                        // Display instant visual preview inside the circular 1:1 frame
+                        setupPreviewImg.src = e.target.result;
+                        setupPreviewImg.style.display = 'block';
+                        setupFallbackIcon.style.display = 'none';
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
