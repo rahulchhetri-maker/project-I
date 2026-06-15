@@ -2941,3 +2941,318 @@ body {
   font-weight: 600;
   display: inline-block;
 }
+/* ============================================================
+   ANTI-OVERLAP & ISOLATED RESPONSIVE SETUP DESIGN ENGINE
+   ============================================================ */
+
+/* Outer screen overlay positioning alignment */
+.setup-modal-overlay {
+  display: flex !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 99999 !important; /* Force layout above all other elements */
+  background: rgba(4, 4, 8, 0.82) !important;
+  backdrop-filter: blur(15px) !important;
+  -webkit-backdrop-filter: blur(15px) !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
+}
+
+/* Modal containment card layout framework configuration */
+.setup-modal-card {
+  width: 100% !important;
+  max-width: 450px !important;
+  max-height: 85vh !important; /* Locks modal size within screen boundary */
+  background: var(--bg2, #0A0A14) !important;
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.08)) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  position: relative !important;
+  transform: none !important; /* Destroys unexpected template movement loops */
+}
+
+/* Internal padding panel box layout properties */
+.setup-modal-body {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+  padding: 30px 24px 24px 24px !important;
+  box-sizing: border-box !important;
+}
+
+/* Title text styling parameters */
+.setup-main-title {
+  font-family: var(--fd, sans-serif) !important;
+  font-size: 26px !important;
+  font-weight: 800 !important;
+  margin: 0 0 6px 0 !important;
+  text-align: center !important;
+  color: var(--text, #ffffff) !important;
+  position: relative !important;
+}
+.setup-main-subtitle {
+  font-family: var(--fb, sans-serif) !important;
+  font-size: 14px !important;
+  color: var(--text-subtle, rgba(255, 255, 255, 0.6)) !important;
+  margin: 0 0 24px 0 !important;
+  text-align: center !important;
+}
+
+/* Scroll mechanism fix container space allocation layout */
+.setup-scrollable-form-fields {
+  flex: 1 !important;
+  overflow-y: auto !important; /* Activates internal scroll functionality */
+  padding-right: 6px !important;
+  margin-bottom: 20px !important;
+  display: block !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Premium Scrollbar Visual Interface overrides */
+.setup-scrollable-form-fields::-webkit-scrollbar {
+  width: 5px !important;
+}
+.setup-scrollable-form-fields::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+.setup-scrollable-form-fields::-webkit-scrollbar-thumb {
+  background: var(--cs, rgba(200, 16, 46, 0.2)) !important;
+  border-radius: 10px !important;
+}
+.setup-scrollable-form-fields::-webkit-scrollbar-thumb:hover {
+  background: var(--cb, #FF1F3D) !important;
+}
+
+/* Field Group block architecture definitions (The ultimate overlap destroyer) */
+.setup-field-wrap {
+  margin-bottom: 18px !important;
+  display: block !important;
+  position: relative !important;
+  height: auto !important; /* Strips structural constraints causing line overlap */
+  width: 100% !important;
+  text-align: left !important;
+}
+
+/* Row-splitting structures configuration setup definitions */
+.setup-row-split {
+  display: flex !important;
+  gap: 14px !important;
+  width: 100% !important;
+  position: relative !important;
+}
+.setup-half-width {
+  flex: 1 !important;
+  width: 50% !important;
+}
+
+/* Label text placement structural resets */
+.setup-field-label {
+  display: block !important;
+  position: relative !important; /* Stops old absolute float rules from hiding elements */
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  font-family: var(--fb, sans-serif) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  color: var(--text, #ffffff) !important;
+  margin-bottom: 8px !important;
+  letter-spacing: 0.2px !important;
+}
+
+/* Base input element architectural specifications configuration styles */
+.setup-custom-input,
+.setup-custom-select {
+  display: block !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 46px !important; /* Forces consistent baseline alignment shapes */
+  padding: 0 14px !important;
+  font-family: var(--fb, sans-serif) !important;
+  font-size: 14px !important;
+  color: var(--text, #ffffff) !important;
+  background: var(--input-bg, rgba(255, 255, 255, 0.03)) !important;
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.15)) !important;
+  border-radius: 10px !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.2s var(--ease), box-shadow 0.2s var(--ease) !important;
+}
+.setup-custom-select {
+  padding-right: 24px !important;
+}
+
+/* Focus and active highlight layer states settings overrides */
+.setup-custom-input:focus,
+.setup-custom-select:focus {
+  outline: none !important;
+  border-color: var(--cb, #FF1F3D) !important;
+  box-shadow: 0 0 0 3px var(--cs, rgba(200, 16, 46, 0.15)) !important;
+}
+
+/* File selector box wrapper component styles specs */
+.setup-file-upload-box {
+  position: relative !important;
+  width: 100% !important;
+  height: 46px !important;
+}
+.setup-file-upload-box input[type="file"] {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  opacity: 0 !important;
+  z-index: 5 !important;
+  cursor: pointer !important;
+}
+.setup-file-text-btn {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: var(--input-bg, rgba(255, 255, 255, 0.03)) !important;
+  border: 1px dashed var(--border, rgba(255, 255, 255, 0.2)) !important;
+  border-radius: 10px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  font-family: var(--fb, sans-serif) !important;
+  font-size: 14px !important;
+  color: var(--text-subtle, rgba(255, 255, 255, 0.7)) !important;
+  pointer-events: none !important;
+  transition: all 0.2s ease !important;
+}
+.setup-file-upload-box:hover .setup-file-text-btn {
+  border-color: var(--cb, #FF1F3D) !important;
+  background: rgba(200, 16, 46, 0.05) !important;
+  color: var(--text, #ffffff) !important;
+}
+
+/* Bottom Action Footer Button structural settings layout styles */
+.setup-action-footer {
+  padding-top: 15px !important;
+  border-top: 1px solid var(--border, rgba(255, 255, 255, 0.06)) !important;
+  display: block !important;
+  position: relative !important;
+}
+.setup-submit-action-btn {
+  display: block !important;
+  width: 100% !important;
+  height: 48px !important;
+  padding: 0 !important;
+  font-family: var(--fb, sans-serif) !important;
+  font-size: 15px !important;
+  font-weight: 700 !important;
+  color: #ffffff !important;
+  background: var(--c, #C8102E) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  cursor: pointer !important;
+  transition: background 0.2s ease, transform 0.1s ease !important;
+}
+.setup-submit-action-btn:hover {
+  background: var(--cb, #FF1F3D) !important;
+}
+.setup-submit-action-btn:active {
+  transform: scale(0.98) !important;
+}
+
+/* ═══════════════════════════════════════
+   LIGHT THEME DESIGN TRANSLATION DEFENSER
+   ═══════════════════════════════════════ */
+html[data-theme="light"] .setup-modal-card {
+  background: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.15) !important;
+}
+html[data-theme="light"] .setup-main-title { color: #05050A !important; }
+html[data-theme="light"] .setup-main-subtitle { color: #666673 !important; }
+html[data-theme="light"] .setup-field-label { color: #222226 !important; }
+html[data-theme="light"] .setup-custom-input,
+html[data-theme="light"] .setup-custom-select,
+html[data-theme="light"] .setup-file-text-btn {
+  background: #f6f6f9 !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  color: #05050A !important;
+}
+html[data-theme="light"] .setup-custom-select option {
+  background: #ffffff !important;
+  color: #05050A !important;
+}
+/* ============================================================
+   BULLETPROOF INTERNAL SCROLL ENGINE PATCH
+   ============================================================ */
+
+/* 1. Force the parent card to respect screen height boundaries */
+.setup-modal-card {
+  max-height: 90vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+/* 2. Force the form body to occupy all available card space without stretching it */
+.setup-modal-body {
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important; /* Keeps the footer and header pinned */
+}
+
+/* 3. The Ultimate Fix: Force a strict maximum height on the fields block */
+.setup-scrollable-form-fields {
+  max-height: 380px !important; /* Locks down the height so a scrollbar MUST appear */
+  overflow-y: auto !important;  /* Actively triggers the vertical scrollbar */
+  overflow-x: hidden !important; /* Eliminates accidental horizontal shifting */
+  padding-right: 8px !important;
+  margin-bottom: 15px !important;
+  display: block !important;
+}
+
+/* Ensure the scrollbar track remains highly visible for a great user experience */
+.setup-scrollable-form-fields::-webkit-scrollbar {
+  width: 6px !important;
+  display: block !important;
+}
+
+.setup-scrollable-form-fields::-webkit-scrollbar-thumb {
+  background: var(--cb, #FF1F3D) !important; /* Uses your primary red theme accent */
+  border-radius: 10px !important;
+}
+
+.setup-scrollable-form-fields::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-radius: 10px !important;
+}
+/* ============================================================
+   DROPDOWN DROPDOWN OPTION VISIBILITY CONTRAST FIX
+   ============================================================ */
+
+/* 1. Force explicit Dark Mode visibility colors for option list items */
+.setup-custom-select option {
+  background-color: #0A0A14 !important; /* Solid dark background matching your theme */
+  color: #ffffff !important;            /* Pure white text */
+}
+
+/* 2. Force explicit Light Mode visibility colors for option list items */
+html[data-theme="light"] .setup-custom-select option {
+  background-color: #ffffff !important; /* Pure white background */
+  color: #05050A !important;            /* Solid charcoal black text */
+}
+
+/* Prevent native browser styling from overriding text colors when hovered/selected */
+.setup-custom-select:focus option {
+  color: #ffffff !important;
+}
+html[data-theme="light"] .setup-custom-select:focus option {
+  color: #05050A !important;
+}

@@ -64,12 +64,16 @@
     </div>
     <div id="register-view" class="auth-view" style="display: none;">
       <h2 class="get">Register</h2>
-      <label class="username">Email or phone number </label>
-      <div class="input-group"><input type="text"></div><label class="password">Password </label>
-      <div class="input-group"><input type="password"></div>
-      <label class="conformpassword">Confirm Password</label>
-      <div class="input-group"><input type="password"></div>
-      <button class="submit-btnn">Sign up</button>
+<label class="username">Email</label>
+<div class="input-group"><input type="email" id="reg-email" required></div>
+
+<label class="password">Password</label>
+<div class="input-group"><input type="password" id="reg-password" required></div>
+
+<label class="conformpassword">Confirm Password</label>
+<div class="input-group"><input type="password" id="reg-confirm" required></div>
+
+<button class="submit-btnn" id="reg-submit-btn">Sign up</button>
       <p class="toggle-text">Have an account? <span onclick="switchView('login')">Login</span></p>
     </div>
   </div>
@@ -92,6 +96,21 @@
           </select>
         </div>
       </div>
+      
+      <div class="input-group">
+        <select id="setup-blood-group" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--cg); background: var(--bg2); color: #fff;">
+          <option value="" disabled selected>Select Blood Group (Required)</option>
+          <option value="A+">A+</option>
+          <option value="A-">A-</option>
+          <option value="B+">B+</option>
+          <option value="B-">B-</option>
+          <option value="O+">O+</option>
+          <option value="O-">O-</option>
+          <option value="AB+">AB+</option>
+          <option value="AB-">AB-</option>
+        </select>
+      </div>
+
       <div class="input-group"><input type="text" id="setup-location" placeholder="Location e.g. Kathmandu (Required)" required></div>
       <div class="input-group"><input type="tel" id="setup-phone" placeholder="Phone Number (Optional)"></div>
       <div class="input-group">

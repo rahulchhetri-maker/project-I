@@ -29,6 +29,29 @@ document.addEventListener("DOMContentLoaded", () => {
     const notifBtn = document.getElementById('notif-btn');
     const notifDropdown = document.getElementById('notif-dropdown');
     const notifDot = document.getElementById('notif-dot');
+    const setupPic = document.getElementById('setup-pic');
+    const fileBtnText = document.querySelector('.setup-file-text-btn');
+
+    if (setupPic && fileBtnText) {
+        setupPic.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                const fileName = this.files[0].name;
+                
+                // If the filename is too long, truncate it nicely so it doesn't break the layout
+                const cleanName = fileName.length > 22 
+                    ? fileName.substring(0, 19) + '...' 
+                    : fileName;
+                
+                // Change the button text and turn the icon into a green checkmark
+                fileBtnText.innerHTML = `<i class="fa-solid fa-circle-check" style="color: #00FF66;"></i> ${cleanName}`;
+                fileBtnText.style.borderColor = 'var(--cb, #FF1F3D)';
+            } else {
+                // Reset back to original state if they clear selection
+                fileBtnText.innerHTML = `<i class="fa-solid fa-camera"></i> Choose Photo`;
+                fileBtnText.style.borderColor = '';
+            }
+        });
+    }
     
     if (notifBtn && notifDropdown) {
         notifBtn.addEventListener('click', (e) => {
@@ -890,16 +913,31 @@ document.addEventListener("DOMContentLoaded", () => {
             
             const usernameValue = usernameInput ? usernameInput.value.trim() : '';
             const passwordValue = passwordInput ? passwordInput.value : '';
-            if (usernameValue === 'admin@gmail.com' && passwordValue === 'Admin@123') {
+            
+            // Read registration data from local storage
+            const savedUserStr = localStorage.getItem('abo_user_data');
+            const savedUser = savedUserStr ? JSON.parse(savedUserStr) : null;
+
+            // Check against both Demo Credentials and Registered Local Storage Account
+            const isDemoAccount = (usernameValue === 'admin@gmail.com' && passwordValue === 'Admin@123');
+            const isLocalAccount = (savedUser && usernameValue === savedUser.email && passwordValue === savedUser.pass);
+
+            if (isDemoAccount || isLocalAccount) {
                 isLoggedIn = true;
                 
-                // Trigger the Visual Change (Circle)
-                transformToUserCircle(headerLogBtn);
+                if (isLocalAccount && savedUser.profilePic) {
+                    window.currentSessionProfilePic = savedUser.profilePic;
+                } else {
+                    window.currentSessionProfilePic = null; // Reset for demo account
+                }
 
+                if (typeof transformToUserCircle === 'function') {
+                    transformToUserCircle(headerLogBtn);
+                }
                 if (authModal) authModal.style.display = 'none';
-                styleCustomAlert("Login successful", true);
+                alert("Login successful!");
             } else {
-                styleCustomAlert("Invalid username or password.", false);
+                alert("Invalid username or password. Please try again.");
             }
         });
     }
@@ -983,22 +1021,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const picUploadInput = document.getElementById('pic-upload-input');
 
     // 1. Open Personal Information Modal from Dashboard dropdown
+// 1. Open Personal Information Modal from Dashboard dropdown
     if (profileOption) {
         profileOption.addEventListener('click', () => {
             const dropdown = document.getElementById('custom-signout-dropdown');
             if (dropdown) dropdown.style.display = 'none'; 
             
+            // --- NEW: Populate Profile Modal dynamically ---
+            const savedUserStr = localStorage.getItem('abo_user_data');
+            const savedUser = savedUserStr ? JSON.parse(savedUserStr) : null;
+
+            const nameEl = document.querySelector('.profile-name');
+            const contactEl = document.querySelectorAll('.profile-info-value')[2]; // 3rd info cell
+            const locEl = document.querySelectorAll('.profile-info-value')[3];     // 4th info cell
+            const ageGenderEl = document.querySelectorAll('.profile-info-value')[1]; // 2nd info cell
+
+            if (savedUser && nameEl) {
+                // If it's a registered user
+                nameEl.innerText = savedUser.name;
+                ageGenderEl.innerText = `${savedUser.age} / ${savedUser.gender}`;
+                contactEl.innerHTML = `${savedUser.phone || 'No Phone'} <br> ${savedUser.email}`;
+                locEl.innerText = savedUser.location;
+            } else if (nameEl) {
+                // Fallback to demo account
+                nameEl.innerText = "Admin User";
+                ageGenderEl.innerText = "19 / Rather not to say";
+                contactEl.innerHTML = "+977 9800000000 <br> admin@gmail.com";
+                locEl.innerText = "example, Nepal";
+            }
+            // ------------------------------------------------
+
             const profileModal = document.getElementById('profile-modal');
             if (profileModal) profileModal.style.display = 'flex'; 
             
-            // Auto-load current image into the personal information popup directly from session window state
-            const popupImg = document.getElementById('popup-profile-img');
-            const popupIcon = document.getElementById('popup-profile-icon');
-            if (window.currentSessionProfilePic && popupImg && popupIcon) {
-                popupImg.src = window.currentSessionProfilePic;
-                popupImg.style.display = 'block';
-                popupIcon.style.display = 'none';
-            }
+            // Auto-load current image... (keep your existing code here)
         });
     }
 
@@ -1157,3 +1213,171 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+// ============================================================
+// FIX: REGISTRATION SUBMISSION LAYER & RUNTIME STATE HYDRATION
+// ============================================================
+
+// A. RE-LOAD RENDER ENGINE (Hydrates personal info fields automatically after refresh)
+const hydrateProfileDashboard = () => {
+    try {
+        const savedUserRaw = localStorage.getItem('abo_user_data');
+        if (!savedUserRaw) return; // Exit if no user is registered yet
+
+        const savedUser = JSON.parse(savedUserRaw);
+        
+        // Target dashboard UI layout element classes from index.html
+        const nameEl = document.querySelector('.profile-name');
+        const allInfoValues = document.querySelectorAll('.profile-info-value');
+        
+        // Populate name field
+        if (nameEl && savedUser.name) {
+            nameEl.innerText = savedUser.name;
+        }
+        
+        // Hydrate grid info cells sequentially based on their index positions
+        if (allInfoValues && allInfoValues.length >= 4) {
+            // Index 0: Blood Group field
+            if (savedUser.bloodGroup) {
+                allInfoValues[0].innerText = savedUser.bloodGroup;
+            }
+            
+            // Index 1: Age / Gender combo field
+            if (savedUser.age || savedUser.gender) {
+                allInfoValues[1].innerText = `${savedUser.age || 'N/A'} / ${savedUser.gender || 'N/A'}`;
+            }
+            
+            // Index 2: Contact Methods (combines Phone & Staging Email values)
+            const userPhone = savedUser.phone || "Not Provided";
+            const userEmail = savedUser.email || "N/A";
+            allInfoValues[2].innerHTML = `${userPhone} <br> ${userEmail}`;
+            
+            // Index 3: Geographic Location mapping field
+            if (savedUser.location) {
+                allInfoValues[3].innerText = savedUser.location;
+            }
+        }
+    } catch (err) {
+        console.error("Critical Profile Hydration Exception Handler:", err);
+    }
+};
+
+// Execute profile data mapping instantly on load script initialization
+document.addEventListener("DOMContentLoaded", hydrateProfileDashboard);
+
+
+// B. REGISTRATION PROCESS SUBMIT BUTTON HANDLER
+if (typeof setupSubmitBtn !== 'undefined' || document.getElementById('setup-submit-btn')) {
+    const activeSetupBtn = document.getElementById('setup-submit-btn');
+    
+    if (activeSetupBtn) {
+        activeSetupBtn.addEventListener('click', function(e) {
+            e.preventDefault(); 
+            console.log("Complete registration button clicked! Compiling profile details...");
+
+            // Extract input fields cleanly
+            const nameEl = document.getElementById('setup-name');
+            const ageEl = document.getElementById('setup-age');
+            const genderEl = document.getElementById('setup-gender');
+            const bloodGroupEl = document.getElementById('setup-blood-group');
+            const locationEl = document.getElementById('setup-location');
+            const phoneEl = document.getElementById('setup-phone');
+            const picInput = document.getElementById('setup-pic');
+
+            const name = nameEl ? nameEl.value.trim() : '';
+            const age = ageEl ? ageEl.value.trim() : '';
+            const gender = genderEl ? genderEl.value : '';
+            const bloodGroup = bloodGroupEl ? bloodGroupEl.value : '';
+            const location = locationEl ? locationEl.value.trim() : '';
+            const phone = phoneEl ? phoneEl.value.trim() : '';
+
+            // Strict validation check
+            if (!name || !age || !gender || !bloodGroup || !location) {
+                if (typeof styleCustomAlert === 'function') {
+                    return styleCustomAlert("Please fill out all required fields (including Blood Group).", false);
+                } else {
+                    return alert("Please fill out all required fields (including Blood Group).");
+                }
+            }
+
+            // Data consolidation and saving mechanism
+            const saveUser = (picBase64) => {
+                let initialCredentials = {};
+                
+                if (typeof tempRegData !== 'undefined' && tempRegData && tempRegData.email) {
+                    initialCredentials = { ...tempRegData };
+                } else {
+                    try {
+                        const storedTemp = localStorage.getItem('abo_temp_reg_data');
+                        if (storedTemp) initialCredentials = JSON.parse(storedTemp);
+                    } catch (err) {
+                        console.error("Error reading staging metadata:", err);
+                    }
+                }
+
+                // Build unified user account data packet
+                const finalUserData = {
+                    ...initialCredentials,
+                    name: name,
+                    age: age,
+                    gender: gender,
+                    bloodGroup: bloodGroup, 
+                    location: location,
+                    phone: phone || "Not Provided",
+                    profilePic: picBase64 || null
+                };
+                
+                // Commit directly to local storage
+                localStorage.setItem('abo_user_data', JSON.stringify(finalUserData));
+                localStorage.removeItem('abo_temp_reg_data'); // Clear staging cache
+                
+                // FORCE IMMEDIATE CLOSURE BEFORE REFRESH RE-RENDER
+                const modalOverlay = document.getElementById('profile-setup-modal');
+                const authOverlay = document.getElementById('auth-modal');
+                if (modalOverlay) modalOverlay.style.setProperty('display', 'none', 'important');
+                if (authOverlay) authOverlay.style.setProperty('display', 'none', 'important');
+                
+                // Toggle local runtime states
+                window.isLoggedIn = true;
+                window.currentSessionProfilePic = picBase64 || null;
+                
+                // Transform nav header state if execution exists
+                const headerLogBtn = document.getElementById('header-log-btn') || document.querySelector('.log-in-btn');
+                if (typeof transformToUserCircle === 'function' && headerLogBtn) {
+                    transformToUserCircle(headerLogBtn);
+                }
+                
+                // Dispatch Alert Notification
+                if (typeof styleCustomAlert === 'function') {
+                    styleCustomAlert("Registration complete! Welcome to ABO±.", true);
+                } else {
+                    alert("Registration complete! Welcome to ABO±.");
+                }
+
+                // Force dynamic layout synchronization refresh cleanly
+                console.log("Forcing layout synchronization refresh...");
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+            };
+
+            // Base64 profile picture reader execution layer
+            if (picInput && picInput.files && picInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (event) => saveUser(event.target.result);
+                reader.onerror = () => saveUser(null);
+                reader.readAsDataURL(picInput.files[0]);
+            } else {
+                saveUser(null);
+            }
+        });
+    }
+}
+// 5. Force Mouse Wheel Scrolling on Profile Modal
+if (setupScrollFields) {
+    setupScrollFields.addEventListener('wheel', function(event) {
+        if (this.scrollHeight > this.clientHeight) {
+            this.scrollTop += event.deltaY;
+            event.preventDefault(); // Lock background canvas actions
+        }
+    }, { passive: false });
+}
