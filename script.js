@@ -1113,33 +1113,46 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 // =========================================================================
-// LANGUAGE TRANSLATION ENGINE CONTROLLER
+// LANGUAGE TRANSLATION ENGINE CONTROLLER (CSS ATTRIBUTE IMMUNE LAYER)
 // =========================================================================
 document.addEventListener('DOMContentLoaded', () => {
     const langBtn = document.querySelector('.lang-translate-btn');
+    let pendingLanguage = null;
+
+    // Background observer: Automatically applies language selection once the widget settles
+    const checkTranslationEngine = setInterval(() => {
+        const googleSelect = document.querySelector('.goog-te-combo');
+        if (googleSelect && pendingLanguage) {
+            googleSelect.value = pendingLanguage;
+            googleSelect.dispatchEvent(new Event('change', { bubbles: true }));
+            pendingLanguage = null; 
+        }
+    }, 400);
     
     if (langBtn) {
         langBtn.addEventListener('click', function() {
-            const langText = this.querySelector('.translate-text');
-            // Find the hidden Google Translate select element
+            const langContainer = this.querySelector('.translate-text');
             const googleSelect = document.querySelector('.goog-te-combo');
             
+            // Read current value from data attribute instead of DOM inner text strings
+            const currentUI = langContainer.getAttribute('data-text');
+            let targetLang = '';
+            
+            if (currentUI === 'ने') {
+                langContainer.setAttribute('data-text', 'EN');
+                targetLang = 'ne';
+            } else {
+                langContainer.setAttribute('data-text', 'ने');
+                targetLang = 'en';
+            }
+
             if (!googleSelect) {
-                console.warn("Translation engine not fully loaded yet.");
+                console.warn("Translation engine is still loading. Queueing selection...");
+                pendingLanguage = targetLang;
                 return;
             }
 
-            if (langText.innerText === 'EN') {
-                // Switch UI to NE and trigger translation to Nepali
-                langText.innerText = 'NE';
-                googleSelect.value = 'ne';
-            } else {
-                // Switch UI to EN and trigger translation to English
-                langText.innerText = 'EN';
-                googleSelect.value = 'en';
-            }
-
-            // Dispatch a change event so Google Translate catches the update
+            googleSelect.value = targetLang;
             googleSelect.dispatchEvent(new Event('change', { bubbles: true }));
         });
     }

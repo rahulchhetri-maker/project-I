@@ -27,13 +27,13 @@
 <link rel="stylesheet" href="styles.css">
 
 </head>
-<button class="lang-translate-btn" aria-label="Change Language">
+<button class="lang-translate-btn notranslate" aria-label="Change Language">
   <svg class="translate-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <circle cx="12" cy="12" r="10"></circle>
     <line x1="2" y1="12" x2="22" y2="12"></line>
     <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
   </svg>
-  <span class="translate-text">EN</span>
+  <span class="translate-text" data-text="ने"></span>
 </button>
 <div id="auth-modal" class="modal-overlay">
   <div class="auth-card">
@@ -71,6 +71,35 @@
       <div class="input-group"><input type="password"></div>
       <button class="submit-btnn">Sign up</button>
       <p class="toggle-text">Have an account? <span onclick="switchView('login')">Login</span></p>
+    </div>
+  </div>
+</div>
+<div id="profile-setup-modal" class="modal-overlay" style="display: none;">
+  <div class="auth-card">
+    <div class="auth-view">
+      <h2 class="get">Complete Profile</h2>
+      <p class="form-subtitle" style="text-align:center;">Just a few more details to create your account.</p>
+      
+      <div class="input-group"><input type="text" id="setup-name" placeholder="Full Name (Required)" required></div>
+      <div class="input-row-2">
+        <div class="input-group"><input type="number" id="setup-age" placeholder="Age (Required)" required></div>
+        <div class="input-group">
+          <select id="setup-gender" required>
+            <option value="" disabled selected>Gender (Required)</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-group"><input type="text" id="setup-location" placeholder="Location e.g. Kathmandu (Required)" required></div>
+      <div class="input-group"><input type="tel" id="setup-phone" placeholder="Phone Number (Optional)"></div>
+      <div class="input-group">
+          <label style="position:static; margin-bottom: 5px; display:block;">Profile Picture (Optional)</label>
+          <input type="file" id="setup-pic" accept="image/*" style="padding: 5px;">
+      </div>
+
+      <button class="submit-btnn" id="setup-submit-btn">Complete Registration</button>
     </div>
   </div>
 </div>

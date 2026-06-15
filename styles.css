@@ -2896,28 +2896,48 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
   transform: translateY(-1px) scale(0.98);
 }
 /* ═══════════════════════════════════════
-   GOOGLE TRANSLATE OVERRIDES
+   GOOGLE TRANSLATE OVERRIDES & FIXES
    ═══════════════════════════════════════ */
-/* Hide the Google Translate dropdown element */
-#google_translate_element { 
+
+/* Hide all injected Google Translate widgets, banners, frames, and icons completely */
+#google_translate_element,
+.goog-te-banner-frame,
+.goog-te-banner,
+.goog-te-gadget,
+.goog-te-gadget-icon,
+.goog-logo-link,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.skiptranslate,
+iframe[id*=":1.container"],
+iframe[class*="goog-te-banner-frame"] { 
   display: none !important; 
+  visibility: hidden !important;
+  opacity: 0 !important;
+  height: 0 !important;
+  width: 0 !important;
 }
 
-/* Hide the top banner frame that Google injects */
-.goog-te-banner-frame.skiptranslate { 
-  display: none !important; 
+/* Force body positioning configuration to terminate forced structural offsets */
+body {
+  top: 0 !important;
+  position: static !important;
 }
 
-/* Prevent Google from pushing the body down */
-body { 
-  top: 0px !important; 
-  position: relative !important;
-}
-
-/* Hide Google's popup tooltip box when hovering over translated text */
-.VIpgJd-ZVi9od-ORHb-OEVmcd,
+/* Strip text highlighting styles applied during layout translations */
 .goog-text-highlight {
-  display: none !important;
+  background: transparent !important;
   box-shadow: none !important;
-  background-color: transparent !important;
+  box-sizing: border-box !important;
+}
+
+/* Keep the interactive selection utility element mounted high above the loading screen */
+.lang-translate-btn {
+  z-index: 100005 !important;
+}
+.translate-text::after {
+  content: attr(data-text);
+  font-family: var(--fb);
+  font-weight: 600;
+  display: inline-block;
 }
