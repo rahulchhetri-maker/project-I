@@ -2189,27 +2189,30 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
 
 
   /* --- Eligibility check --- */
-
-  .elig-wrap { margin-top: 24px; gap: 20px; }
-
-  .qs-list { max-height: none; overflow: visible; gap: 10px; }
-
+  /* Reduced top margin and gap to fix the huge spacing issue */
+  .elig-wrap { margin-top: 10px; gap: 8px; } 
+  
+  /* Restored scrolling for mobile and added a max height */
+  .qs-list { 
+    max-height: 350px; 
+    overflow-y: auto; 
+    gap: 10px; 
+    padding-right: 6px;
+  }
+  
+  /* Optional: Custom mobile scrollbar for the question list so it matches desktop */
+  .qs-list::-webkit-scrollbar { width: 4px; }
+  .qs-list::-webkit-scrollbar-track { background: transparent; }
+  .qs-list::-webkit-scrollbar-thumb { background: rgba(200,16,46,0.3); border-radius: 10px; }
+  
   .q-item { padding: 16px; }
-
   .q-text { font-size: 13.5px; margin-bottom: 12px; }
-
   .qb { padding: 7px 16px; font-size: 12px; }
-
-  .elig-card { padding: 18px; }
-
-  .elig-ring { width: 130px; height: 130px; margin-bottom: 16px; }
-
+  .elig-card { padding: 16px; margin-bottom: 0; } /* Tightened card padding slightly */
+  .elig-ring { width: 120px; height: 120px; margin-bottom: 12px; } /* Shrunk slightly for better mobile fit */
   .elig-pct-txt { font-size: 2.2rem; }
-
   .elig-lbl { font-size: 10px; }
-
   .elig-desc { font-size: 13px; }
-
 
 
   /* --- Stock / activity / pulse cards --- */
