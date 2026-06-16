@@ -17,12 +17,15 @@
     </script>
 </head> 
 <body>
-<div class="sidebar">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="sidebar">
         <div class="logo">
             <span class="logo" id="logo"></span> ABO± AI
         </div>
         <button class="btn btn-primary" onclick="startNewChat()">+ New Chat</button>
         <button class="btn" onclick="clearAllHistory()">🗑️ Wipe All History</button>
+        <button class="btn" onclick="toggleTheme()">🌗 Toggle Theme</button>
         
         <div style="margin-top: 25px; font-size: 0.75rem; color: var(--tm); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Timeline Ledger</div>
         <div class="history-container" id="historyContainer">
@@ -31,6 +34,8 @@
 
     <div class="main-chat">
         <div class="header">
+            <button class="mobile-menu-toggle" id="menuToggle">☰</button>
+            <div class="header-title" style="font-family: var(--fd); font-weight: 700; color: var(--tp);">ABO± AI Assistant</div>
         </div>
 
         <div class="chat-window" id="chatWindow">

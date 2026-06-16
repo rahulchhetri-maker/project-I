@@ -751,10 +751,7 @@ function toggleTheme() {
     const current = html.getAttribute('data-theme');
     html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
 }
-// Simple logic to find the match
-const match = database.find(entry => 
-    entry.keywords.some(keyword => userQuery.includes(keyword))
-);
+
 const knowledgeBase = [
     // --- HIGH PRIORITY: Medical & Safety Rules ---
     {
@@ -796,4 +793,37 @@ function getBotResponse(userInput) {
 
     return "I'm sorry, I couldn't find a specific rule for that. Please visit your nearest Nepal Red Cross blood center for a professional health screening.";
 }
+/* ==========================================================================
+   RESPONSIVENESS: OFF-CANVAS SIDEBAR INTERACTIVITY CONTROLLERS
+   ========================================================================== */
 
+function toggleMobileSidebar() {
+    const sidebar = document.querySelector(".sidebar");
+    const overlay = document.getElementById("sidebarOverlay");
+    
+    if (!sidebar || !overlay) return;
+
+    const isOpening = sidebar.classList.toggle("open");
+    
+    if (isOpening) {
+        overlay.style.display = "block";
+        void overlay.offsetHeight; // Triggers browser layout pass to force CSS transition execution
+        overlay.classList.add("show");
+    } else {
+        overlay.classList.remove("show");
+        setTimeout(() => {
+            if (!sidebar.classList.contains("open")) {
+                overlay.style.display = "none";
+            }
+        }, 300); // Wait for CSS opacity ease duration
+    }
+}
+
+// Bind interactive click handlers when document loads
+document.addEventListener("DOMContentLoaded", () => {
+    const triggerBtn = document.getElementById("menuToggle");
+    const interfaceOverlay = document.getElementById("sidebarOverlay");
+
+    if (triggerBtn) triggerBtn.addEventListener("click", toggleMobileSidebar);
+    if (interfaceOverlay) interfaceOverlay.addEventListener("click", toggleMobileSidebar);
+});
