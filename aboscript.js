@@ -1,3 +1,4 @@
+
 /* ============================================================
    ABO± AI — COMPLETE KNOWLEDGE ENGINE  (Enhanced v2)
    New in v2:
@@ -42,6 +43,7 @@ function getWelcomeGreeting() {
     };
     return lines[g];
 }
+
  
 // Set welcome subtitle
 document.getElementById('welcomeGreeting').textContent = getWelcomeGreeting();
@@ -339,7 +341,49 @@ const knowledgeBase = [
     tags: ["रक्तदानका प्रकारहरू","रगत दिने फरक तरिकाहरू","प्लेटलेट्स दान","प्लाज्मा दान","एफेरेसिस"],
     answer: "🩸 रक्तदानका विभिन्न प्रकारहरू\n\n1️⃣ पूर्ण रक्तदान (Whole Blood Donation)\n   यो सबैभन्दा प्रचलित र सामान्य तरिका हो — यसमा एक पिन्ट (लगभग ४५० एमएल) रगत निकालिन्छ, जसमा रातो कोष, सेतो कोष, प्लेटलेट्स र प्लाज्मा सबै सामेल हुन्छन्। यसमा ८–१० मिनेट लाग्छ र पछि प्रयोगशालामा यसलाई छुट्ट्याइन्छ।\n\n2️⃣ प्लेटलेट्स दान (Platelet Donation - Apheresis)\n   एउटा विशेष मेसिन (Apheresis) को मद्दतले तपाईंको शरीरबाट रगत निकालिन्छ, मेसिनले केवल प्लेटलेट्स मात्र छानेर राख्छ र बाँकी रातो रक्तकोष र प्लाज्मा तपाईंको शरीरमै फिर्ता पठाइदिन्छ। यसमा २–३ घण्टा लाग्छ। यो क्यान्सर र ठूला शल्यक्रियाका बिरामीका लागि बचाउ हुन्छ।\n\n3️⃣ प्लाज्मा दान (Plasma Donation)\n   यसमा रगतको केवल तरल भाग (प्लाज्मा) मात्र राखिन्छ र रक्तकोष फिर्ता गरिन्छ। यो आगोले पोलेका बिरामी र औषधि बनाउन प्रयोग हुन्छ। यसमा १-२ घण्टा लाग्छ।\n\n4️⃣ डबल रेड सेल दान (Double Red Cell Donation)\n   यसमा मेसिनले सामान्य भन्दा दोब्बर मात्रामा रातो रक्तकोष मात्र लिन्छ र प्लाज्मा तथा प्लेटलेट्स शरीरमा फिर्ता गर्छ। यो दुर्घटनाका गम्भीर घाइतेहरूका लागि उपयोगी हुन्छ।"
   },
-  
+  // ── AI IDENTITY ────────────────────────────────────────
+  {
+    id: "nepali_ai_identity",
+    tags: ["तपाईं को हो","तपाई को हो","के तपाईं एआई हो","तपाई रोबोट हो","के तपाईं वास्तविक हो","एबीओ एआई भनेको के हो","आफ्नो बारेमा भन्नुहोस्","यो एपको बारेमा","को हो तपाइ","तपाइ को हो"],
+    answer: "🤖 म ABO± AI हुँ — म एक विशेष ब्लड ग्रुप र रक्तदान सम्बन्धी बौद्धिक सहायक (Intelligence Assistant) हुँ।\n\nमलाई विशेष गरी तपाईंलाई निम्न कुराहरूमा मद्दत गर्न तयार गरिएको हो:\n   🩸 ब्लड ग्रुपको पहिचान र प्रोफाइलहरू\n   💉 रक्तदानको योग्यता र अस्थायी रोकका नियमहरू\n   🔬 रगत चढाउने अनुकूलता तालिका (Compatibility Matrices)\n   🏥 आपतकालीन रक्त चिकित्सा सम्बन्धी तथ्यहरू\n   ❤️ रक्तदान पछिको हेरचाह र आइरन पोषण\n   🇳🇵 नेपाली भाषा र रोमन नेपाली सपोर्ट\n   🩺 रगतका रोगहरू, वंशाणुगत संरचना र क्लिनिकल ज्ञान\n\nम अंग्रेजी र नेपाली (देवनागरी लिपि + रोमन नेपाली) दुवै भाषा राम्रोसँग बुझ्दछु।\n\n⚠️ म कुनै प्रमाणित मेडिकल प्रोफेसनल (डाक्टर) भने होइन। म मानक हेमटोलोजी दिशानिर्देशहरूमा आधारित चिकित्सकीय रूपमा सही जानकारी प्रदान गर्दछु, तर व्यक्तिगत स्वास्थ्य निर्णयहरूका लागि तपाईंले सधैं आफ्नो ब्लड बैंक वा अस्पतालका योग्य स्वास्थ्यकर्मीहरूसँग परामर्श लिनुपर्छ।\n\nयो नेपाल र विश्वभरका ब्लड बैंक तथा रक्तदान केन्द्रहरूका लागि निर्माण गरिएको हो। 🌍"
+  },
+  {
+    id: "nepali_not_doctor",
+    tags: ["के तपाईं डाक्टर हो","मेडिकल सल्लाह","के तपाईंलाई विश्वास गर्ने","लाइसेन्स छ","डाक्टर भन्दा राम्रो हो","डाक्टरलाई भेट्नु पर्छ"],
+    answer: "होइन, म डाक्टर वा लाइसेन्स प्राप्त मेडिकल प्रोफेसनल होइन। 🩺\n\nम मानक ब्लड बैंकिङ र हेमटोलोजी दिशानिर्देशहरूमा आधारित सामान्य जानकारीहरू मात्र प्रदान गर्दछु। यद्यपि, प्रत्येक व्यक्तिको स्वास्थ्य अवस्था अद्वितीय र फरक हुन्छ।\n\nतपाईंको स्वास्थ्य, रक्तदान गर्ने योग्यता, वा चिकित्सा उपचार सम्बन्धी विशेष निर्णयहरूका लागि सधैं निम्नसँग परामर्श गर्नुहोस्:\n   • एक लाइसेन्स प्राप्त चिकित्सक वा रक्त विशेषज्ञ (Hematologist)\n   • तपाईंको स्थानीय ब्लड बैंकको मेडिकल टोली\n   • अस्पतालका विशेषज्ञ डाक्टरहरू\n\nम ती स्वास्थ्यकर्मीहरूसँग कुरा गर्नुअघि तपाईंलाई आवश्यक ज्ञानले सुसज्जित बनाउन सक्छु, तर अन्तिम निर्णय सधैं योग्य व्यावसायिक डाक्टरहरूको नै हुन्छ। 🏥"
+  },
+  {
+    id: "nepali_fun_blood_facts",
+    tags: ["रमाइलो तथ्य","रोचक तथ्य","रगतको बारेमा तथ्य","रगत विज्ञान","के तपाईंलाई थाहा छ","रगतको रोचक कुरा","केहि रोचक भन्नुहोस्","रगतको तथ्यहरु"],
+    answer: "🔬 रगत सम्बन्धी केही रोचक र आश्चर्यजनक तथ्यहरू:\n\n• तपाईंको शरीरको हाडभित्रको मासी (Bone Marrow) ले प्रत्येक सेकेन्डमा लगभग २० देखि ३० लाख रातो रक्तकोषहरू उत्पादन गरिरहेको हुन्छ।\n\n• तपाईंले दान गर्नुभएको रगतको केवल एक युनिटले ३ जना फरक-फरक बिरामीको ज्यान बचाउन सक्छ।\n\n• रातो रक्तकोषहरूको आयु केवल १२० दिनको मात्र हुन्छ, त्यसपछि यिनीहरूलाई फियो (Spleen) ले रिसाइकल गर्छ।\n\n• यदि तपाईंको शरीरका सबै रक्तनलीहरूलाई एकै ठाउँमा जोडेर तन्काउने हो भने, तिनीहरूको लम्बाइ लगभग १,००,००० किलोमिटर हुन्छ — जसले पृथ्वीलाई २.५ पटक घेर्न पुग्छ।\n\n• संसारकै सबैभन्दा दुर्लभ ब्लड ग्रुप (Rhnull वा 'गोल्डेन ब्लड') इतिहासमा अहिलेसम्म केवल ४३ जना मानिसमा मात्र फेला परेको छ।\n\n• 'हर्सशु क्र्याब' (Horseshoe Crab - एक प्रकारको गँगटो) को रगत चम्किलो नीलो रङको हुन्छ (जसमा आइरनको सट्टा तामा हुन्छ)। यसको रगत मेडिकल उपकरणहरूमा ब्याक्टेरियाको संक्रमण जाँच गर्न प्रयोग गरिन्छ।\n\n• रगतले तपाईंको शरीरको कुल वजनको लगभग ७ देखि ८ प्रतिशत भाग ओगटेको हुन्छ।\n\n• प्लाज्मामा हुने रोग प्रतिरोधात्मक एन्टिबडीहरू यति सूक्ष्म र कडा हुन्छन् कि उनीहरूले आफ्नै करोडौँ कोषहरूका बीचमा लुकेको एउटा मात्र ब्याक्टेरियालाई पनि तुरुन्तै चिन्न सक्छन्।\n\n• एबी-नेगेटिभ (AB-) प्लाज्मा यति दुर्लभ र बहुमूल्य हुन्छ कि केही देशका ब्लड बैंकहरूले यसको आपूर्ति सुनिश्चित गर्न अन्तर्राष्ट्रिय ढुवानी खर्च समेत बेहोर्ने गर्छन्। 🧬"
+  },
+   
+  // ── MISC / FALLBACK SLANG — ALL ORIGINAL ──────────────
+  {
+    id: "nepali_slang_laughing",
+    tags: ["लोल","हाहा","हाहाहा","हेहे","हँसाउने","भयो","😂","🤣"],
+    answer: "😄 तपाईं हाँसेको देख्दा खुसी लाग्यो! रगत विज्ञानमा वास्तवमै केही आश्चर्यजनक र रमाइला तथ्यहरू छन्। अरू केही सोध्न मन लागेमा भन्नुहोस् है!"
+  },
+  {
+    id: "nepali_misc_yes",
+    tags: ["हो","हुन्छ","हुन्छ नि","सहि हो","ठीक","पक्कै पनि","अवश्य","मिलेको छ"],
+    answer: "उत्कृष्ट! अब ब्लड ग्रुप वा रक्तदानको बारेमा अरू के जान्न चाहनुहुन्छ?"
+  },
+  {
+    id: "nepali_misc_no",
+    tags: ["होइन","नाइ","हुँदैन","पर्दैन","छोडिदेउ","चाहिदैन"],
+    answer: "केही छैन, समस्या भएन! यदि अर्को कुनै विषयमा कुरा गर्न वा केही सोध्न मन लागेमा मलाई भन्नुहोस्। 😊"
+  },
+  {
+    id: "nepali_misc_wait",
+    tags: ["पर्खनुहोस्","एक मिनेट","एक सेकेन्ड","पर्ख","एकैछिन","पर्ख है"],
+    answer: "हतार नगर्नुहोस्! आरामले आफ्नो समय लिनुहोस् — तपाईं तयार हुनासाथ म यहीँ उपलब्ध छु। 🩸"
+  },
+  {
+    id: "nepali_misc_sorry",
+    tags: ["माफ गर्नुहोस्","माफ गर","गल्ती भयो","सरी","स्री","ओहो"],
+    answer: "केही फरक पर्दैन, चिन्ता नगर्नुहोस्! हामी यसैलाई अगाडि बढाउन सक्छौँ वा नयाँ विषय सुरु गर्न सक्छौँ। के जान्न मन छ भन्नुहोस्? 😊"
+  },
   
 
   // ── EMERGENCY & CLINICAL ─────────────────────────────
@@ -409,108 +453,6 @@ const knowledgeBase = [
     type: "greeting",
     respond: () => "Good afternoon! 🌤️ Great time to get your questions answered. Ask me anything about blood groups, eligibility, or donation procedures."
   },
-  {
-  id: "id_developer",
-  tag: [
-    "who is your developer",
-    "who created you",
-    "who made you",
-    "who is your creator",
-    "who programmed you",
-    "who built this bot",
-    "who designed you",
-    "who is the owner of this bot",
-    "who wrote your code",
-    "who is behind this project",
-    "who is the mastermind behind you",
-    "who owns this chatbot",
-    "who is your boss",
-    "who is your father",
-    "who invented you",
-    "timilai kasle banayeko",
-    "timro developer ko ho",
-    "timilai kasle banako ho",
-    "timro creator ko ho",
-    "yo bot kasle banako",
-    "timro boss ko ho",
-    "yo project kasle banako ho",
-    "तिमीलाई कसले बनाएको हो",
-    "तिम्रो डेभलपर को हो",
-    "तपाईंको निर्माता को हो",
-    "यो बोट कसले बनाएको",
-    "who developed this application",
-    "who is the author of this script",
-    "tell me your developer name",
-    "who is the genius that made you"
-  ],
-  answer: "Rahul Chhetri"
-},
-{
-  id: "id_developer",
-  tag: [
-    "who is your developer",
-    "who is your developer?",
-    "who created you",
-    "who created you?",
-    "who made you",
-    "who made you?",
-    "who is your creator",
-    "who is your creator?",
-    "who programmed you",
-    "who programmed you?",
-    "who built this bot",
-    "who built this bot?",
-    "who designed you",
-    "who designed you?",
-    "who is the owner of this bot",
-    "who is the owner of this bot?",
-    "who wrote your code",
-    "who wrote your code?",
-    "who is behind this project",
-    "who is behind this project?",
-    "who is the mastermind behind you",
-    "who is the mastermind behind you?",
-    "who owns this chatbot",
-    "who owns this chatbot?",
-    "who is your boss",
-    "who is your boss?",
-    "who is your father",
-    "who is your father?",
-    "who invented you",
-    "who invented you?",
-    "timilai kasle banayeko",
-    "timilai kasle banayeko?",
-    "timro developer ko ho",
-    "timro developer ko ho?",
-    "timilai kasle banako ho",
-    "timilai kasle banako ho?",
-    "timro creator ko ho",
-    "timro creator ko ho?",
-    "yo bot kasle banako",
-    "yo bot kasle banako?",
-    "timro boss ko ho",
-    "timro boss ko ho?",
-    "yo project kasle banako ho",
-    "yo project kasle banako ho?",
-    "तिमीलाई कसले बनाएको हो",
-    "तिमीलाई कसले बनाएको हो?",
-    "तिम्रो डेभलपर को हो",
-    "तिम्रो डेभलपर को हो?",
-    "तपाईंको निर्माता को हो",
-    "तपाईंको निर्माता को हो?",
-    "यो बोट कसले बनाएको",
-    "यो बोट कसले बनाएको?",
-    "who developed this application",
-    "who developed this application?",
-    "who is the author of this script",
-    "who is the author of this script?",
-    "tell me your developer name",
-    "tell me your developer name?",
-    "who is the genius that made you",
-    "who is the genius that made you?"
-  ],
-  answer: "Rahul Chhetri"
-},
   {
     id: "greet_evening",
     tags: ["good evening","evening","good night","goodnight","gn","nite","night"],
@@ -1254,4 +1196,4 @@ document.addEventListener('DOMContentLoaded', () => {
         if (dx > 60 && sidebar && sidebar.classList.contains('open')) closeSidebar();
     }, { passive: true });
 });
- 
+
