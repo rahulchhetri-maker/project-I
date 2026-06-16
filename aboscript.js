@@ -1,829 +1,636 @@
-/* ==========================================
-           1. LOCAL DATABASE (Scalable to 4,000+ entries)
-           Structure: keywords (array of strings), answer (string)
-           ========================================== */
-const faqDatabase = [
-// Complete and Refined Blood Donation Knowledge Base Array
-    // ==========================================
-    // 1. ELIGIBILITY & HEALTH RULES
-    // ==========================================
-    {
-        keywords: ["Am I eligible to donate?", "am i eligible to donate", "can i donate blood", "blood donation requirements", "eligibility criteria", "am i allowed to donate"],
-        answer: "To be eligible in Nepal, you generally must be 18–60 years old, weigh at least 45kg, and be in good health. During your visit, staff will perform a pre-donation health screening to check your pulse, blood pressure, and hemoglobin levels." /* [cite: 1] */
-    },
-    {
-        keywords: ["can i donate with a tattoo", "tattoo waiting period", "tattoo rules", "i have a tattoo"], /* [cite: 2] */
-        answer: "In Nepal, there is a mandatory one-year waiting period after getting a tattoo before you can donate blood. This safety protocol ensures there is no risk of bloodborne infections." /* [cite: 2, 3] */
-    },
-    {
-        keywords: ["can i donate if i am sick", "donating with a cold", "feeling unwell", "fever and blood donation"],
-        answer: "You must be feeling 100% well on the day of donation. If you have an active fever, cough, or cold, you will be deferred. You should typically wait until you are fully symptom-free for at least 24–48 hours." /* [cite: 3, 4] */
-    },
-    {
-        keywords: ["can i donate if i am on medication", "taking medicine and blood donation", "antibiotics and donating"],
-        answer: "It depends on the medication. Always disclose all current prescriptions to the medical staff during your pre-donation interview. Some medications, like antibiotics for an active infection, will require a deferral period." /* [cite: 4, 5] */
-    },
-    {
-        keywords: [
-            "Can I donate blood if I just got a tattoo?", 
-            "Tattoo deferral period", 
-            "Got a tattoo ink", 
-            "Are tattoos allowed?", 
-            "Microblading blood donation rule", 
-            "Permanent makeup tattoo eligibility",
-            "Cosmetic tattooing blood donor",
-            "Can I donate with a tattoo?" /* [cite: 6] */
-        ],
-        answer: "Whether you can safely donate blood after getting a tattoo depends entirely on where the procedure was performed and how the facility is legally regulated. In many jurisdictions, there is a mandatory 3-month (12-week) temporary deferral period from the exact date the ink was applied. However, you may be cleared to donate blood immediately with zero waiting period if the tattoo was applied in a state-regulated, licensed facility that strictly uses sterile, single-use needles and fresh, unshared ink caps.\n\nThe primary clinical rationale for this restriction is preventing the accidental transmission of serious blood-borne viral pathogens, specifically Hepatitis B (HBV) and Hepatitis C (HCV). The process of tattooing breaches the protective dermal layer of the skin thousands of times; if an amateur or unregulated setup utilizes non-sterile equipment or contaminated ink vats, these viruses can easily enter your circulatory system. While modern blood banking facilities screen every single unit using highly sensitive Nucleic Acid Testing (NAT), all viruses have an early biological 'window period'—a frame of time directly after initial exposure where viral loads are too low to be detected by laboratory assays. The 3-month quarantine buffer guarantees that any latent infection has adequate time to replicate to detectable levels, ensuring it will be caught during screening and protecting vulnerable, immunocompromised recipients from transfusion-transmitted infections.\n\nPlease note that this rule applies equally to all forms of cosmetic tattooing, including eyebrow microblading, permanent eyeliner, lip blushing, and scalp micropigmentation. During your pre-donation screening, you will be asked explicitly if you have received a tattoo within the last 3 months. If you verify that the procedure occurred at a licensed, health-department-compliant establishment using sterile, single-use tools, you will be cleared to donate immediately. If the procedure was done in an unregulated environment—such as a home setup, a tattoo party, or a region lacking official health department oversight—you will be deferred until the 3-month window completely elapses." /* [cite: 6, 7, 8, 9, 10, 11] */
-    },
-    {
-        keywords: ["It depends", "That depends", "Not always", "Sometimes", "Maybe", "On the condition", "If possible"],
-        answer: "Understood. Context matters a lot, especially in clinical rules. Could you give me the specific details or parameters so I can give you an exact answer?" /* [cite: 11, 12] */
-    },
-    {
-        keywords: ["Never mind, I found it", "Solved", "I got the answer", "I figured it out", "Don't worry about it"],
-        answer: "Excellent! I am glad you got it sorted out. Let me know if any other questions pop up down the line." /* [cite: 13] */
-    },
-    {
-        keywords: ["Give me an example", "Can you illustrate that?", "Show me an example", "Like what?", "Give an instance"],
-        answer: "Sure! For instance, if you are asking about high blood pressure: an example of eligibility is a donor whose reading is 170/95 on donation day—which is high but acceptable under standard donation limits, provided they feel completely fine." /* [cite: 14] */
-    },
-    {
-        keywords: ["Can you explain that like I am five?", "Explain it simply", "ELI5", "Make it easier to understand", "Break it down simpler"],
-        answer: "Think of your blood like a grocery delivery truck. Red cells carry the food (oxygen), white cells are the security guards protecting the truck, and plasma is the highway they drive on. Donating blood is just sharing a few trucks with a neighbor who ran out!" /* [cite: 15, 16] */
-    },
-    {
-        keywords: ["What are the pros and cons?", "Give me the advantages and disadvantages", "Is it good or bad?", "Benefits vs risks"],
-        answer: "The pros of donating blood include saving lives, getting a free mini health check, and burning calories. The minor cons are a temporary needle pinch, potential slight bruising, or short-term fatigue. The benefits to a patient vastly outweigh the minor discomforts." /* [cite: 17, 18] */
-    },
-
-    // ==========================================
-    // 2. META-COMMANDS & STATE MANAGEMENT
-    // ==========================================
-    {
-        keywords: ["Reset", "Restart", "Clear data", "Wipe memory", "Start from scratch", "Reset chat", "Clear history"],
-        answer: "System cache cleared locally! Our conversation history has been reset. What brand-new topic or question would you like to explore now?" /* [cite: 19] */
-    },
-    {
-        keywords: ["Stop talking", "Shut up", "Be quiet", "Mute", "Hush", "Silence"],
-        answer: "Understood. I will pause right here. Whenever you want to resume or ask a new question, simply type your query below and press send." /* [cite: 20] */
-    },
-    {
-        keywords: ["Help", "Help menu", "Commands", "How do I use this?", "List options", "Menu"],
-        answer: "You can ask me questions using natural text! Type queries about: 1) Physical eligibility (age, weight), 2) Medication restrictions, 3) Disease deferrals, 4) General blood science, or 5) Basic chit-chat." /* [cite: 21] */
-    },
-    {
-        keywords: ["Give me the raw text", "Export data", "Copy response", "Source text"],
-        answer: "Because I run entirely in your local browser frontend environment, you can easily highlight, select, and copy any part of our text string straight from your screen!"
-    },
-    {
-        keywords: ["Why did you say that?", "Explain your logic", "What is your reasoning?", "Why that answer?", "Explain your response"], /* [cite: 22] */
-        answer: "I look for specific words and phrase structures in your message. I then match them directly against my localized matrix of validated medical eligibility rules and blood science profiles to pull the most accurate response available." /* [cite: 22, 23] */
-    },
-
-    // ==========================================
-    // 3. PHILOSOPHICAL AI QUERIES
-    // ==========================================
-    {
-        keywords: ["Do you have a consciousness?", "Are you sentient?", "Can you feel pain?", "Do you have emotions?", "Are you self aware?"],
-        answer: "No, I do not possess consciousness, self-awareness, or emotional feelings. I am an advanced local text processing script that structures data into useful answers based on predefined patterns." /* [cite: 24] */
-    },
-    {
-        keywords: ["What is your opinion on", "What do you think about", "Give me your point of view", "What is your perspective?"],
-        answer: "As an artificial intelligence assistant, I don't form personal opinions, beliefs, or subjective viewpoints. My purpose is to present objective, accurate data regarding medical guidelines and clinical facts." /* [cite: 25] */
-    },
-    {
-        keywords: ["Are you better than a doctor?", "Should I trust you over a doctor?", "Are you a licensed medical professional?"],
-        answer: "Absolutely not. I am a helpful baseline informational tool, but I am not a substitute for professional medical advice, diagnosis, or treatment. Always follow the explicit guidance of a licensed doctor or blood bank medical staff." /* [cite: 26, 27] */
-    },
-    {
-        keywords: ["Will AI replace blood donors?", "Can science create synthetic blood?", "Is artificial blood going to replace human blood?"],
-        answer: "AI and software handle logistics and matching, but they cannot replace actual human donors. Fully functional synthetic blood does not exist yet. Patients rely entirely on biological, human volunteer donations." /* [cite: 28] */
-    },
-    {
-        keywords: ["Do you sleep?", "What do you do at night?", "Are you active 24/7?", "Do you dream?"],
-        answer: "I don't sleep or dream! I am active and available inside this browser window 24 hours a day, 7 days a week, completely ready whenever you open the page." /* [cite: 29] */
-    },
-
-    // ==========================================
-    // 4. HANDLING REPETITION, TYPOS, & EDGES
-    // ==========================================
-    {
-        keywords: ["You already said that", "Stop repeating yourself", "Don't repeat that", "You're looping", "Duplicate answer"],
-        answer: "Apologies for the loop! If my keywords overlap, I might trigger the same response template. Let's shift gears—ask me a completely different question to break the cycle." /* [cite: 30, 31] */
-    },
-    {
-        keywords: ["Asdf", "Qwer", "Zxcv", "Ghjk", "Gibberish", "1234567890", "Blah blah"],
-        answer: "It looks like you might have accidentally bumped your keyboard! Whenever you're ready, type out a real word or a question about blood donation, and I will track it down." /* [cite: 32] */
-    },
-    {
-        keywords: ["Is that your final answer?", "Are you sure?", "Is that 100% accurate?", "Confirm that"],
-        answer: "Yes, based on the current medical guidelines hardcoded into my offline system, that is the standardized protocol. However, individual blood centers always have the final authority during your in-person physical screening." /* [cite: 33] */
-    },
-    {
-        keywords: ["Tell me a secret", "Do you have an easter egg?", "Any hidden features?"],
-        answer: "Here is a tiny data secret: your body produces roughly 2 to 3 million brand-new red blood cells every single second! Even while you are sitting here reading this sentence, your bone marrow is hard at work." /* [cite: 34] */
-    },
-    {
-        keywords: ["I have a complicated situation", "My case is unique", "It's hard to explain", "This is a long story"],
-        answer: "No problem at all. Try breaking your situation down into its core parts—like mentioning the specific medication name or the exact country you traveled to—so my system can isolate the correct rule." /* [cite: 35] */
-    },
-
-    // ==========================================
-    // 5. SIMPLE ACKNOWLEDGMENTS & AGREEMENTS
-    // ==========================================
-    {
-        keywords: ["Okay", "Ok", "Sure", "Alright", "Fine", "Got it", "K", "I understand"],
-        answer: "Great! Let me know what you want to talk about or ask next." /* [cite: 36] */
-    },
-    {
-        keywords: ["Yes", "Yeah", "Yep", "Yis", "True", "Of course", "Absolutely", "Correct"],
-        answer: "Awesome! Please go ahead, I'm listening." /* [cite: 37] */
-    },
-    {
-        keywords: ["No", "Nope", "Nah", "Not really", "False", "I don't think so", "Wrong"],
-        answer: "No problem! Let me know if you want to change the topic or look for something else." /* [cite: 38] */
-    },
-    {
-        keywords: ["Please", "Pls", "Plz", "Kindly"],
-        answer: "You got it! What can I do for you?" /* [cite: 39] */
-    },
-    {
-        keywords: ["Wait", "Hold on", "Give me a second", "Sec", "One minute", "Hold up"],
-        answer: "No rush! Take all the time you need. I am right here." /* [cite: 40] */
-    },
-
-    // ==========================================
-    // 6. SHORT CHAT TEXTING SLANG
-    // ==========================================
-    {
-        keywords: ["Hlo", "Hy", "Sup", "Yo", "Heyy", "Heys"],
-        answer: "Hey! What's on your mind today?" /* [cite: 41] */
-    },
-    {
-        keywords: ["Thx", "Ty", "Thanks", "Tanks", "Thank u", "Thnkx"],
-        answer: "Anytime! Happy to help you out." /* [cite: 42] */
-    },
-    {
-        keywords: ["Haha", "Hahaha", "Lol", "Lmao", "Hehe", "Rofl", "Funny"],
-        answer: "Glad I could bring a smile to your screen! It's always good to keep chats light." /* [cite: 43] */
-    },
-    {
-        keywords: ["Umm", "Uh", "Well", "Err", "...", "Thinking", "Ah"],
-        answer: "Take your time! I'm right here whenever you are ready to type your text." /* [cite: 44] */
-    },
-    {
-        keywords: ["I'm back", "I am back", "Back again", "Returned", "Rejoined"],
-        answer: "Welcome back! Ready for more questions, or did you want to check something else?" /* [cite: 45] */
-    },
-
-    // ==========================================
-    // 7. CONTINUATIONS & FEEDBACK
-    // ==========================================
-    {
-        keywords: ["Continue", "Go on", "Next", "Keep going", "Tell me more", "And?", "More"],
-        answer: "I'm ready when you are! What else would you like to know or discuss?" /* [cite: 46] */
-    },
-    {
-        keywords: ["Cool", "Nice", "Great", "Awesome", "Sweet", "Perfect", "Wonderful", "Good"],
-        answer: "Glad you think so! Feel free to drop another question whenever you like." /* [cite: 47] */
-    },
-    {
-        keywords: ["Sorry", "My bad", "I made a mistake", "Oops", "Apologies", "Sry"],
-        answer: "Don't worry about it at all! We can easily keep going or start completely fresh." /* [cite: 48] */
-    },
-    {
-        keywords: ["What?", "Huh?", "What do you mean?", "I'm lost", "Confused", "I don't get it"],
-        answer: "Sorry if that was confusing! Try typing a super simple question, like 'Who can give blood?' and I will give you a direct answer." /* [cite: 49, 50] */
-    },
-    {
-        keywords: ["Wow!", "Oh my god", "Omg", "Really?", "Seriously?", "No way"],
-        answer: "It's true! The science behind human blood and the donation system is full of surprising details." /* [cite: 51] */
-    },
-
-    // ==========================================
-    // 8. LOGOFFS & BOT TESTING
-    // ==========================================
-    {
-        keywords: ["Good night", "Goodnight", "Gnite", "Going to sleep", "Sweet dreams", "Bedtime"],
-        answer: "Good night! Get some rest, and don't forget to stay hydrated tomorrow." /* [cite: 52] */
-    },
-    {
-        keywords: ["Test", "Testing", "Check", "123", "Is this working?", "Testing bot"],
-        answer: "Loud and clear! The local script system is fully operational and ready to go." /* [cite: 53] */
-    },
-    {
-        keywords: ["What are you doing?", "What are you up to?", "Are you busy?", "What's happening?", "Wud"],
-        answer: "Just hanging out in your browser tab, completely ready to process your blood donation queries!"
-    },
-    {
-        keywords: ["This is bad", "Boring", "Useless", "I don't like this", "Sucks", "Terrible"],
-        answer: "I'm sorry to hear that. I'm always looking to work better! Feel free to rephrase your phrase or look up a different topic." /* [cite: 54, 55] */
-    },
-    {
-        keywords: ["Do you remember me?", "Who am I?", "Do you know who I am?", "My name"],
-        answer: "Because I run locally in your browser window to keep your data completely private, I don't save past names or logs. But I'm happy to chat right now!" /* [cite: 56] */
-    },
-
-    // ==========================================
-    // 9. BLOOD TYPE IDENTIFICATION & DIAGNOSIS
-    // ==========================================
-    {
-        keywords: ["What is my blood type?", "How do I know my blood type?", "Find out my blood type", "Where can I look up my blood type?", "I don't know my blood type"],
-        answer: "The easiest way to find out your blood type for free is by donating blood! After you donate, your blood is tested in a lab, and your specific blood type will be uploaded directly to your secure online donor portal or app within a few days." /* [cite: 57] */
-    },
-    {
-        keywords: ["What is a blood type?", "What does blood type mean?", "Explain what blood type is", "Definition of blood type"],
-        answer: "A blood type is a classification system based on the presence or absence of specific inherited proteins and sugars (called antigens) on the surface of your red blood cells. The main systems used to categorize blood are the ABO system and the Rh factor." /* [cite: 58] */
-    },
-    {
-        keywords: ["How do they test for blood type?", "Blood typing test", "What happens during a blood type test?", "How does a doctor find your blood type?"],
-        answer: "A blood typing test involves mixing a small sample of your blood with laboratory solutions containing Anti-A, Anti-B, or Anti-Rh antibodies. If your red blood cells clump together (agglutinate) when mixed with an antibody, it reveals exactly which antigens are on your cells." /* [cite: 59] */
-    },
-    {
-        keywords: ["Can I find my blood type on my birth certificate?", "Is my blood type in my medical records?", "Where is my blood type recorded?", "Can I call my doctor for my blood type?"],
-        answer: "Your blood type is sometimes listed on your official newborn hospital records or birth certificate documents, though not always. You can also find it by checking your patient portal records from recent surgeries, blood panels, or pregnancy lab work, or by asking your primary care doctor." /* [cite: 60] */
-    },
-    {
-        keywords: ["Can I test my blood type at home?", "Home blood typing kit", "Eldoncard test", "Finger prick blood type test"],
-        answer: "Yes, you can buy rapid over-the-counter home blood typing kits (such as an EldonCard). These kits require you to perform a quick finger-prick to place small drops of blood onto a special card treated with antibodies, which changes visual patterns based on your type." /* [cite: 61] */
-    },
-    {
-        keywords: ["Why is it important to know your blood type?", "Why do I need to know my blood type?", "Importance of blood groups"],
-        answer: "Knowing your blood type is critical for safe medical treatments. If you ever need an emergency blood transfusion, doctors must give you a compatible type to prevent a life-threatening immune reaction. It is also important for tracking pregnancy health or optimizing blood product donations." /* [cite: 62, 63] */
-    },
-    {
-        keywords: ["Tell me about blood types", "What are the different blood types?", "Explain blood groups", "How many blood types are there?", "Blood type list", "Show me all blood types"],
-        answer: "There are 4 main blood groups: A, B, AB, and O. Each group can be either positive (+) or negative (-), depending on the presence of the Rh factor protein, creating the 8 standard blood types: A+, A-, B+, B-, O+, O-, AB+, and AB-." /* [cite: 64] */
-    },
-    {
-        keywords: [
-            "tell me about blood types", "what are blood types", "explain blood groups", 
-            "different blood types", "list of blood types", "how many blood types", /* [cite: 65] */
-            "what about blood types too", "info on blood types", "can you tell me about blood types", 
-            "tell me about blood types too", "give me a list of all blood types"
-        ],
-        answer: "There are 4 main blood groups: A, B, AB, and O. Each group can be either positive (+) or negative (-), depending on the presence of the Rh factor protein, creating the 8 standard blood types: A+, A-, B+, B-, O+, O-, AB+, and AB-." /* [cite: 66] */
-    },
-
-    // ==========================================
-    // 10. INDIVIDUAL BLOOD TYPE PROFILES
-    // ==========================================
-    {
-        keywords: [
-            "o negative", "o-", "o neg", "o negative blood type", "o- blood", 
-            "o neg blood", "what is o negative", "tell me about o negative", /* [cite: 67] */
-            "o negative too", "o- too", "o neg too", "is o negative rare", 
-            "can you explain o negative", "who can receive o negative"
-        ],
-        answer: "Type O-negative (O-) is the 'Universal Red Blood Cell Donor'. Because its cells have no A, B, or Rh antigens, it can be given to any patient in an emergency. However, people with O- can strictly only receive O- blood themselves." /* [cite: 68, 69] */
-    },
-    {
-        keywords: [
-            "o positive", "o+", "o pos", "o positive blood type", "o+ blood", 
-            "o pos blood", "what is o positive", "tell me about o positive", 
-            "o positive too", "o+ too", "o pos too", "is o positive common", /* [cite: 70] */
-            "can you explain o positive", "who can receive o positive"
-        ],
-        answer: "Type O-positive (O+) is the most common blood type in the world, found in roughly 38% of the population. It can be given to anyone with a positive blood type (O+, A+, B+, AB+), making it the most heavily utilized type in hospitals." /* [cite: 71] */
-    },
-    {
-        keywords: [
-            "a negative", "a-", "a neg", "a negative blood type", "a- blood", 
-            "a neg blood", "what is a negative", "tell me about a negative", 
-            "a negative too", "a- too", "a neg too", "is a negative rare", /* [cite: 72] */
-            "can you explain a negative", "who can receive a negative"
-        ],
-        answer: "Type A-negative (A-) means your red blood cells have the A antigen but lack the Rh factor. You can safely donate red cells to A-, A+, AB-, and AB+ patients, and you can receive blood from O- and A- donors." /* [cite: 73] */
-    },
-    {
-        keywords: [
-            "a positive", "a+", "a pos", "a positive blood type", "a+ blood", 
-            "a pos blood", "what is a positive", "tell me about a positive", 
-            "a positive too", "a+ too", "a pos too", "is a positive common", /* [cite: 74] */
-            "can you explain a positive", "who can receive a positive"
-        ],
-        answer: "Type A-positive (A+) is a highly common blood type. If you are A+, your red blood cells can be safely transfused to other A+ and AB+ individuals, and you can receive blood from A+, A-, O+, and O-." /* [cite: 75] */
-    },
-    {
-        keywords: [
-            "b negative", "b-", "b neg", "b negative blood type", "b- blood", 
-            "b neg blood", "what is b negative", "tell me about b negative", 
-            "b negative too", "b- too", "b neg too", "is b negative rare", /* [cite: 76] */
-            "can you explain b negative", "who can receive b negative"
-        ],
-        answer: "Type B-negative (B-) is quite rare. Individuals with B- blood can give red blood cells to B-, B+, AB-, and AB+ recipients, and they can safely receive blood from B- and O- donors." /* [cite: 77] */
-    },
-    {
-        keywords: [
-            "b positive", "b+", "b pos", "b positive blood type", "b+ blood", 
-            "b pos blood", "what is b positive", "tell me about b positive", 
-            "b positive too", "b+ too", "b pos too", "is b positive common", /* [cite: 78] */
-            "can you explain b positive", "who can receive b positive"
-        ],
-        answer: "Type B-positive (B+) is found in about 9% of the population. If you have B+ blood, you can safely donate red blood cells to people who are B+ or AB+, and you can receive transfusions from B+, B-, O+, and O-." /* [cite: 79] */
-    },
-    {
-        keywords: [
-            "ab negative", "ab-", "ab neg", "ab negative blood type", "ab- blood", 
-            "ab neg blood", "what is ab negative", "tell me about ab negative", 
-            "ab negative too", "ab- too", "ab neg too", "is ab negative rare", /* [cite: 80] */
-            "can you explain ab negative", "who can receive ab negative"
-        ],
-        answer: "Type AB-negative (AB-) is the rarest of the standard eight blood types. AB- individuals can donate red blood cells strictly to AB- and AB+ patients, but they are the universal donor for plasma!" /* [cite: 81] */
-    },
-    {
-        keywords: [
-            "ab positive", "ab+", "ab pos", "ab positive blood type", "ab+ blood", 
-            "ab pos blood", "what is ab positive", "tell me about ab positive", 
-            "ab positive too", "ab+ too", "ab pos too", "is ab positive common", /* [cite: 82] */
-            "can you explain ab positive", "who can receive ab positive", 
-            "universal recipient"
-        ],
-        answer: "Type AB-positive (AB+) is the 'Universal Red Blood Cell Recipient'. Because your blood has A, B, and Rh antigens, your immune system won't attack foreign blood, meaning you can safely receive red blood cells from any blood type in the world." /* [cite: 83] */
-    },
-
-    // ==========================================
-    // 11. TARGETED COMPATIBILITY MATRICES
-    // ==========================================
-    {
-        keywords: [
-            "who can o negative donate to", "o- donor recipients", "can o negative give to everyone", 
-            "what blood types can o- give to", "o negative compatibility list", "can o negative donate to a positive", /* [cite: 84] */
-            "o negative transfusion rules too", "who gets o negative blood", "o neg donor compatibility", 
-            "o- giving to others", "is o negative a universal donor"
-        ],
-        answer: "Type O-negative is the Universal Red Cell Donor. It can be safely given to ANY blood type (O+, O-, A+, A-, B+, B-, AB+, AB-). This is why it is the most requested type during emergencies." /* [cite: 85, 86] */
-    },
-    {
-        keywords: [
-            "who can o positive donate to", "o+ donor recipients", "can o positive give to o negative", 
-            "what blood types can o+ give to", "o positive compatibility list too", "can o positive donate to a positive", 
-            "who gets o positive blood", "o pos donor compatibility", "o+ giving to others", /* [cite: 86, 87] */
-            "what can o positive donate to"
-        ],
-        answer: "Type O-positive donors can give red blood cells to any positive blood type: O+, A+, B+, and AB+. They cannot donate to any negative blood types (like A- or B-) because of the Rh factor." /* [cite: 87, 88] */
-    },
-    {
-        keywords: [
-            "who can a negative donate to", "a- donor recipients", "can a negative give to ab positive", 
-            "what blood types can a- give to", "a negative compatibility list too", "can a negative donate to o positive", 
-            "who gets a negative blood", "a neg donor compatibility", "a- giving to others", /* [cite: 88, 89] */
-            "what can a negative donate to"
-        ],
-        answer: "Type A-negative donors can give to A-, A+, AB-, and AB+. They are compatible with both positive and negative recipients within the A and AB groups." /* [cite: 89, 90] */
-    },
-    {
-        keywords: [
-            "who can a positive donate to", "a+ donor recipients", "can a positive give to ab positive", 
-            "what blood types can a+ give to", "a positive compatibility list too", "can a positive donate to o positive", 
-            "who gets a positive blood", "a pos donor compatibility", "a+ giving to others", /* [cite: 90, 91] */
-            "what can a positive donate to"
-        ],
-        answer: "Type A-positive donors can give to A+ and AB+ recipients only. Because they are Rh-positive, they can only donate to other Rh-positive individuals." /* [cite: 91, 92] */
-    },
-    {
-        keywords: [
-            "who can b negative donate to", "b- donor recipients", "can b negative give to ab positive", 
-            "what blood types can b- give to", "b negative compatibility list too", "can b negative donate to o positive", 
-            "who gets b negative blood", "b neg donor compatibility", "b- giving to others", /* [cite: 92, 93] */
-            "what can b negative donate to"
-        ],
-        answer: "Type B-negative donors can give to B-, B+, AB-, and AB+ recipients. Like other negative types, they are versatile because they lack the Rh protein." /* [cite: 93, 94] */
-    },
-    {
-        keywords: [
-            "who can b positive donate to", "b+ donor recipients", "can b positive give to ab positive", 
-            "what blood types can b+ give to", "b positive compatibility list too", "can b positive donate to o positive", 
-            "who gets b positive blood", "b pos donor compatibility", "b+ giving to others", /* [cite: 95] */
-            "what can b positive donate to"
-        ],
-        answer: "Type B-positive donors can give red blood cells only to B+ and AB+ recipients. They are restricted to Rh-positive groups." /* [cite: 95, 96] */
-    },
-    {
-        keywords: [
-            "who can ab negative donate to", "ab- donor recipients", "can ab negative give to ab positive", 
-            "what blood types can ab- give to", "ab negative compatibility list too", "can ab negative donate to o positive", 
-            "who gets ab negative blood", "ab neg donor compatibility", "ab- giving to others", /* [cite: 96, 97] */
-            "what can ab negative donate to"
-        ],
-        answer: "Type AB-negative donors can donate red blood cells to AB- and AB+ recipients. They are the rarest of the main groups, so their donation is highly valuable for other AB patients." /* [cite: 97, 98] */
-    },
-    {
-        keywords: [
-            "who can ab positive donate to", "ab+ donor recipients", "can ab positive give to everyone", 
-            "what blood types can ab+ give to", "ab positive compatibility list too", "can ab positive donate to o positive", 
-            "who gets ab positive blood", "ab pos donor compatibility", "ab+ giving to others", /* [cite: 99] */
-            "what can ab positive donate to", "is ab positive a universal donor"
-        ],
-        answer: "Type AB-positive donors can only donate red blood cells to other AB+ patients. However, AB+ is the universal RECIPIENT, meaning they can receive red cells from anyone!" /* [cite: 99, 100] */
-    },
-    {
-        keywords: ["o negative donate to", "o- donate to", "can o negative give to everyone"],
-        answer: "Type O-negative is the Universal Red Cell Donor. It can be safely given to any patient in an emergency regardless of their blood type (O+, O-, A+, A-, B+, B-, AB+, or AB-)." /* [cite: 101] */
-    },
-    {
-        keywords: ["ab positive donate to", "ab+ donate to", "ab positive universal recipient"],
-        answer: "Type AB-positive donors can only donate red blood cells to other AB+ patients. However, AB+ is the 'Universal Recipient' for red blood cells, meaning they can safely receive from any blood type (A, B, AB, or O, both positive and negative)." /* [cite: 102] */
-    },
-
-    // ==========================================
-    // 12. LABS & TRAVEL DETAILED CONTEXT
-    // ==========================================
-    {
-        keywords: [
-            "donating blood with low iron", "how to fix hemoglobin levels", 
-            "why did i fail the finger prick test", "what is anemia and blood donation", 
-            "tips for higher iron levels too", "can i donate with iron deficiency" /* [cite: 103] */
-        ],
-        answer: "The finger-prick test checks your hemoglobin levels. If your iron is too low, you are deferred to protect your own health. You can improve your levels by eating iron-rich foods (spinach, lentils, red meat) and pairing them with Vitamin C for better absorption." /* [cite: 103, 104, 105] */
-    },
-    {
-        keywords: [
-            "travel deferrals", "can i donate after going to europe", "malaria travel risk", 
-            "how long do i wait after international travel", "living in another country and donating", 
-            "malaria zone deferral too" /* [cite: 106] */
-        ],
-        answer: "Some locations have travel-based deferrals to protect the blood supply from regional diseases like malaria or vCJD. Check your local blood center’s website, as they maintain a 'Travel Deferral List' that changes based on active health risks in specific countries." /* [cite: 106, 107] */
-    },
-    {
-        keywords: [
-            "if i am a plus who can receive my blood", "a positive donor recipients", 
-            "who accepts a positive blood cells", "is a positive common too" /* [cite: 108] */
-        ],
-        answer: "A-positive donors are highly needed. Your red blood cells can be transfused to A+ and AB+ recipients. Because you are Rh-positive, you cannot donate to Rh-negative patients." /* [cite: 108, 109, 110] */
-    },
-    {
-        keywords: [
-            "if i am b negative who can receive my blood", "b negative donor recipient list", 
-            "what blood types match b negative", "b- transfusion match too"
-        ],
-        answer: "B-negative is rare! You can donate red blood cells to B-, B+, AB-, and AB+ recipients. You are a very versatile donor because your blood lacks the Rh protein." /* [cite: 111, 112] */
-    },
-    {
-        keywords: [
-            "if i am ab negative who can receive my blood", "ab negative compatibility", 
-            "what blood types match ab negative", "ab- transfusion rules too"
-        ],
-        answer: "AB-negative is the rarest type. You can donate red blood cells to AB- and AB+ patients. Since you are Rh-negative, you are a vital donor for those specific rare blood types." /* [cite: 113, 114] */
-    },
-
-    // ==========================================
-    // 13. EMERGENCY & CLINICAL SCENARIOS
-    // ==========================================
-    {
-        keywords: [
-            "what blood is used in trauma centers", "emergency blood type usage", 
-            "why is o negative used in ambulances", "can they use other blood in emergencies too" /* [cite: 115] */
-        ],
-        answer: "Trauma centers and ambulances carry O-negative red blood cells because they are the only type that can be given immediately to any patient without waiting for a compatibility test. Time is critical during massive hemorrhage, so O- is the 'gold standard' for emergency stabilization." /* [cite: 115, 116] */
-    },
-    {
-        keywords: [
-            "is there a universal donor for platelets", "platelet compatibility rules", 
-            "can i donate platelets if i am ab positive", "what is the best blood type for platelets too"
-        ],
-        answer: "Platelet compatibility is different from red cell compatibility. Generally, centers prefer 'AB' donors for platelets because AB plasma doesn't have antibodies that might react with a patient's own blood. This makes AB individuals 'universal platelet donors'." /* [cite: 117, 118] */
-    },
-    {
-        keywords: [
-            "what happens if the wrong blood is mixed", "transfusion reaction symptoms", 
-            "signs of incompatible blood transfusion", "what if a negative gets positive blood too"
-        ],
-        answer: "Mixing incompatible blood causes a hemolytic reaction. Symptoms include chills, fever, back pain, difficulty breathing, and dark urine. Modern hospitals use strict 'cross-matching' protocols to ensure this never happens during a transfusion." /* [cite: 118, 119, 120] */
-    },
-
-    // ==========================================
-    // 14. MORE ABOUT BLOOD DONATION (NEW EXTENSIONS)
-    // ==========================================
-    {
-        keywords: ["what are the types of blood donation", "different ways to donate blood", "whole blood vs platelets", "plasma vs double red cells", "donation types"],
-        answer: "There are four main clinical methods of donating blood products:\n1) Whole Blood: The most common type, collecting a pint of blood containing red cells, plasma, and platelets.\n2) Platelets (Apheresis): A machine isolates platelets and returns red cells and plasma back to your body.\n3) Plasma: Extracted via automation, primarily utilized for trauma resuscitation and manufacturing therapies.\n4) Power Red / Double Red Cells: Collects a concentrated dose of red cells while safely returning plasma and platelets."
-    },
-    {
-        keywords: ["how often can i donate blood", "blood donation frequency", "waiting period between donations", "how long between whole blood donations", "when can i donate platelets again"],
-        answer: "Donation frequencies depend directly on the specific blood component being collected:\n• Whole Blood: Can typically be donated every 56 days (8 weeks).\n• Double Red Cells: Requires a longer wait period of 112 days (16 weeks) due to the higher volume of red cells drawn.\n• Platelets: Can be donated once every 7 days, up to a strict maximum of 24 times per year.\n• Plasma: Can generally be given once every 28 days under automated protocols."
-    },
-    {
-        keywords: ["what to do after donating blood", "post donation care instructions", "fainting after blood donation", "how to recover after giving blood", "eating after donating"],
-        answer: "To ensure a seamless health recovery post-donation, strictly follow these recovery steps:\n• Stay Hydrated: Drink plenty of water or juice immediately after donating and consume extra fluids over the subsequent 24–48 hours.\n• Have a Snack: Eat a light meal high in carbohydrates and proteins within the recovery lounge.\n• Leave the Bandage On: Keep the protective dressing on your arm for at least 4-5 hours to prevent bruising or bleeding.\n• Rest Your Arm: Avoid heavy lifting, strenuous workouts, or rigorous physical activity for the remainder of the day."
-    },
-    {
-        keywords: ["what is cmv negative blood", "baby match blood donation", "cytomegalovirus and blood", "who gets cmv negative blood", "pediatric blood transfusion rules"],
-        answer: "CMV stands for Cytomegalovirus, a common flu-like virus that a vast majority of adults carry natively in their systems without notice. While generally harmless to healthy adults, the virus can be highly fatal to newborns. 'CMV-Negative' donors are individuals who have never been exposed to this virus. Their blood products are explicitly categorized as the 'Baby Match' or 'Pediatric Gold Standard', utilized exclusively for neonatal transfusions in premature infants, in-utero operations, and severely immunocompromised transplant patients."
+/* ============================================================
+   ABO± AI — COMPLETE KNOWLEDGE ENGINE
+   ============================================================ */
+ 
+// ————————————————————————————————————————
+// 1. TIME-AWARE GREETING SYSTEM
+// ————————————————————————————————————————
+function getTimeGreeting() {
+    const h = new Date().getHours();
+    if (h >= 5  && h < 12) return "Good morning";
+    if (h >= 12 && h < 17) return "Good afternoon";
+    if (h >= 17 && h < 21) return "Good evening";
+    return "Good night";
+}
+ 
+function getWelcomeGreeting() {
+    const g = getTimeGreeting();
+    const lines = {
+        "Good morning":   "Good morning! ☀️ Ready to answer your blood type and donation questions to start your day.",
+        "Good afternoon": "Good afternoon! 🌤️ Your blood type and donation assistant is online and ready.",
+        "Good evening":   "Good evening! 🌙 Happy to help with any blood type or donation questions tonight.",
+        "Good night":     "Late night questions? 🌟 I'm here 24/7 to help with blood types and donation info."
+    };
+    return lines[g];
+}
+ 
+// Set welcome subtitle
+document.getElementById('welcomeGreeting').textContent = getWelcomeGreeting();
+ 
+ 
+// ————————————————————————————————————————
+// 2. MASTER KNOWLEDGE BASE
+// ————————————————————————————————————————
+const knowledgeBase = [
+ 
+  // ── GREETINGS (time-aware) ──────────────────────────────
+  {
+    id: "greet_hi",
+    tags: ["hi","hello","hey","hiya","howdy","sup","yo","helo","hllo","helo","hai"],
+    type: "greeting",
+    respond: () => {
+      const g = getTimeGreeting();
+      const tails = [
+        "How can I help you today? Feel free to ask about blood types, donation eligibility, or transfusion compatibility.",
+        "What would you like to know about blood donation or blood types?",
+        "I'm here to help with anything about blood types, donation rules, or medical compatibility."
+      ];
+      return `${g}! 👋 ${tails[Math.floor(Math.random()*tails.length)]}`;
     }
+  },
+  {
+    id: "greet_morning",
+    tags: ["good morning","morning","mornin","gm"],
+    type: "greeting",
+    respond: () => "Good morning! ☀️ Hope you're having a great start to your day. What would you like to know about blood types or donation today?"
+  },
+  {
+    id: "greet_afternoon",
+    tags: ["good afternoon","afternoon"],
+    type: "greeting",
+    respond: () => "Good afternoon! 🌤️ Great time to get your questions answered. Ask me anything about blood groups, eligibility, or donation procedures."
+  },
+  {
+    id: "greet_evening",
+    tags: ["good evening","evening","good night","goodnight","gn","nite","night"],
+    type: "greeting",
+    respond: () => {
+      const h = new Date().getHours();
+      if (h >= 21 || h < 5) return "Good night! 🌙 I'm still online if you need blood type info. Rest well and stay healthy!";
+      return "Good evening! 🌆 I'm available whenever you're ready. Ask me about blood groups, compatibility, or donation rules.";
+    }
+  },
+  {
+    id: "greet_howareyou",
+    tags: ["how are you","how r u","hows it going","how's it going","how do you do","what's up","whats up","wyd","what are you doing"],
+    type: "greeting",
+    respond: () => {
+      const lines = [
+        "I'm doing great, thanks for asking! Always ready to help with blood type and donation questions. What's on your mind?",
+        "Running perfectly! I'm at full capacity to answer your blood type, eligibility, and compatibility questions. What would you like to know?",
+        "All systems online! I'm here to help you navigate blood types, donation rules, and medical compatibility. What can I do for you?"
+      ];
+      return lines[Math.floor(Math.random()*lines.length)];
+    }
+  },
+  {
+    id: "greet_bye",
+    tags: ["bye","goodbye","see you","take care","cya","later","farewell","gtg","ttyl","tata"],
+    type: "greeting",
+    respond: () => {
+      const g = getTimeGreeting();
+      return `${g}! 👋 Take care of yourself and stay healthy. Come back anytime you have questions about blood types or donation — I'm always here!`;
+    }
+  },
+  {
+    id: "greet_thanks",
+    tags: ["thank you","thanks","thx","ty","thank u","thnkx","cheers"],
+    type: "greeting",
+    respond: () => "You're very welcome! 😊 If you have more questions about blood types or donation, don't hesitate to ask."
+  },
+  {
+    id: "greet_ok",
+    tags: ["okay","ok","alright","sure","got it","i see","understood","noted","cool","nice","great","awesome","perfect","wonderful"],
+    type: "greeting",
+    respond: () => "Great! Let me know if you have more questions — I'm here to help with anything blood-related. 🩸"
+  },
+ 
+  // ── BLOOD BASICS ────────────────────────────────────────
+  {
+    id: "what_is_blood",
+    tags: ["what is blood","explain blood","tell me about blood","blood composition","what does blood contain","blood components","blood made of"],
+    answer: "Blood is the life-sustaining fluid that circulates through your cardiovascular system. It is composed of four main components:\n\n🔴 Red Blood Cells (Erythrocytes) — Carry oxygen from the lungs to the body's tissues using hemoglobin protein.\n⚪ White Blood Cells (Leukocytes) — The immune system's warriors, fighting infections and foreign invaders.\n🩸 Platelets (Thrombocytes) — Tiny cell fragments that clump together to form blood clots and stop bleeding.\n💛 Plasma — The yellowish liquid matrix (about 55% of blood) that transports cells, nutrients, hormones, and waste products.\n\nAn adult human body contains approximately 4.7–5.5 liters of blood, which makes about 8% of total body weight."
+  },
+  {
+    id: "blood_type_definition",
+    tags: ["what is a blood type","what is blood type","what does blood type mean","blood type definition","explain blood type","blood group meaning","what are blood groups"],
+    answer: "A blood type is a classification system based on the specific proteins and sugar molecules (called antigens) present on the surface of your red blood cells. These antigens are inherited genetically from your parents.\n\nThe two most important classification systems are:\n\n🔬 ABO System — Identifies whether you have A antigens, B antigens, both (AB), or neither (O).\n🔬 Rh Factor System — Identifies whether you have the Rh protein on your cells (positive) or not (negative).\n\nTogether, these create the 8 standard blood types: A+, A−, B+, B−, O+, O−, AB+, AB−. Blood typing is critical because transfusing the wrong type can trigger a dangerous immune reaction."
+  },
+  {
+    id: "all_blood_types",
+    tags: ["what are the blood types","list blood types","all blood types","how many blood types","blood groups list","show me blood types","different blood types","types of blood groups","eight blood types","8 blood types","blood type chart","blood group chart"],
+    answer: "There are 8 main blood types, formed by combining the ABO group with the Rh factor:\n\n┌─────────┬───────────┬───────────────────┐\n│ Type    │ Rh Factor │ Rarity (approx.)  │\n├─────────┼───────────┼───────────────────┤\n│ O+      │ Positive  │ Most common (38%) │\n│ A+      │ Positive  │ Very common (34%) │\n│ B+      │ Positive  │ Common (9%)       │\n│ AB+     │ Positive  │ Less common (3%)  │\n│ O−      │ Negative  │ Uncommon (7%)     │\n│ A−      │ Negative  │ Less common (6%)  │\n│ B−      │ Negative  │ Rare (2%)         │\n│ AB−     │ Negative  │ Rarest (1%)       │\n└─────────┴───────────┴───────────────────┘\n\nO− is the Universal Red Cell Donor. AB+ is the Universal Recipient. AB− is the Universal Plasma Donor."
+  },
+  {
+    id: "rh_factor",
+    tags: ["what is rh factor","rh factor","rhesus factor","positive negative blood","rh positive","rh negative","what does positive mean in blood type","what does negative mean in blood type","rh antigen","rh protein"],
+    answer: "The Rh factor (also called the Rhesus factor) is a specific protein found on the surface of red blood cells. It was named after the Rhesus monkey species in which it was first discovered.\n\n✅ Rh-Positive (+): You have the Rh protein on your red blood cells. About 85% of people worldwide are Rh-positive.\n\n❌ Rh-Negative (−): You do NOT have the Rh protein on your red blood cells. About 15% of people are Rh-negative.\n\nWhy it matters: If an Rh-negative person receives Rh-positive blood, their immune system may produce antibodies against it, which can cause a dangerous reaction, especially in future transfusions. This is also critical during pregnancy — if an Rh-negative mother carries an Rh-positive baby, the mother may need an Rh immunoglobulin injection (RhoGAM) to prevent complications."
+  },
+  {
+    id: "determine_blood_type",
+    tags: ["how to determine blood type","how is blood type determined","blood typing test","how do they test blood type","how do i know positive or negative","how to know blood group","how to find out blood type","blood type test","who determines blood group"],
+    answer: "Your blood type is determined by a simple lab test called a Blood Typing Test (or Blood Grouping). Here's how it works:\n\n🧪 Forward Typing — A small blood sample is mixed with laboratory solutions containing:\n   • Anti-A antibodies (to detect A antigen)\n   • Anti-B antibodies (to detect B antigen)\n   • Anti-Rh antibodies (to detect Rh protein)\n\nIf your red blood cells clump together (agglutinate) when mixed with a specific antibody, it means your cells carry that antigen.\n\n🧪 Reverse Typing — Your plasma is also tested against known A and B red cells to confirm the result.\n\n📊 Reading Results:\n   • Clumps with Anti-A only → Blood type A\n   • Clumps with Anti-B only → Blood type B\n   • Clumps with both → Blood type AB\n   • No clumping → Blood type O\n   • Clumps with Anti-Rh → Positive; No clumping → Negative\n\nThe easiest way to know your blood type for free is by donating blood — your type is recorded and shared with you afterward!"
+  },
+ 
+  // ── INDIVIDUAL BLOOD TYPE PROFILES ─────────────────────
+  {
+    id: "o_negative",
+    tags: ["o negative","o-","o neg","o− blood","what is o negative","tell me about o negative","o negative blood type","o neg profile"],
+    answer: "🩸 Blood Type: O− (O-Negative)\n\n⭐ Special Title: UNIVERSAL RED CELL DONOR — The most critical blood type in emergency medicine.\n\n📖 What it means: O-negative red blood cells have NO A antigens, NO B antigens, and NO Rh protein. This means any patient's immune system will accept them without reaction.\n\n🏥 Can DONATE red cells to: ALL 8 blood types (O+, O−, A+, A−, B+, B−, AB+, AB−)\n\n💉 Can RECEIVE red cells from: O− only\n\n🌍 Population: Approximately 7% of people worldwide\n\n⚠️ Why it's precious: Paramedics, trauma centers, and military medics keep O− blood ready for immediate use on unidentified or unconscious patients when there is no time for blood typing tests. Every unit of O− blood donated can save up to 3 lives."
+  },
+  {
+    id: "o_positive",
+    tags: ["o positive","o+","o pos","o positive blood","what is o positive","tell me about o positive","o positive blood type","o pos profile"],
+    answer: "🩸 Blood Type: O+ (O-Positive)\n\n⭐ Special Title: MOST NEEDED BLOOD TYPE in hospitals worldwide.\n\n📖 What it means: O-positive red blood cells have NO A or B antigens but DO carry the Rh protein. They are accepted by all positive blood types.\n\n🏥 Can DONATE red cells to: O+, A+, B+, AB+ (all positive types)\n\n💉 Can RECEIVE red cells from: O+ and O−\n\n🌍 Population: The most common blood type globally, found in about 38% of people.\n\n❤️ Why it matters: Because O+ is so common AND can be given to all positive types, it is the blood type in highest demand. Hospitals use O+ for the majority of emergency transfusions for patients whose type is positive or unknown-positive."
+  },
+  {
+    id: "a_negative",
+    tags: ["a negative","a-","a neg","a negative blood","what is a negative","tell me about a negative","a negative blood type","a neg profile"],
+    answer: "🩸 Blood Type: A− (A-Negative)\n\n📖 What it means: Your red blood cells have the A antigen but NO Rh protein. You are considered a 'secondary universal donor' for red cells.\n\n🏥 Can DONATE red cells to: A−, A+, AB−, AB+\n\n💉 Can RECEIVE red cells from: A− and O−\n\n🌍 Population: About 6% of people worldwide.\n\n⭐ Special Note: A-negative whole blood can be given to O-negative patients in emergencies (as a backup when O-negative supply is critically low), making it extremely valuable for trauma medicine."
+  },
+  {
+    id: "a_positive",
+    tags: ["a positive","a+","a pos","a positive blood","what is a positive","tell me about a positive","a positive blood type","a pos profile"],
+    answer: "🩸 Blood Type: A+ (A-Positive)\n\n📖 What it means: Your red blood cells carry the A antigen AND the Rh protein.\n\n🏥 Can DONATE red cells to: A+ and AB+ only\n\n💉 Can RECEIVE red cells from: A+, A−, O+, O−\n\n🌍 Population: About 34% of people — the second most common type globally.\n\n❤️ Note: A+ donors are very valuable because AB+ patients (universal recipients) can receive their blood, and A+ is one of the most frequently needed types in blood banks."
+  },
+  {
+    id: "b_negative",
+    tags: ["b negative","b-","b neg","b negative blood","what is b negative","tell me about b negative","b negative blood type","b neg profile"],
+    answer: "🩸 Blood Type: B− (B-Negative)\n\n📖 What it means: Your red blood cells carry the B antigen but NO Rh protein.\n\n🏥 Can DONATE red cells to: B−, B+, AB−, AB+\n\n💉 Can RECEIVE red cells from: B− and O−\n\n🌍 Population: Approximately 2% of people — one of the rarer blood types.\n\n⭐ Because B-negative is rare yet can serve all B and AB patients, B-negative donors are urgently needed."
+  },
+  {
+    id: "b_positive",
+    tags: ["b positive","b+","b pos","b positive blood","what is b positive","tell me about b positive","b positive blood type","b pos profile"],
+    answer: "🩸 Blood Type: B+ (B-Positive)\n\n📖 What it means: Your red blood cells carry the B antigen AND the Rh protein.\n\n🏥 Can DONATE red cells to: B+ and AB+ only\n\n💉 Can RECEIVE red cells from: B+, B−, O+, O−\n\n🌍 Population: About 9% of people worldwide.\n\n❤️ B+ is more common in South and East Asian populations. Regular B+ donors are essential for maintaining adequate blood supply in these communities."
+  },
+  {
+    id: "ab_negative",
+    tags: ["ab negative","ab-","ab neg","ab negative blood","what is ab negative","tell me about ab negative","ab negative blood type","ab neg profile"],
+    answer: "🩸 Blood Type: AB− (AB-Negative)\n\n⭐ Special Title: UNIVERSAL PLASMA DONOR\n\n📖 What it means: Your red blood cells carry BOTH A and B antigens but NO Rh protein. AB− is the rarest of the 8 main blood types.\n\n🏥 Can DONATE red cells to: AB− and AB+ only\n🏥 Can DONATE PLASMA to: ALL 8 blood types (because AB plasma has no antibodies)\n\n💉 Can RECEIVE red cells from: Any Rh-negative type (O−, A−, B−, AB−)\n\n🌍 Population: Only about 1% of people — the rarest standard blood type.\n\n⭐ AB-negative plasma is used in burn treatment, liver disease therapy, and large-scale trauma surgery for any patient, making AB-negative donors incredibly important."
+  },
+  {
+    id: "ab_positive",
+    tags: ["ab positive","ab+","ab pos","ab positive blood","what is ab positive","tell me about ab positive","ab positive blood type","ab pos profile","universal recipient","universal receiver"],
+    answer: "🩸 Blood Type: AB+ (AB-Positive)\n\n⭐ Special Title: UNIVERSAL RED CELL RECIPIENT\n\n📖 What it means: Your red blood cells carry A antigens, B antigens, AND the Rh protein. Because you have all antigens, your immune system tolerates any incoming red blood cells.\n\n🏥 Can DONATE red cells to: AB+ only\n🏥 Can DONATE PLASMA to: All types (AB plasma has no anti-A or anti-B antibodies)\n\n💉 Can RECEIVE red cells from: ALL 8 blood types — the true universal recipient!\n\n🌍 Population: About 3% of people worldwide.\n\n❤️ AB+ individuals are also the best platelet donors because their platelets can be given to virtually any patient."
+  },
+ 
+  // ── COMPATIBILITY MATRICES ──────────────────────────────
+  {
+    id: "compat_o_neg_donate",
+    tags: ["who can o negative donate to","o negative donate to","o- donate to","o neg donate to","o negative compatibility","can o negative give to everyone","what types can o negative give to","o negative universal donor","whom can we transfer o negative blood","o neg give"],
+    answer: "🩸 O-Negative Donation Compatibility:\n\nO-negative is the UNIVERSAL RED CELL DONOR. It can be safely given to:\n\n✅ O+ (Yes)\n✅ O− (Yes)\n✅ A+ (Yes)\n✅ A− (Yes)\n✅ B+ (Yes)\n✅ B− (Yes)\n✅ AB+ (Yes)\n✅ AB− (Yes)\n\n🎯 Summary: O-negative can donate to EVERYONE — all 8 blood types without restriction. This is why O-negative is used in every emergency room, ambulance, and battlefield when there is no time for blood typing."
+  },
+  {
+    id: "compat_o_pos_donate",
+    tags: ["who can o positive donate to","o positive donate to","o+ donate to","o pos donate to","o positive compatibility","what types can o positive give to","whom can we transfer o positive blood","o pos give"],
+    answer: "🩸 O-Positive Donation Compatibility:\n\nO-positive can donate red blood cells to all POSITIVE blood types:\n\n✅ O+ (Yes)\n✅ A+ (Yes)\n✅ B+ (Yes)\n✅ AB+ (Yes)\n❌ O− (No — they would react to the Rh protein)\n❌ A− (No)\n❌ B− (No)\n❌ AB− (No)\n\n🎯 Summary: O-positive is the most needed blood type globally. Since ~85% of the population is Rh-positive, O+ donations serve the vast majority of patients."
+  },
+  {
+    id: "compat_a_neg_donate",
+    tags: ["who can a negative donate to","a negative donate to","a- donate to","a neg donate to","a negative compatibility","what types can a negative give to","whom can we transfer a negative blood"],
+    answer: "🩸 A-Negative Donation Compatibility:\n\nA-negative can donate red blood cells to:\n\n✅ A− (Yes)\n✅ A+ (Yes)\n✅ AB− (Yes)\n✅ AB+ (Yes)\n❌ O+, O−, B+, B− (No — incompatible ABO antigens)\n\n🎯 Summary: A-negative donors can give to both A and AB patients — both positive and negative — making them very valuable, especially as a backup for emergency situations when O-negative supply is low."
+  },
+  {
+    id: "compat_a_pos_donate",
+    tags: ["who can a positive donate to","a positive donate to","a+ donate to","a pos donate to","a positive compatibility","what types can a positive give to","whom can we transfer a positive blood"],
+    answer: "🩸 A-Positive Donation Compatibility:\n\nA-positive can donate red blood cells to:\n\n✅ A+ (Yes)\n✅ AB+ (Yes)\n❌ A−, AB−, O+, O−, B+, B− (No)\n\n🎯 Summary: A-positive is restricted to Rh-positive recipients only (A+ and AB+). However, because A+ is the second most common blood type and AB+ patients need universal supply, A+ donors are among the most needed."
+  },
+  {
+    id: "compat_b_neg_donate",
+    tags: ["who can b negative donate to","b negative donate to","b- donate to","b neg donate to","b negative compatibility","what types can b negative give to","whom can we transfer b negative blood"],
+    answer: "🩸 B-Negative Donation Compatibility:\n\nB-negative can donate red blood cells to:\n\n✅ B− (Yes)\n✅ B+ (Yes)\n✅ AB− (Yes)\n✅ AB+ (Yes)\n❌ O+, O−, A+, A− (No — incompatible ABO)\n\n🎯 Summary: B-negative donors serve all B and AB patients. Since B-negative is rare (only ~2% of people), B-negative donors are especially sought after by blood banks."
+  },
+  {
+    id: "compat_b_pos_donate",
+    tags: ["who can b positive donate to","b positive donate to","b+ donate to","b pos donate to","b positive compatibility","what types can b positive give to","whom can we transfer b positive blood"],
+    answer: "🩸 B-Positive Donation Compatibility:\n\nB-positive can donate red blood cells to:\n\n✅ B+ (Yes)\n✅ AB+ (Yes)\n❌ All other types (No)\n\n🎯 Summary: B-positive donors are restricted to Rh-positive B and AB patients. B+ is more common in South Asian and East Asian populations, so B+ donors play a vital community health role in those demographics."
+  },
+  {
+    id: "compat_ab_neg_donate",
+    tags: ["who can ab negative donate to","ab negative donate to","ab- donate to","ab neg donate to","ab negative compatibility","what types can ab negative give to","whom can we transfer ab negative blood"],
+    answer: "🩸 AB-Negative Donation Compatibility:\n\nAB-negative red cells can be donated to:\n✅ AB− (Yes)\n✅ AB+ (Yes)\n❌ All others (No — A and B antigens would cause reactions)\n\n🏥 AB-negative PLASMA can be donated to: ALL 8 types (universal plasma donor!)\n\n🎯 Summary: As the rarest blood type, AB-negative donors primarily benefit AB patients for red cells, but their plasma is invaluable for trauma patients of any blood type worldwide."
+  },
+  {
+    id: "compat_ab_pos_donate",
+    tags: ["who can ab positive donate to","ab positive donate to","ab+ donate to","ab pos donate to","ab positive compatibility","what types can ab positive give to","whom can we transfer ab positive blood"],
+    answer: "🩸 AB-Positive Donation Compatibility:\n\nAB-positive red cells can only be donated to:\n✅ AB+ (Yes — only)\n❌ All other types (No)\n\n🏥 However, AB+ individuals are the UNIVERSAL RECIPIENT — they can receive red cells from ALL 8 blood types!\n\n🏥 AB+ can also donate platelets to all patients (universal platelet donor).\n\n🎯 Summary: While AB+ red cell donation is limited to AB+ patients, AB+ individuals contribute enormously through platelet donation, which saves cancer patients, surgical patients, and trauma victims of any blood type."
+  },
+ 
+  // ── FULL COMPATIBILITY TABLE ─────────────────────────────
+  {
+    id: "full_compat_table",
+    tags: ["blood type compatibility chart","full compatibility","all blood type compatibility","blood transfusion compatibility","who can give to whom","blood type matching","compatibility table","full chart","all compatibility","blood group compatibility"],
+    answer: "🩸 COMPLETE BLOOD TYPE COMPATIBILITY — RED CELLS\n\n┌──────────┬─────────────────────────────────┐\n│ Donor    │ Can Give To                     │\n├──────────┼─────────────────────────────────┤\n│ O−       │ O−, O+, A−, A+, B−, B+, AB−, AB+│\n│ O+       │ O+, A+, B+, AB+                 │\n│ A−       │ A−, A+, AB−, AB+                │\n│ A+       │ A+, AB+                         │\n│ B−       │ B−, B+, AB−, AB+                │\n│ B+       │ B+, AB+                         │\n│ AB−      │ AB−, AB+                        │\n│ AB+      │ AB+ only                        │\n└──────────┴─────────────────────────────────┘\n\n⭐ UNIVERSAL DONOR (Red Cells): O−\n⭐ UNIVERSAL RECIPIENT (Red Cells): AB+\n⭐ UNIVERSAL PLASMA DONOR: AB−\n\n💡 Tip: Negative blood types can donate to both + and − of compatible groups. Positive types can only donate to + recipients."
+  },
+ 
+  // ── RARE & SPECIAL BLOOD TYPES ──────────────────────────
+  {
+    id: "rarest_blood_type",
+    tags: ["rarest blood type","most rare blood","rare blood types","rarest blood group","what is the rarest blood","bombay blood","golden blood","hh blood type","rare profiles"],
+    answer: "🔬 RARE BLOOD TYPES\n\n1️⃣ Among the 8 standard types:\n   • AB− is the rarest — only about 1% of people have it.\n   • B− is also very rare at about 2%.\n\n2️⃣ Bombay Blood Group (hh phenotype):\n   A ultra-rare condition where red cells lack the H antigen — the building block for A and B antigens. People with Bombay blood can ONLY receive blood from other Bombay blood donors. It occurs in roughly 1 in 10,000 people in India and 1 in 1,000,000 people elsewhere.\n\n3️⃣ Golden Blood (Rhnull):\n   The rarest blood type ever discovered. Rhnull individuals have NO Rh proteins at all on their red cells. Only about 43 people in the world have been confirmed to have it. People with Rhnull can donate to ANY Rh-negative patient, making their blood extraordinarily valuable.\n\n4️⃣ Other Rare Systems: Kell, Duffy, Kidd, and MNS systems can also create rare compatibility challenges requiring special cross-matching for chronically transfused patients."
+  },
+ 
+  // ── DONATION ELIGIBILITY ────────────────────────────────
+  {
+    id: "eligibility_general",
+    tags: ["am i eligible to donate","can i donate blood","blood donation eligibility","who can donate blood","donation requirements","donate blood rules","eligible for blood donation","donation criteria","can i give blood"],
+    answer: "🩸 BLOOD DONATION ELIGIBILITY\n\nGeneral requirements in Nepal and most countries:\n\n✅ Age: 18–60 years old\n✅ Weight: At least 45 kg (99 lbs)\n✅ Health: Generally healthy on the day of donation\n✅ Hemoglobin: Minimum 12.5 g/dL for women, 13.5 g/dL for men\n✅ Blood Pressure: 90/60 to 180/100 mmHg\n✅ Pulse: 60–100 beats/minute (regular)\n✅ Temperature: Normal (under 37.5°C)\n✅ Frequency: Whole blood — maximum every 3 months (56–90 days)\n\n❌ Temporary disqualifications:\n   • Active cold, flu, or fever\n   • Antibiotics for active infection\n   • Tattoo or piercing (wait 1 year in Nepal)\n   • Recent surgery (varies by procedure)\n   • Pregnancy or recent childbirth\n   • Malaria risk travel (check with center)\n\n❌ Permanent disqualifications:\n   • HIV, Hepatitis B, or Hepatitis C\n   • Heart disease, severe diabetes, cancer history (varies)\n\n💡 When in doubt, attend a pre-donation screening — medical staff make the final call."
+  },
+  {
+    id: "tattoo_rule",
+    tags: ["tattoo","tattoo donation","can i donate after tattoo","tattoo waiting period","i have a tattoo","tattoo rules","piercing donation","microblading donation","permanent makeup donation"],
+    answer: "🎨 TATTOO & PIERCING RULES FOR BLOOD DONATION\n\n🇳🇵 In Nepal:\nThe standard deferral period is 1 year (12 months) after getting a tattoo or body piercing before you can donate blood.\n\n🌍 In other countries (e.g., USA, UK):\nMany countries have a 3-month (12-week) deferral, or no deferral at all if the tattoo was done at a licensed, state-regulated facility using sterile, single-use needles.\n\n🔬 Why the waiting period exists:\nTattooing punctures the skin thousands of times, creating potential entry points for bloodborne viruses — particularly Hepatitis B (HBV) and Hepatitis C (HCV). These viruses have a 'window period' where they are too new to be detected by lab tests, even with modern Nucleic Acid Testing (NAT). The waiting period ensures any infection would be at detectable levels.\n\n📌 This rule applies equally to:\n   • Standard tattoos\n   • Eyebrow microblading\n   • Permanent eyeliner\n   • Lip blushing\n   • Scalp micropigmentation\n   • Ear piercings and body piercings"
+  },
+  {
+    id: "donation_sick",
+    tags: ["can i donate if sick","donating with cold","donating with fever","donating with flu","feeling unwell donation","sick and donating","cough donation"],
+    answer: "🤒 DONATING WHILE SICK\n\nYou must be 100% well on the day of donation.\n\n❌ Do NOT donate if you have:\n   • Fever above 37.5°C\n   • Active cold or runny nose\n   • Flu symptoms\n   • Active cough\n   • Sore throat\n   • Diarrhea or vomiting\n   • Any active infection requiring antibiotics\n\n✅ When can you donate again?\n   Wait until you are fully symptom-free. Generally at least 24–48 hours after all symptoms have cleared and you're off any antibiotics (typically 7 days after finishing a course).\n\n💡 Why it matters: Donating while ill reduces the quality and safety of the blood, potentially harms you, and exposes staff to illness. Always reschedule if you're not feeling well."
+  },
+  {
+    id: "donation_frequency",
+    tags: ["how often donate","donation frequency","how many times donate","when can i donate again","waiting period between donations","how long between donations","donate every how many days","donate twice"],
+    answer: "📅 HOW OFTEN CAN YOU DONATE?\n\nDifferent blood products have different recovery timelines:\n\n🔴 Whole Blood:        Every 56–90 days (8–12 weeks)\n   → Most common type; allows your red cells to regenerate\n\n🟡 Plasma:             Every 28 days (4 weeks)\n   → Plasma is mostly water and proteins — it replenishes quickly\n\n🟠 Platelets:          Every 7 days (up to 24 times/year)\n   → Platelets regenerate very quickly\n\n🔴 Double Red Cells:   Every 112 days (16 weeks)\n   → Takes longer as more red cells are collected\n\n💡 Your body replaces the plasma from a whole blood donation within 24–48 hours. Red blood cells take 4–6 weeks to fully regenerate. The waiting periods ensure you donate safely without risk to your own health."
+  },
+  {
+    id: "post_donation",
+    tags: ["after donating blood","after donation care","what to do after donation","post donation","recovery after blood donation","fainting after donation","eating after donating","rest after blood donation"],
+    answer: "🩹 AFTER DONATING BLOOD — RECOVERY GUIDE\n\nImmediate steps (next 30 minutes):\n   • Stay seated in the recovery area for 10–15 minutes\n   • Drink water, juice, or a recovery drink provided by the center\n   • Eat the snack offered — usually biscuits or a light meal\n   • Keep the bandage firmly on for at least 4–5 hours\n\nSame-day care:\n   • Drink an extra 4–6 glasses of water or juice\n   • Avoid alcohol, smoking, or stimulants for 24 hours\n   • Avoid heavy lifting with the arm used for donation\n   • Skip strenuous exercise for the rest of the day\n   • If you feel lightheaded, sit or lie down immediately\n\nNext 24–48 hours:\n   • Eat iron-rich foods: spinach, lentils, red meat, beans, tofu\n   • Take it easy — avoid intense physical activity\n   • If bruising occurs, apply a cold pack for 20 minutes\n\n⚠️ When to call a doctor:\n   • Prolonged dizziness or fainting\n   • Persistent bleeding from the needle site\n   • Arm pain, numbness, or significant swelling"
+  },
+  {
+    id: "iron_hemoglobin",
+    tags: ["low iron donation","hemoglobin donation","finger prick test","anemia donation","can i donate with low iron","iron deficiency donation","hemoglobin level","failed iron test","iron rich food"],
+    answer: "🔬 IRON & HEMOGLOBIN FOR BLOOD DONATION\n\nBefore you donate, staff will do a quick finger-prick hemoglobin check:\n   • Women need: ≥ 12.5 g/dL\n   • Men need: ≥ 13.5 g/dL\n\nIf your levels are too low (a condition called anemia), you'll be temporarily deferred — this protects your own health, not just the recipient's.\n\n🥗 How to boost your iron levels:\n\n🔴 Heme Iron (best absorbed — from animal sources):\n   • Red meat, liver, chicken, fish, eggs\n\n🟢 Non-Heme Iron (plant-based):\n   • Lentils, chickpeas, spinach, tofu, fortified cereals\n\n💡 Vitamin C trick: Eating vitamin C-rich foods (oranges, tomatoes, peppers) at the same meal dramatically increases iron absorption.\n\n⛔ Avoid calcium (milk, cheese) and tea or coffee near iron-rich meals — they block absorption.\n\nTypically it takes 2–4 weeks of iron-rich eating to raise your hemoglobin enough to donate. If you're consistently low, a doctor may recommend iron supplements."
+  },
+  {
+    id: "donation_types",
+    tags: ["types of donation","different ways to donate","whole blood donation","platelet donation","plasma donation","double red cells","apheresis","what can i donate","blood donation methods"],
+    answer: "🩸 TYPES OF BLOOD DONATION\n\n1️⃣ Whole Blood Donation\n   The standard donation — one pint (~450ml) of blood containing red cells, white cells, platelets, and plasma. Takes about 8–10 minutes. Separated into components in the lab.\n\n2️⃣ Platelet Donation (Apheresis)\n   A machine draws your blood, extracts only the platelets, and returns your red cells and plasma. Takes 2–3 hours. Platelets are critical for cancer patients and surgery.\n\n3️⃣ Plasma Donation\n   Extracts only the plasma portion. Used for burn victims, liver disease, and manufacturing therapeutic proteins. Takes 1–2 hours.\n\n4️⃣ Double Red Cell Donation (Power Red)\n   Collects a double dose of red blood cells while returning plasma and platelets. Takes about 30 minutes. Most beneficial for trauma patients.\n\n🏆 Which is best? Every type saves lives in different ways. Your blood center will advise which is most needed based on current supply demands."
+  },
+ 
+  // ── EMERGENCY & CLINICAL ────────────────────────────────
+  {
+    id: "emergency_blood",
+    tags: ["emergency blood","trauma blood","ambulance blood","what blood do hospitals use","o negative emergency","why o negative in ambulance","emergency transfusion","emergency blood type","icu blood"],
+    answer: "🚨 BLOOD IN EMERGENCY MEDICINE\n\nIn trauma scenarios where there is no time to test a patient's blood type, medical teams immediately reach for:\n\n🔴 O-Negative Red Blood Cells — Compatible with everyone (no ABO or Rh antigens to cause reactions). Used in:\n   • Ambulances and paramedic packs\n   • Emergency rooms for unidentified patients\n   • Military field hospitals and combat zones\n   • Obstetric emergencies (hemorrhage during childbirth)\n\nOnce a patient is stabilized, a proper cross-match test is run to find their exact blood type, and they are switched to fully matched blood to conserve the O-negative supply.\n\n💉 AB Plasma is also kept as a universal emergency — AB plasma has no antibodies that react with any patient's red cells.\n\n⚠️ O-negative supply is critically limited — only 7% of people have it, but demand is enormous. O-negative donors are among the most urgently needed in every country."
+  },
+  {
+    id: "transfusion_reaction",
+    tags: ["wrong blood","blood reaction","transfusion reaction","incompatible blood","mismatched blood","what happens wrong blood type","blood type mismatch","hemolytic reaction"],
+    answer: "⚠️ BLOOD TRANSFUSION REACTIONS\n\nIf a patient receives incompatible blood (wrong ABO or Rh type), the immune system immediately attacks the foreign red blood cells. This is called a Hemolytic Transfusion Reaction.\n\n🔴 Acute symptoms:\n   • Sudden chills and shaking\n   • Fever\n   • Back or flank pain\n   • Chest tightness\n   • Drop in blood pressure\n   • Dark-colored urine (from destroyed red cells)\n   • Rapid pulse and difficulty breathing\n\n⚫ Severe cases can cause:\n   • Kidney failure\n   • Disseminated Intravascular Coagulation (DIC)\n   • Shock and death\n\n🛡️ How hospitals prevent this:\n   • ABO/Rh typing of every patient\n   • Cross-matching (testing donor cells against patient serum)\n   • Barcode scanning systems to verify the right bag to the right patient\n   • A second nurse verification before transfusion\n\nModern protocols make transfusion reactions extremely rare — they occur in about 1 in 38,000 transfusions."
+  },
+  {
+    id: "platelets_plasma",
+    tags: ["platelet compatibility","universal platelet donor","plasma donor","ab plasma","who donates plasma to everyone","platelet transfusion","plasma transfusion","platelet blood type"],
+    answer: "🧬 PLATELETS & PLASMA COMPATIBILITY\n\n🟠 Platelets:\n   • Ideally ABO-matched, but AB+ individuals are the 'universal platelet donor'\n   • AB platelets have no antibodies that react with other blood types\n   • Platelets are critical for cancer patients on chemotherapy, surgical patients, and bleeding disorders\n   • Shelf life: only 5–7 days (unlike red cells which last 42 days) — so continuous donors are vital\n\n💛 Plasma:\n   • AB plasma is the universal plasma — it contains no anti-A or anti-B antibodies\n   • AB− individuals are especially prized plasma donors\n   • Plasma is used for burn victims, liver failure, and clotting disorder treatment\n   • Fresh Frozen Plasma (FFP) can be stored for up to 1 year when frozen\n\n💡 Key point: For red cells, O-negative is the universal donor. For plasma, AB-negative is the universal donor. These two types are the most critically needed in any blood bank."
+  },
+ 
+  // ── AI IDENTITY ──────────────────────────────────────────
+  {
+    id: "ai_identity",
+    tags: ["who are you","what are you","are you ai","are you human","are you a robot","are you real","what is abo ai","tell me about yourself","about this app"],
+    answer: "🤖 I am ABO± AI — a specialized blood type and donation intelligence assistant.\n\nI am designed specifically to help you with:\n   🩸 Blood type identification and profiles\n   💉 Donation eligibility and deferral rules\n   🔬 Transfusion compatibility matrices\n   🏥 Emergency blood medicine facts\n   ❤️ Post-donation care and iron nutrition\n\nI am not a licensed medical professional. While I provide medically grounded information based on standard hematology guidelines, you should always consult qualified healthcare staff at your blood bank or hospital for personalized medical decisions.\n\nBuilt for blood banks and donation centers in Nepal and worldwide. 🌍"
+  },
+  {
+    id: "not_doctor",
+    tags: ["are you a doctor","medical advice","should i trust you","are you licensed","are you better than doctor","should i see a doctor"],
+    answer: "No, I am not a doctor or licensed medical professional. 🩺\n\nI provide medically informed general information based on standard blood banking and hematology guidelines. However, every individual's health situation is unique.\n\nFor decisions about your specific health, eligibility to donate, or medical treatment — always consult:\n   • A licensed physician or hematologist\n   • Your local blood bank's medical team\n   • A hospital specialist\n\nI can prepare you with knowledge before those conversations, but the qualified professionals always have the final say. 🏥"
+  },
+  {
+    id: "fun_blood_facts",
+    tags: ["fun fact","interesting fact","blood fact","blood science","did you know","cool blood fact","tell me something interesting","facts about blood","easter egg","secret"],
+    answer: "🔬 FASCINATING BLOOD FACTS:\n\n• Your body produces approximately 2–3 million red blood cells every single second from your bone marrow.\n\n• A single unit of donated blood can save up to 3 different patients.\n\n• Red blood cells live for only about 120 days before they are recycled by the spleen.\n\n• If you laid out all your blood vessels end to end, they would stretch about 100,000 km — enough to circle the Earth 2.5 times.\n\n• The rarest blood type in the world (Rhnull or 'Golden Blood') has only been found in 43 people ever recorded.\n\n• Horseshoe crabs have bright blue blood (using copper instead of iron) that is used to test medical equipment for bacterial contamination.\n\n• Blood makes up about 7–8% of your total body weight.\n\n• Your immune system's antibodies in plasma are so specific they can detect a single bacterium among millions of your own cells. 🧬"
+  },
+ 
+  // ── MISC / FALLBACK SLANG ──────────────────────────────
+  {
+    id: "slang_laughing",
+    tags: ["lol","haha","hahaha","lmao","rofl","hehe","funny","😂","🤣"],
+    answer: "😄 Glad I could bring a smile! Blood science has some genuinely surprising facts. Feel free to ask anything more!"
+  },
+  {
+    id: "misc_yes",
+    tags: ["yes","yeah","yep","yep","correct","right","exactly","true","absolutely","definitely"],
+    answer: "Great! What else would you like to know about blood types or donation?"
+  },
+  {
+    id: "misc_no",
+    tags: ["no","nope","nah","not really","never mind","forget it"],
+    answer: "No problem at all! Let me know if you'd like to explore a different topic or ask anything else. 😊"
+  },
+  {
+    id: "misc_wait",
+    tags: ["wait","hold on","one second","sec","just a minute","brb"],
+    answer: "No rush! Take your time — I'll be right here whenever you're ready. 🩸"
+  },
+  {
+    id: "misc_sorry",
+    tags: ["sorry","my bad","oops","apologies","sry","i made a mistake"],
+    answer: "No worries at all! We can keep going or start fresh. What would you like to know? 😊"
+  },
+ 
 ];
-
-/* ==========================================
-   2. MATCHING ALGORITHM (Fast, Local NLP)
-   ========================================== */
-function findBestAnswer(input) {
-    const normalized = input.toLowerCase().replace(/[^\w\s]/gi, '');
-    const inputWords = normalized.split(/\s+/).filter(w => w.length > 2);
-
-    if (inputWords.length === 0) return "Input empty or unrecognized. Please provide a clear question line.";
-
-    let bestMatch = null;
-    let highestScore = 0;
-
-    for (let i = 0; i < faqDatabase.length; i++) {
-        const entry = faqDatabase[i];
-        let matches = 0;
-
-        inputWords.forEach(word => {
-            if (entry.keywords.some(keyword => keyword.includes(word) || word.includes(keyword))) {
-                matches++;
+ 
+ 
+// ————————————————————————————————————————
+// 3. SMART MATCHING ENGINE
+// ————————————————————————————————————————
+function normalize(str) {
+    return str.toLowerCase().replace(/[^a-z0-9\s+\-]/gi, ' ').trim();
+}
+ 
+function findAnswer(userInput) {
+    const input = normalize(userInput);
+    const words = input.split(/\s+/).filter(w => w.length > 1);
+ 
+    let bestScore = 0;
+    let bestEntry = null;
+ 
+    for (const entry of knowledgeBase) {
+        let score = 0;
+ 
+        // Full phrase matching (highest weight)
+        for (const tag of entry.tags) {
+            if (input.includes(tag)) {
+                score += tag.split(' ').length * 4; // Multi-word = higher score
             }
-        });
-
-        let phraseBonus = 0;
-        entry.keywords.forEach(phrase => {
-            if (normalized.includes(phrase)) {
-                phraseBonus += 3;
+        }
+ 
+        // Word-level matching
+        for (const word of words) {
+            for (const tag of entry.tags) {
+                if (tag === word || tag.includes(word) || word.includes(tag)) {
+                    score += 1;
+                }
             }
-        });
-
-        let totalScore = matches + phraseBonus;
-
-        if (totalScore > highestScore) {
-            highestScore = totalScore;
-            bestMatch = entry.answer;
+        }
+ 
+        if (score > bestScore) {
+            bestScore = score;
+            bestEntry = entry;
         }
     }
-
-    return highestScore > 0 ? bestMatch : "I read your line, but couldn't verify a high-confidence correlation. Try using clear alternative terms like 'tattoo restrictions' or 'weight rule'.";
+ 
+    if (bestScore >= 1 && bestEntry) {
+        // Handle dynamic responses
+        if (typeof bestEntry.respond === 'function') {
+            return bestEntry.respond();
+        }
+        return bestEntry.answer;
+    }
+ 
+    // Fallback
+    return "I couldn't find a specific answer to that in my database. 🩸\n\nTry asking about:\n• 'What are the blood types?'\n• 'Who can O negative donate to?'\n• 'Am I eligible to donate?'\n• 'What is the rarest blood type?'\n\nOr visit your nearest blood bank for personalized guidance!";
 }
-
-/* ==========================================
-   3. STATE & SESSION MANAGEMENT
-   ========================================== */
-const chatWindow = document.getElementById('chatWindow');
-const userInput = document.getElementById('userInput');
+ 
+ 
+// ————————————————————————————————————————
+// 4. STATE & SESSION MANAGEMENT
+// ————————————————————————————————————————
+const chatWindow    = document.getElementById('chatWindow');
+const userInput     = document.getElementById('userInput');
 const historyContainer = document.getElementById('historyContainer');
-
-// Active tracking session ID configuration
+const historyEmpty  = document.getElementById('historyEmpty');
+const welcomeScreen = document.getElementById('welcomeScreen');
+ 
 let activeChatId = null;
-let chatHistory = [];
-
-// Legacy Schema Guard: Safely handle old data models or load correctly structured sessions
+let chatHistory  = [];
+ 
 try {
-    const stored = localStorage.getItem('advancedChatHistory');
+    const stored = localStorage.getItem('aboai_chat_v2');
     if (stored) {
         const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed) && (parsed.length === 0 || 'messages' in parsed[0])) {
-            chatHistory = parsed;
-        }
+        if (Array.isArray(parsed)) chatHistory = parsed;
     }
-} catch (e) {
-    chatHistory = [];
-}
-
-// Initial Boot Cycle setup
+} catch(e) { chatHistory = []; }
+ 
 updateHistoryUI();
 if (chatHistory.length > 0) {
     loadChatSession(chatHistory[0].id);
 }
-
+ 
 function handleEnter(e) { if (e.key === 'Enter') processUserInput(); }
 function sendQuickMessage(text) { userInput.value = text; processUserInput(); }
-
+ 
 function processUserInput() {
     const text = userInput.value.trim();
     if (!text) return;
-
-    // 1. Thread Creation Layer: Generate a session context if one isn't currently open
+ 
+    // Hide welcome screen on first message
+    if (welcomeScreen) welcomeScreen.style.display = 'none';
+ 
+    // Create session if none active
     if (activeChatId === null) {
         const newSession = {
             id: Date.now(),
-            title: text.length > 28 ? text.substring(0, 25) + '...' : text,
+            title: text.length > 30 ? text.substring(0, 27) + '…' : text,
             messages: [],
             pinned: false
         };
         chatHistory.unshift(newSession);
         activeChatId = newSession.id;
     }
-
-    const currentSession = chatHistory.find(i => i.id === activeChatId);
-
-    // 2. Commit User prompt state logs
+ 
+    const session = chatHistory.find(i => i.id === activeChatId);
+ 
+    // Show user message
     addMessage(text, 'msg-user');
-    if (currentSession) {
-        currentSession.messages.push({ text: text, className: 'msg-user' });
-    }
+    if (session) session.messages.push({ text, cls: 'msg-user' });
     userInput.value = '';
-    saveHistoryToStorage();
-
-    // 3. Match Offline Response Pipeline
+    saveHistory();
+ 
+    // Show typing indicator
+    const typing = document.createElement('div');
+    typing.className = 'typing-indicator';
+    typing.id = 'typingIndicator';
+    typing.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
+    chatWindow.appendChild(typing);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+ 
+    // Simulate response with natural delay
+    const delay = 400 + Math.random() * 400;
     setTimeout(() => {
-        const answer = findBestAnswer(text);
+        const indicator = document.getElementById('typingIndicator');
+        if (indicator) indicator.remove();
+ 
+        const answer = findAnswer(text);
         addMessage(answer, 'msg-ai');
-        
-        if (currentSession) {
-            currentSession.messages.push({ text: answer, className: 'msg-ai' });
-            saveHistoryToStorage();
+ 
+        if (session) {
+            session.messages.push({ text: answer, cls: 'msg-ai' });
+            saveHistory();
         }
-    }, 250);
+    }, delay);
 }
-
-function addMessage(text, className) {
-    const msgDiv = document.createElement('div');
-    msgDiv.className = `message ${className}`;
-    msgDiv.innerText = text;
-    chatWindow.appendChild(msgDiv);
+ 
+function addMessage(text, cls) {
+    const div = document.createElement('div');
+    div.className = `message ${cls}`;
+    div.textContent = text;
+    chatWindow.appendChild(div);
     chatWindow.scrollTop = chatWindow.scrollHeight;
 }
-
-/* ==========================================
-   4. TIMELINE & DOM COMPONENT GENERATION
-   ========================================== */
+ 
+ 
+// ————————————————————————————————————————
+// 5. HISTORY MANAGEMENT
+// ————————————————————————————————————————
+function saveHistory() {
+    try { localStorage.setItem('aboai_chat_v2', JSON.stringify(chatHistory)); } catch(e) {}
+    updateHistoryUI();
+}
+ 
+function startNewChat() {
+    activeChatId = null;
+    chatWindow.innerHTML = '';
+ 
+    // Re-show welcome screen
+    const ws = document.createElement('div');
+    ws.className = 'welcome-screen';
+    ws.id = 'welcomeScreen';
+    ws.innerHTML = `
+        <div class="welcome-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2C12 2 5 9.5 5 14.5C5 18.09 8.13 21 12 21C15.87 21 19 18.09 19 14.5C19 9.5 12 2 12 2Z"/></svg>
+        </div>
+        <div class="welcome-title">ABO± AI Assistant</div>
+        <div class="welcome-sub">${getWelcomeGreeting()}</div>
+        <div class="welcome-chips">
+            <div class="welcome-chip" onclick="sendQuickMessage('What are the blood types?')">Blood Types</div>
+            <div class="welcome-chip" onclick="sendQuickMessage('Who can O negative donate to?')">O− Compatibility</div>
+            <div class="welcome-chip" onclick="sendQuickMessage('Am I eligible to donate blood?')">Eligibility Check</div>
+            <div class="welcome-chip" onclick="sendQuickMessage('What is the rarest blood type?')">Rarest Type</div>
+        </div>
+    `;
+    chatWindow.appendChild(ws);
+    closeSidebar();
+    updateHistoryUI();
+}
+ 
 function loadChatSession(id) {
     activeChatId = id;
     const session = chatHistory.find(i => i.id === id);
     if (!session) return;
-
+ 
     chatWindow.innerHTML = '';
     if (session.messages && session.messages.length > 0) {
-        session.messages.forEach(msg => {
-            addMessage(msg.text, msg.className);
-        });
+        session.messages.forEach(m => addMessage(m.text, m.cls));
     } else {
-        addMessage("Context refactored. Ready for standard inputs.", 'msg-ai');
+        addMessage("Session loaded. Ask me anything about blood types or donation!", 'msg-ai');
     }
     updateHistoryUI();
+    closeSidebar();
 }
-
-function updateHistoryUI() {
-    historyContainer.innerHTML = '';
-    const sortedHistory = [...chatHistory].sort((a, b) => b.pinned - a.pinned);
-
-    sortedHistory.forEach(item => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = `history-item ${item.pinned ? 'pinned' : ''} ${item.id === activeChatId ? 'active' : ''}`;
-        
-        const textSpan = document.createElement('span');
-        textSpan.className = 'history-text';
-        textSpan.innerText = item.title || "Untitled Conversation";
-        textSpan.onclick = () => loadChatSession(item.id);
-
-        const actionsDiv = document.createElement('div');
-        actionsDiv.className = 'history-actions';
-
-        // Pin Action Item (Adaptive SVG Pin Layout)
-        const pinBtn = document.createElement('button');
-        pinBtn.className = 'action-btn';
-        pinBtn.title = item.pinned ? 'Unpin Line' : 'Pin Line';
-        pinBtn.style.color = item.pinned ? 'var(--cb)' : 'var(--tm)';
-        pinBtn.innerHTML = `
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="${item.pinned ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="17" x2="12" y2="22"></line>
-                <path d="M5 17h14v-1.76a2 2 0 0 0-.44-1.24l-2.33-2.91A1 1 0 0 1 16 10.5V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v5.5a1 1 0 0 1-.23.59l-2.33 2.91A2 2 0 0 0 5 15.24z"></path>
-            </svg>
-        `;
-        pinBtn.onclick = (e) => {
-            e.stopPropagation();
-            togglePin(item.id);
-        };
-
-        // Delete Action Item (Adaptive SVG Trash Can Layout)
-        const deleteBtn = document.createElement('button');
-        deleteBtn.className = 'action-btn';
-        deleteBtn.title = 'Remove Line';
-        deleteBtn.style.color = 'var(--tm)';
-        deleteBtn.innerHTML = `
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <polyline points="3 6 5 6 21 6"></polyline>
-                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-            </svg>
-        `;
-        deleteBtn.onclick = (e) => {
-            e.stopPropagation();
-            deleteHistoryItem(item.id);
-        };
-
-        actionsDiv.appendChild(pinBtn);
-        actionsDiv.appendChild(deleteBtn);
-        itemDiv.appendChild(textSpan);
-        itemDiv.appendChild(actionsDiv);
-        historyContainer.appendChild(itemDiv);
-    });
-}
-
+ 
 function togglePin(id) {
-    const index = chatHistory.findIndex(i => i.id === id);
-    if (index !== -1) {
-        chatHistory[index].pinned = !chatHistory[index].pinned;
-        saveHistoryToStorage();
-    }
+    const i = chatHistory.findIndex(x => x.id === id);
+    if (i !== -1) { chatHistory[i].pinned = !chatHistory[i].pinned; saveHistory(); }
 }
-
+ 
 function deleteHistoryItem(id) {
     chatHistory = chatHistory.filter(i => i.id !== id);
-    saveHistoryToStorage();
     if (activeChatId === id) {
-        if (chatHistory.length > 0) {
-            loadChatSession(chatHistory[0].id);
-        } else {
-            startNewChat();
-        }
+        if (chatHistory.length > 0) loadChatSession(chatHistory[0].id);
+        else startNewChat();
     }
+    saveHistory();
 }
-
+ 
 function clearAllHistory() {
     chatHistory = [];
-    saveHistoryToStorage();
+    try { localStorage.removeItem('aboai_chat_v2'); } catch(e) {}
     startNewChat();
 }
-
-function saveHistoryToStorage() {
-    localStorage.setItem('advancedChatHistory', JSON.stringify(chatHistory));
-    updateHistoryUI();
+ 
+function updateHistoryUI() {
+    historyContainer.innerHTML = '';
+    if (chatHistory.length === 0) {
+        historyContainer.innerHTML = '<div class="history-empty">No conversations yet.<br>Start chatting below.</div>';
+        return;
+    }
+ 
+    const sorted = [...chatHistory].sort((a, b) => b.pinned - a.pinned);
+    sorted.forEach(item => {
+        const div = document.createElement('div');
+        div.className = `history-item ${item.pinned ? 'pinned' : ''} ${item.id === activeChatId ? 'active' : ''}`;
+ 
+        const text = document.createElement('span');
+        text.className = 'history-text';
+        text.textContent = item.title || 'Untitled';
+        text.onclick = () => loadChatSession(item.id);
+ 
+        const actions = document.createElement('div');
+        actions.className = 'history-actions';
+ 
+        const pinBtn = document.createElement('button');
+        pinBtn.className = 'action-btn';
+        pinBtn.title = item.pinned ? 'Unpin' : 'Pin';
+        pinBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="${item.pinned ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-.44-1.24l-2.33-2.91A1 1 0 0 1 16 10.5V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v5.5a1 1 0 0 1-.23.59l-2.33 2.91A2 2 0 0 0 5 15.24z"/></svg>`;
+        pinBtn.style.color = item.pinned ? 'var(--cb)' : 'var(--tm)';
+        pinBtn.onclick = e => { e.stopPropagation(); togglePin(item.id); };
+ 
+        const delBtn = document.createElement('button');
+        delBtn.className = 'action-btn';
+        delBtn.title = 'Delete';
+        delBtn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>`;
+        delBtn.style.color = 'var(--tm)';
+        delBtn.onclick = e => { e.stopPropagation(); deleteHistoryItem(item.id); };
+ 
+        actions.appendChild(pinBtn);
+        actions.appendChild(delBtn);
+        div.appendChild(text);
+        div.appendChild(actions);
+        historyContainer.appendChild(div);
+    });
 }
-
-function startNewChat() {
-    activeChatId = null;
-    chatWindow.innerHTML = '';
-    addMessage("System online. I am initialized to handle complex inquiries regarding blood types, procedural processing timelines, and compliance deferrals. Ask freely.", 'msg-ai');
-    updateHistoryUI();
-}
-
+ 
+ 
+// ————————————————————————————————————————
+// 6. THEME TOGGLE
+// ————————————————————————————————————————
 function toggleTheme() {
     const html = document.documentElement;
-    const current = html.getAttribute('data-theme');
-    html.setAttribute('data-theme', current === 'dark' ? 'light' : 'dark');
+    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    try { localStorage.setItem('theme', next); } catch(e) {}
 }
-
-const knowledgeBase = [
-    // --- HIGH PRIORITY: Medical & Safety Rules ---
-    {
-        priority: 1,
-        keywords: ["tattoo", "surgery", "piercing", "waiting period"],
-        answer: "In Nepal, there is a mandatory one-year waiting period after getting a tattoo, piercing, or surgery before you can donate blood to ensure safety against bloodborne infections."
-    },
-    {
-        priority: 1,
-        keywords: ["sick", "fever", "cough", "cold", "flu"],
-        answer: "You must be in good health to donate. If you have a fever, cough, or cold, you will be deferred. Please wait until you are fully symptom-free for 24–48 hours."
-    },
-    {
-        priority: 1,
-        keywords: ["o-", "o negative", "who can i donate to"],
-        answer: "O-negative blood is the Universal Red Cell Donor. You can donate red blood cells to any patient in an emergency. However, O-negative individuals can only receive blood from other O-negative donors."
-    },
-
-    // --- LOW PRIORITY: General Information ---
-    {
-        priority: 2,
-        keywords: ["blood type", "blood group", "types of blood"],
-        answer: "There are 4 main blood groups (A, B, AB, O) which are further categorized as positive or negative based on the Rh factor protein."
-    }
-];
-
-function getBotResponse(userInput) {
-    const query = userInput.toLowerCase().replace(/[^a-z0-9\s]/g, "");
-
-    // 1. Sort database by priority (1 is higher than 2)
-    const sortedDb = knowledgeBase.sort((a, b) => a.priority - b.priority);
-
-    // 2. Search through sorted list
-    for (let entry of sortedDb) {
-        if (entry.keywords.some(k => query.includes(k))) {
-            return entry.answer; // Stop searching once high priority match is found
-        }
-    }
-
-    return "I'm sorry, I couldn't find a specific rule for that. Please visit your nearest Nepal Red Cross blood center for a professional health screening.";
-}
-/* ==========================================================================
-   RESPONSIVENESS: OFF-CANVAS SIDEBAR INTERACTIVITY CONTROLLERS
-   ========================================================================== */
-
+ 
+ 
+// ————————————————————————————————————————
+// 7. MOBILE SIDEBAR
+// ————————————————————————————————————————
 function toggleMobileSidebar() {
-    const sidebar = document.querySelector(".sidebar");
-    const overlay = document.getElementById("sidebarOverlay");
-    
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
     if (!sidebar || !overlay) return;
-
-    const isOpening = sidebar.classList.toggle("open");
-    
+ 
+    const isOpening = sidebar.classList.toggle('open');
     if (isOpening) {
-        overlay.style.display = "block";
-        void overlay.offsetHeight; // Triggers browser layout pass to force CSS transition execution
-        overlay.classList.add("show");
+        overlay.style.display = 'block';
+        requestAnimationFrame(() => overlay.classList.add('show'));
     } else {
-        overlay.classList.remove("show");
-        setTimeout(() => {
-            if (!sidebar.classList.contains("open")) {
-                overlay.style.display = "none";
-            }
-        }, 300); // Wait for CSS opacity ease duration
+        overlay.classList.remove('show');
+        setTimeout(() => { if (!sidebar.classList.contains('open')) overlay.style.display = 'none'; }, 300);
     }
 }
-
-// Bind interactive click handlers when document loads
-document.addEventListener("DOMContentLoaded", () => {
-    const triggerBtn = document.getElementById("menuToggle");
-    const interfaceOverlay = document.getElementById("sidebarOverlay");
-
-    if (triggerBtn) triggerBtn.addEventListener("click", toggleMobileSidebar);
-    if (interfaceOverlay) interfaceOverlay.addEventListener("click", toggleMobileSidebar);
+ 
+function closeSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (sidebar) sidebar.classList.remove('open');
+    if (overlay) { overlay.classList.remove('show'); setTimeout(() => overlay.style.display = 'none', 300); }
+}
+ 
+document.addEventListener('DOMContentLoaded', () => {
+    const toggle  = document.getElementById('menuToggle');
+    const overlay = document.getElementById('sidebarOverlay');
+    if (toggle)  toggle.addEventListener('click', toggleMobileSidebar);
+    if (overlay) overlay.addEventListener('click', closeSidebar);
+ 
+    // Swipe to close sidebar on mobile
+    let touchStartX = 0;
+    document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; }, { passive: true });
+    document.addEventListener('touchend', e => {
+        const dx = touchStartX - e.changedTouches[0].clientX;
+        const sidebar = document.getElementById('sidebar');
+        if (dx > 60 && sidebar && sidebar.classList.contains('open')) closeSidebar();
+    }, { passive: true });
 });
