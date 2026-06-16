@@ -24,7 +24,11 @@
             <span class="logo" id="logo"></span> ABO± AI
         </div>
         <button class="btn btn-primary" onclick="startNewChat()">+ New Chat</button>
-        <button class="btn" onclick="clearAllHistory()">🗑️ Wipe All History</button>
+        <button class="btn" onclick="clearAllHistory()"><svg class="trash-icon" viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg">
+    <path class="bin-body" d="M 25 35 L 75 35 L 70 105 A 5 5 0 0 1 65 110 L 35 110 A 5 5 0 0 1 30 105 Z" />
+    <rect class="lid" x="15" y="27" width="70" height="8" rx="4" />
+    <path class="handle" d="M 42 27 L 58 27 L 55 18 L 45 18 Z" />
+  </svg> Wipe All History</button>
         
         <div style="margin-top: 25px; font-size: 0.75rem; color: var(--tm); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Timeline Ledger</div>
         <div class="history-container" id="historyContainer">

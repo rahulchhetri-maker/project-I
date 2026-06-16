@@ -327,3 +327,21 @@ body {
     .input-area { padding: 15px 20px; }
     .message { max-width: 95%; }
 }
+/* Container sizing */
+
+/* Base styles for SVG parts */
+.bin-body { fill: #b71c1c; }
+.lid { fill: #e53935; }
+.handle { fill: #7f0000; }
+
+/* Interactive Hover State */
+.trash-container:hover .bin-body {
+  fill: #d32f2f; /* Lighter red on hover */
+}
+
+.trash-container:hover {
+  transform: scale(1.1); /* Slight zoom effect */
+}
+.trash-icon{
+    height: 18px;
+}
