@@ -410,8 +410,8 @@ const knowledgeBase = [
     respond: () => "Good afternoon! 🌤️ Great time to get your questions answered. Ask me anything about blood groups, eligibility, or donation procedures."
   },
   {
-  "id": "id_developer",
-  "tag": [
+  id: "id_developer",
+  tag: [
     "who is your developer",
     "who created you",
     "who made you",
@@ -443,11 +443,11 @@ const knowledgeBase = [
     "tell me your developer name",
     "who is the genius that made you"
   ],
-  "answer": "Rahul Chhetri"
+  answer: "Rahul Chhetri"
 },
 {
-  "id": "id_developer",
-  "tag": [
+  id: "id_developer",
+  tag: [
     "who is your developer",
     "who is your developer?",
     "who created you",
@@ -509,7 +509,7 @@ const knowledgeBase = [
     "who is the genius that made you",
     "who is the genius that made you?"
   ],
-  "answer": "Rahul Chhetri"
+  answer: "Rahul Chhetri"
 },
   {
     id: "greet_evening",
