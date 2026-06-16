@@ -1865,3 +1865,47 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 });
+// ═══════════════════════════════════════════════════════════════════════════
+// SAFE MOUSE WHEEL SCROLL UNBLOCKER
+// ═══════════════════════════════════════════════════════════════════════════
+document.addEventListener("DOMContentLoaded", () => {
+    // Target only the internal form body container where the inputs live
+    const modalBody = document.querySelector('.abo-unique-modal-body');
+
+    if (modalBody) {
+        // Stop the wheel event from bubbling up to background scroll-blockers.
+        // This does NOT alter any display, visibility, positioning, or styles.
+        modalBody.addEventListener('wheel', function(event) {
+            event.stopPropagation();
+        }, { passive: true });
+    }
+});// ═══════════════════════════════════════════════════════════════════════════
+// MODAL MOUSE WHEEL SCROLL REPAIR ENGINE
+// ═══════════════════════════════════════════════════════════════════════════
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Locate the edit profile modal or its active content containers
+    const editModal = document.getElementById('abo-unique-edit-profile-modal') || 
+                      document.querySelector('[id*="edit-profile"]') || 
+                      document.querySelector('.abo-unique-modal-body')?.closest('div');
+
+    if (editModal) {
+        // 2. Select the internal scrollable containers (the form or the modal body)
+        const scrollableTargets = editModal.querySelectorAll('form, .abo-unique-modal-body, .abo-unique-input-group');
+        
+        // Target the main wrapper of the modal content directly
+        const modalContentBox = editModal.querySelector('.abo-unique-modal-content') || editModal;
+
+        // 4. Stop wheel event propagation
+        // This stops background overlay scripts from blocking your mouse scroll inside the form
+        modalContentBox.addEventListener('wheel', (event) => {
+            event.stopPropagation();
+        }, { passive: true });
+
+        // Apply fallback listeners to any forms inside to ensure full scroll capture
+        scrollableTargets.forEach(target => {
+            target.addEventListener('wheel', (event) => {
+                event.stopPropagation();
+            }, { passive: true });
+        });
+    }
+});
