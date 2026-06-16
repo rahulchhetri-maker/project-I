@@ -3413,12 +3413,12 @@ html[data-theme="light"] .setup-file-label {
   /* Positioning */
   position: fixed;
   bottom: 85px;
-  right: 48px;
+  right: 45px;
   z-index: 9999;
   
   /* Sizing & Layout */
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
