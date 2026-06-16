@@ -3381,3 +3381,23 @@ html[data-theme="light"] .setup-file-label {
 
 }
 .pi-subtitle { font-family: var(--fb); font-size: 1rem; color: var(--ts); margin-bottom: 5px; }
+
+.team-slider-container {
+  overflow: hidden;
+  position: relative;
+  width: 100%;
+  padding: 10px 0;
+}
+
+#team-track {
+  display: flex;
+  gap: 24px; /* Space between cards */
+  width: max-content; 
+  will-change: transform;
+}
+
+/* Ensure the cards don't shrink inside the flex container */
+.team-track .team-card {
+  flex: 0 0 auto;
+  width: 280px; /* Adjust width as needed for your design */
+}

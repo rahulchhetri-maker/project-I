@@ -1607,3 +1607,71 @@ document.addEventListener("DOMContentLoaded", () => {
         if(section.id) scrollSpyObserver.observe(section);
     });
 });
+// --- Team Slider Engine ---
+let activeTeamSlideIndex = 0;
+let _teamSliderLock = false;
+
+const getTeamSlideWidth = (track) => {
+  const gap = parseFloat(getComputedStyle(track).gap) || 24;
+  const firstSlide = track.children[0];
+  if (!firstSlide) return 0;
+  return firstSlide.getBoundingClientRect().width + gap;
+};
+
+const initTeamCarousel = () => {
+  const track = document.getElementById('team-track');
+  if (!track) return;
+
+  const slides = Array.from(track.children);
+  if (slides.length < 2) return;
+
+  // Select the specific team navigation buttons
+  const teamNavBtns = document.querySelectorAll('.team-nav-btn');
+  
+  teamNavBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const direction = Number(btn.dataset.direction || 0);
+      if (direction && !_teamSliderLock) {
+        shiftTeamSlider(direction, track, slides.length);
+      }
+    });
+  });
+};
+
+const shiftTeamSlider = (movementDirection, track, totalSlides) => {
+  _teamSliderLock = true;
+  const slideWidth = getTeamSlideWidth(track);
+  
+  if (!slideWidth) {
+    _teamSliderLock = false;
+    return;
+  }
+
+  // Calculate visible bounds so we don't scroll past empty space
+  const containerWidth = track.parentElement.getBoundingClientRect().width;
+  const visibleSlides = Math.floor(containerWidth / slideWidth);
+  const maxIndex = Math.max(0, totalSlides - visibleSlides);
+
+  let nextIndex = activeTeamSlideIndex + movementDirection;
+  
+  // Enforce min and max boundaries
+  if (nextIndex < 0) nextIndex = 0;
+  if (nextIndex > maxIndex) nextIndex = maxIndex;
+
+  activeTeamSlideIndex = nextIndex;
+
+  // Execute GSAP Animation
+  gsap.to(track, {
+    x: -slideWidth * activeTeamSlideIndex,
+    duration: 0.85,
+    ease: 'power3.out',
+    onComplete: () => {
+      setTimeout(() => { _teamSliderLock = false; }, 120);
+    }
+  });
+};
+
+// Initialize the team slider when the DOM loads
+document.addEventListener('DOMContentLoaded', () => {
+  initTeamCarousel();
+});
