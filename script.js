@@ -700,12 +700,22 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     window.toggleDonorModal = () => {
+        if (!localStorage.getItem('abo_active_session')) {
+            window.toggleAuth();
+            if (typeof window.addNotification === 'function') window.addNotification("Please log in to register as a donor.");
+            return;
+        }
         const targetState = (donorModal.style.display === 'flex') ? 'none' : 'flex';
         closeAllActiveModals();
         donorModal.style.display = targetState;
     };
 
     window.toggleRequestModal = () => {
+        if (!localStorage.getItem('abo_active_session')) {
+            window.toggleAuth();
+            if (typeof window.addNotification === 'function') window.addNotification("Please log in to request blood.");
+            return;
+        }
         const targetState = (requestModal.style.display === 'flex') ? 'none' : 'flex';
         closeAllActiveModals();
         requestModal.style.display = targetState;
@@ -726,7 +736,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // FINAL PRODUCTION-READY LOGIN STATE & FORM VALIDATION PIPELINE
 // =========================================================================
 document.addEventListener("DOMContentLoaded", () => {
-    let isLoggedIn = false; // Initialize to false (no persistence)
     let pendingFormModal = null; 
 
     const authModal = document.getElementById('auth-modal');
@@ -805,7 +814,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     window.toggleAuth = () => {
-        if (isLoggedIn) {
+        if (localStorage.getItem('abo_active_session')) {
             if (signoutDropdown) {
                 if (signoutDropdown.style.display === 'block') {
                     signoutDropdown.style.display = 'none';
@@ -829,6 +838,11 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     window.toggleDonorModal = () => {
+        if (!localStorage.getItem('abo_active_session')) {
+            window.toggleAuth();
+            if (typeof window.addNotification === 'function') window.addNotification("Please log in to register as a donor.");
+            return;
+        }
         if (donorModal) {
             const targetState = (donorModal.style.display === 'flex') ? 'none' : 'flex';
             closeAllActiveModals();
@@ -837,6 +851,11 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     window.toggleRequestModal = () => {
+        if (!localStorage.getItem('abo_active_session')) {
+            window.toggleAuth();
+            if (typeof window.addNotification === 'function') window.addNotification("Please log in to request blood.");
+            return;
+        }
         if (requestModal) {
             const targetState = (requestModal.style.display === 'flex') ? 'none' : 'flex';
             closeAllActiveModals();
@@ -892,7 +911,6 @@ document.addEventListener("DOMContentLoaded", () => {
     if (signoutItem) {
         signoutItem.addEventListener('click', (e) => {
             e.stopPropagation();
-            isLoggedIn = false; // Reset to false
             
             // Delete the profile picture from temporary memory
             window.currentSessionProfilePic = null;
@@ -923,7 +941,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const isLocalAccount = (savedUser && usernameValue === savedUser.email && passwordValue === savedUser.pass);
 
             if (isDemoAccount || isLocalAccount) {
-                isLoggedIn = true;
                 
                 if (isLocalAccount && savedUser.profilePic) {
                     window.currentSessionProfilePic = savedUser.profilePic;
@@ -948,10 +965,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const handleSecureFormSubmit = async (event, modalElement) => {
         event.preventDefault(); 
 
-        if (!isLoggedIn) {
+        if (!localStorage.getItem('abo_active_session')) {
             pendingFormModal = modalElement;
             closeAllActiveModals();
             if (authModal) authModal.style.display = 'flex';
+            if (typeof window.addNotification === 'function') window.addNotification("Please log in to submit this form.");
             return; 
         }
 
@@ -1885,8 +1903,8 @@ document.addEventListener("DOMContentLoaded", () => {
 document.addEventListener("DOMContentLoaded", () => {
     // 1. Locate the edit profile modal or its active content containers
     const editModal = document.getElementById('abo-unique-edit-profile-modal') || 
-                      document.querySelector('[id*="edit-profile"]') || 
-                      document.querySelector('.abo-unique-modal-body')?.closest('div');
+    document.querySelector('[id*="edit-profile"]') || 
+    document.querySelector('.abo-unique-modal-body')?.closest('div');
 
     if (editModal) {
         // 2. Select the internal scrollable containers (the form or the modal body)
