@@ -1572,3 +1572,38 @@ if (setupScrollFields) {
             }
         });
     }
+// =========================================================================
+// REAL-TIME NAVIGATION HIGHLIGHT (SCROLL SPY ENGINE)
+// =========================================================================
+document.addEventListener("DOMContentLoaded", () => {
+    const sections = document.querySelectorAll('section, footer');
+    const navLinks = document.querySelectorAll('.nav-links a');
+    
+    // Configurations: Trigger active state when a section hits the middle/top of the viewport
+    const observerOptions = {
+        root: null,
+        // Negative top margin offsets the fixed sticky header
+        rootMargin: '-100px 0px -60% 0px', 
+        threshold: 0
+    };
+
+    const scrollSpyObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const targetId = entry.target.getAttribute('id');
+                
+                // Update navigation links
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${targetId}`) {
+                        link.classList.add('active');
+                    }
+                });
+            }
+        });
+    }, observerOptions);
+
+    sections.forEach(section => {
+        if(section.id) scrollSpyObserver.observe(section);
+    });
+});

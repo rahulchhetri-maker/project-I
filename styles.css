@@ -2726,41 +2726,6 @@ section { padding: 140px 0; position: relative; z-index: 2; perspective: 1000px;
 }
 
 
-
-.hint-row {
-
-  display: flex;
-
-  gap: 10px;
-
-  font-size: 0.75rem;
-
-  font-family: var(--fb);            /* Inter font */
-
-}
-
-
-
-.hint-row .label {
-
-  color: var(--c);                   /* Red color for labels */
-
-  font-weight: 700;
-
-  text-transform: uppercase;
-
-}
-
-
-
-.hint-row code {
-
-  color: var(--tm);                  /* Text color */
-
-  font-family: monospace;
-
-}
-
 /* ═══════════════════════════════════════
 
    NOTIFICATION SYSTEM
