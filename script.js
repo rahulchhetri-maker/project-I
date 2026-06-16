@@ -1675,3 +1675,193 @@ const shiftTeamSlider = (movementDirection, track, totalSlides) => {
 document.addEventListener('DOMContentLoaded', () => {
   initTeamCarousel();
 });
+/**
+ * ABO± Extended Security & Profile Customization Engine
+ * Safe Modular Elements Processing Layer
+ */
+document.addEventListener("DOMContentLoaded", () => {
+    
+    // --- ELEMENT SELECTORS ---
+    const privacyModal = document.getElementById('abo-unique-privacy-modal');
+    const editProfileModal = document.getElementById('abo-unique-edit-profile-modal');
+    
+    // Triggers
+    const triggerEditProfile = document.getElementById('abo-unique-trigger-edit-profile');
+    // Finds your existing target layout option for privacy safely via text contents or classes
+    let triggerPrivacy = document.getElementById('abo-unique-trigger-privacy'); 
+    if (!triggerPrivacy) {
+        // Fallback finder system searching your lists/anchors dynamically for "Privacy and Security"
+        const elements = document.querySelectorAll('a, li, button, div');
+        for (let el of elements) {
+            if (el.textContent.trim().toLowerCase().includes('privacy and security')) {
+                triggerPrivacy = el;
+                break;
+            }
+        }
+    }
+
+    // Closers
+    const closePrivacyX = document.getElementById('abo-unique-close-privacy');
+    const cancelPrivacyBtn = document.getElementById('abo-unique-cancel-privacy');
+    const closeEditX = document.getElementById('abo-unique-close-edit-profile');
+    const cancelEditBtn = document.getElementById('abo-unique-cancel-edit-profile');
+    
+    // Forms / Submission Elements
+    const savePrivacyBtn = document.getElementById('abo-unique-save-privacy');
+    const saveProfileBtn = document.getElementById('abo-unique-save-profile');
+
+    // --- MODAL TOGGLE UTILITIES ---
+    const openModal = (modal) => {
+        if(modal) {
+            modal.classList.add('abo-unique-active');
+            // Re-enforce mousewheel interaction handling
+            const scrollBody = modal.querySelector('.abo-unique-modal-scroll-body');
+            if (scrollBody) scrollBody.scrollTop = 0;
+        }
+    };
+
+    const closeModal = (modal) => {
+        if(modal) modal.classList.remove('abo-unique-active');
+    };
+
+    // --- INTERACTION EVENT LISTENERS ---
+    
+    // Privacy and Security Listeners
+    if (triggerPrivacy) {
+        triggerPrivacy.style.cursor = 'pointer';
+        triggerPrivacy.addEventListener('click', (e) => {
+            e.preventDefault();
+            openModal(privacyModal);
+        });
+    }
+
+    if (closePrivacyX) closePrivacyX.addEventListener('click', () => closeModal(privacyModal));
+    if (cancelPrivacyBtn) cancelPrivacyBtn.addEventListener('click', () => closeModal(privacyModal));
+
+    // Edit Profile Information Listeners
+    if (triggerEditProfile) {
+        triggerEditProfile.addEventListener('click', () => {
+            // Load current data directly from DOM elements before displaying form views
+            prefillProfileFormFields();
+            openModal(editProfileModal);
+        });
+    }
+
+    if (closeEditX) closeEditX.addEventListener('click', () => closeModal(editProfileModal));
+    if (cancelEditBtn) cancelEditBtn.addEventListener('click', () => closeModal(editProfileModal));
+
+    // Close Modals when clicking outside of the Card content window safely
+    window.addEventListener('click', (e) => {
+        if (e.target === privacyModal) closeModal(privacyModal);
+        if (e.target === editProfileModal) closeModal(editProfileModal);
+    });
+
+    // --- FORM PRE-POPULATION LOGIC ---
+    function prefillProfileFormFields() {
+        const nameEl = document.querySelector('.profile-name');
+        if (nameEl) document.getElementById('abo-unique-edit-name').value = nameEl.textContent.trim();
+
+        // Target dynamic grid mapping tags safely
+        const infoCells = document.querySelectorAll('.info-cell');
+        infoCells.forEach(cell => {
+            const labelEl = cell.querySelector('.profile-info-label');
+            const valueEl = cell.querySelector('.profile-info-value');
+            if (!labelEl || !valueEl) return;
+
+            const labelText = labelEl.textContent.trim().toLowerCase();
+            const valText = valueEl.innerText.trim();
+
+            if (labelText.includes('blood group')) {
+                document.getElementById('abo-unique-edit-blood').value = valText;
+            } else if (labelText.includes('age')) {
+                // Splits strings like "19 / Rather not to say" safely
+                const pieces = valText.split('/');
+                if (pieces[0]) document.getElementById('abo-unique-edit-age').value = pieces[0].trim();
+                if (pieces[1]) document.getElementById('abo-unique-edit-gender').value = pieces[1].trim();
+            } else if (labelText.includes('contact')) {
+                const lines = valText.split('\n');
+                if (lines[0]) document.getElementById('abo-unique-edit-phone').value = lines[0].trim();
+                if (lines[1]) document.getElementById('abo-unique-edit-email-view').value = lines[1].trim();
+            } else if (labelText.includes('location')) {
+                document.getElementById('abo-unique-edit-location').value = valText;
+            }
+        });
+    }
+
+    // --- SUBMISSION HANDLERS WITH CORE NOTIFICATION INTEGRATION ---
+    
+    // Privacy Logic Submit
+    if (savePrivacyBtn) {
+        savePrivacyBtn.addEventListener('click', () => {
+            const prevEmail = document.getElementById('abo-unique-prev-email').value;
+            const newEmail = document.getElementById('abo-unique-new-email').value;
+            const prevPass = document.getElementById('abo-unique-prev-password').value;
+            const newPass = document.getElementById('abo-unique-new-password').value;
+            const confirmPass = document.getElementById('abo-unique-confirm-password').value;
+
+            // Simple confirmation checks
+            if (!prevEmail || !newEmail || !prevPass || !newPass || !confirmPass) {
+                if (window.addNotification) window.addNotification("Please fill out all security fields.");
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                if (window.addNotification) window.addNotification("Security Alert: New passwords do not match.");
+                return;
+            }
+
+            // Successfully processed
+            if (window.addNotification) {
+                window.addNotification("Privacy settings updated securely. Email and password saved.");
+            }
+            closeModal(privacyModal);
+            document.getElementById('abo-unique-privacy-form').reset();
+        });
+    }
+
+    // Profile Data Mutation Logic Submit
+    if (saveProfileBtn) {
+        saveProfileBtn.addEventListener('click', () => {
+            const editedName = document.getElementById('abo-unique-edit-name').value;
+            const editedBlood = document.getElementById('abo-unique-edit-blood').value;
+            const editedAge = document.getElementById('abo-unique-edit-age').value;
+            const editedGender = document.getElementById('abo-unique-edit-gender').value;
+            const editedPhone = document.getElementById('abo-unique-edit-phone').value;
+            const editedEmail = document.getElementById('abo-unique-edit-email-view').value;
+            const editedLocation = document.getElementById('abo-unique-edit-location').value;
+
+            if (!editedName || !editedAge || !editedPhone || !editedEmail || !editedLocation) {
+                if (window.addNotification) window.addNotification("Please ensure all personal details are complete.");
+                return;
+            }
+
+            // Write live data back to DOM nodes instantly
+            const nameEl = document.querySelector('.profile-name');
+            if (nameEl) nameEl.textContent = editedName;
+
+            const infoCells = document.querySelectorAll('.info-cell');
+            infoCells.forEach(cell => {
+                const labelEl = cell.querySelector('.profile-info-label');
+                const valueEl = cell.querySelector('.profile-info-value');
+                if (!labelEl || !valueEl) return;
+
+                const labelText = labelEl.textContent.trim().toLowerCase();
+                
+                if (labelText.includes('blood group')) {
+                    valueEl.textContent = editedBlood;
+                } else if (labelText.includes('age')) {
+                    valueEl.textContent = `${editedAge} / ${editedGender}`;
+                } else if (labelText.includes('contact')) {
+                    valueEl.innerHTML = `${editedPhone} <br> ${editedEmail}`;
+                } else if (labelText.includes('location')) {
+                    valueEl.textContent = editedLocation;
+                }
+            });
+
+            if (window.addNotification) {
+                window.addNotification("Personal profile records updated successfully.");
+            }
+            closeModal(editProfileModal);
+        });
+    }
+});

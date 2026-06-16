@@ -159,6 +159,7 @@
 
       </div>
       <button class="submit-btnn" id="setup-submit-btn">Complete Registration</button>
+    
     </div>
   </div>
 </div>
@@ -1362,10 +1363,136 @@
         <span class="profile-info-label">Location</span>
         <div class="profile-info-value">example, Nepal</div>
       </div>
+      <div class="abo-unique-btn-container" style="margin-top: 20px; display: flex; justify-content: flex-end;">
+  <button id="abo-unique-trigger-edit-profile" class="abo-unique-action-btn">
+    <i class="fa-solid fa-user-gear"></i> Change Information
+  </button>
+</div>
     </div>
   </div>
 </div>
 <div id="google_translate_element" style="display:none;"></div>
+<div id="abo-unique-privacy-modal" class="abo-unique-modal-overlay">
+  <div class="abo-unique-modal-card">
+    <div class="abo-unique-modal-header">
+      <h3><i class="fa-solid fa-shield-halved"></i> Privacy & Security Settings</h3>
+      <button id="abo-unique-close-privacy" class="abo-unique-close-x">&times;</button>
+    </div>
+    
+    <div class="abo-unique-modal-scroll-body">
+      <form id="abo-unique-privacy-form" onsubmit="return false;">
+        
+        <div class="abo-unique-form-section">
+          <h4>Change Security Account Email</h4>
+          <div class="abo-unique-input-group">
+            <label for="abo-unique-prev-email">Previous Email Address</label>
+            <input type="email" id="abo-unique-prev-email" placeholder="Enter current email" required>
+          </div>
+          <div class="abo-unique-input-group">
+            <label for="abo-unique-new-email">New Email Address</label>
+            <input type="email" id="abo-unique-new-email" placeholder="Enter new email" required>
+          </div>
+        </div>
+
+        <hr class="abo-unique-separator">
+
+        <div class="abo-unique-form-section">
+          <h4>Update System Password</h4>
+          <div class="abo-unique-input-group">
+            <label for="abo-unique-prev-password">Previous Password</label>
+            <input type="password" id="abo-unique-prev-password" placeholder="Enter current password" required>
+          </div>
+          <div class="abo-unique-input-group">
+            <label for="abo-unique-new-password">New Password</label>
+            <input type="password" id="abo-unique-new-password" placeholder="Create complex password" required>
+          </div>
+          <div class="abo-unique-input-group">
+            <label for="abo-unique-confirm-password">Confirm New Password</label>
+            <input type="password" id="abo-unique-confirm-password" placeholder="Re-type new password" required>
+          </div>
+        </div>
+        
+      </form>
+    </div>
+    
+    <div class="abo-unique-modal-footer">
+      <button id="abo-unique-cancel-privacy" class="abo-unique-btn-secondary">Cancel</button>
+      <button id="abo-unique-save-privacy" class="abo-unique-btn-primary">Save Secure Changes</button>
+    </div>
+  </div>
+</div>
+
+
+<div id="abo-unique-edit-profile-modal" class="abo-unique-modal-overlay">
+  <div class="abo-unique-modal-card">
+    <div class="abo-unique-modal-header">
+      <h3><i class="fa-solid fa-user-pen"></i> Edit Personal Information</h3>
+      <button id="abo-unique-close-edit-profile" class="abo-unique-close-x">&times;</button>
+    </div>
+    
+    <div class="abo-unique-modal-scroll-body">
+      <form id="abo-unique-profile-form" onsubmit="return false;">
+        
+        <div class="abo-unique-input-group">
+          <label for="abo-unique-edit-name">Full Display Name</label>
+          <input type="text" id="abo-unique-edit-name" placeholder="Admin User" required>
+        </div>
+
+        <div class="abo-unique-input-row">
+          <div class="abo-unique-input-group">
+            <label for="abo-unique-edit-blood">Blood Group</label>
+            <select id="abo-unique-edit-blood" required>
+              <option value="O-">O-</option>
+              <option value="O+">O+</option>
+              <option value="A-">A-</option>
+              <option value="A+">A+</option>
+              <option value="B-">B-</option>
+              <option value="B+">B+</option>
+              <option value="AB-">AB-</option>
+              <option value="AB+">AB+</option>
+            </select>
+          </div>
+          
+          <div class="abo-unique-input-group">
+            <label for="abo-unique-edit-age">Age</label>
+            <input type="number" id="abo-unique-edit-age" min="16" max="100" placeholder="19" required>
+          </div>
+        </div>
+
+        <div class="abo-unique-input-group">
+          <label for="abo-unique-edit-gender">Gender Preference</label>
+          <select id="abo-unique-edit-gender" required>
+            <option value="Rather not to say">Rather not to say</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+
+        <div class="abo-unique-input-group">
+          <label for="abo-unique-edit-phone">Contact Number</label>
+          <input type="text" id="abo-unique-edit-phone" placeholder="+977 9800000000" required>
+        </div>
+
+        <div class="abo-unique-input-group">
+          <label for="abo-unique-edit-email-view">Contact Email</label>
+          <input type="email" id="abo-unique-edit-email-view" placeholder="admin@gmail.com" required>
+        </div>
+
+        <div class="abo-unique-input-group">
+          <label for="abo-unique-edit-location">Location / Address</label>
+          <input type="text" id="abo-unique-edit-location" placeholder="example, Nepal" required>
+        </div>
+        
+      </form>
+    </div>
+    
+    <div class="abo-unique-modal-footer">
+      <button id="abo-unique-cancel-edit-profile" class="abo-unique-btn-secondary">Cancel</button>
+      <button id="abo-unique-save-profile" class="abo-unique-btn-primary">Update Information</button>
+    </div>
+  </div>
+</div>
 
 <script type="text/javascript">
   function googleTranslateElementInit() {
