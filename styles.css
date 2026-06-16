@@ -3401,3 +3401,78 @@ html[data-theme="light"] .setup-file-label {
   flex: 0 0 auto;
   width: 280px; /* Adjust width as needed for your design */
 }
+/* ═══════════════════════════════════════
+   ROBOT FLOATING ACTION BUTTON
+═══════════════════════════════════════ */
+
+/* ═══════════════════════════════════════
+   ROBOT BUTTON & MICRO-ANIMATIONS
+═══════════════════════════════════════ */
+
+.ai-robot-btn {
+  /* Positioning */
+  position: fixed;
+  bottom: 85px;
+  right: 48px;
+  z-index: 9999;
+  
+  /* Sizing & Layout */
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  /* Styling utilizing your design tokens */
+  background-color: var(--c); 
+  color: #FFFFFF; 
+  border: none;
+  border-radius: 50%; 
+  box-shadow: var(--sc); 
+  cursor: pointer;
+  
+  /* Smooth interactions */
+  transition: transform 0.3s var(--spring), 
+              box-shadow 0.3s var(--ease), 
+              background-color 0.3s var(--ease);
+}
+
+/* Hover State - Lifts up and glows */
+.ai-robot-btn:hover {
+  transform: translateY(-6px) scale(1.05);
+  background-color: var(--cb);
+  box-shadow: var(--sg);
+}
+
+.ai-robot-btn:active {
+  transform: translateY(2px) scale(0.95);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+/* --- SVG ANIMATIONS --- */
+
+.ai-robot-btn .robot-icon {
+  width: 34px;
+  height: 34px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+  /* Makes the entire robot float gently up and down */
+  animation: floatRobot 4s ease-in-out infinite;
+}
+
+/* Transform origin for eyes so they blink from the center */
+.ai-robot-btn .robot-eye {
+  transform-origin: center;
+  animation: blink 5s infinite;
+}
+
+/* Gentle floating keyframes */
+@keyframes floatRobot {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+/* Natural-looking double blink keyframes */
+@keyframes blink {
+  0%, 90%, 94%, 100% { transform: scaleY(1); }
+  92%, 96% { transform: scaleY(0.1); } /* Squishes the circle flat to mimic a blink */
+}

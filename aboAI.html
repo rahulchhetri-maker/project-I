@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABO± AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="abostyles.css">
+    <script>
+      // Instantly grabs the theme from the main website before the page even renders
+      (function(){
+        try {
+          var t = localStorage.getItem('theme') || 'light';
+          document.documentElement.setAttribute('data-theme', t);
+        } catch(e) { /* ignore */ }
+      })();
+    </script>
+</head> 
+<body>
+<div class="sidebar">
+        <div class="logo">
+            <span class="logo" id="logo"></span> ABO± AI
+        </div>
+        <button class="btn btn-primary" onclick="startNewChat()">+ New Chat</button>
+        <button class="btn" onclick="clearAllHistory()">🗑️ Wipe All History</button>
+        
+        <div style="margin-top: 25px; font-size: 0.75rem; color: var(--tm); text-transform: uppercase; letter-spacing: 1px; font-weight: 600;">Timeline Ledger</div>
+        <div class="history-container" id="historyContainer">
+            </div>
+    </div>
+
+    <div class="main-chat">
+        <div class="header">
+        </div>
+
+        <div class="chat-window" id="chatWindow">
+            <div class="message msg-ai">
+                System online. I am initialized to handle complex inquiries regarding blood types, procedural processing timelines, and compliance deferrals. Ask freely.
+            </div>
+        </div>
+
+        <div class="input-area">
+            <div class="quick-actions">
+                <button class="quick-btn" onclick="sendQuickMessage('Am I eligible to donate?')">Eligibility Checks</button>
+                <button class="quick-btn" onclick="sendQuickMessage('Can I donate with a tattoo?')">Tattoo Procedures</button>
+                <button class="quick-btn" onclick="sendQuickMessage('What are the rare blood types?')">Rare Profiles</button>
+            </div>
+            <div class="input-box">
+                <input type="text" id="userInput" placeholder="Type a sentence or long line here..." autocomplete="off" onkeypress="handleEnter(event)">
+                <button class="send-btn" onclick="processUserInput()">➤</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="aboscript.js"></script>
+</body>
+</html>
