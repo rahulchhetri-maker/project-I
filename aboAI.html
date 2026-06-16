@@ -2,7 +2,11 @@
 <html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <!-- Critical: interactive-widget keeps the layout stable when keyboard appears -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>ABO± AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
@@ -16,9 +20,9 @@
     <link rel="stylesheet" href="abostyles.css">
 </head>
 <body>
- 
+
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
- 
+
 <div class="sidebar" id="sidebar">
     <div class="logo-wrap">
         <div class="logo-mark">
@@ -29,7 +33,7 @@
         </div>
         <span class="logo-name"><span>ABO±</span> AI</span>
     </div>
- 
+
     <div class="sidebar-actions">
         <button class="btn btn-primary" onclick="startNewChat()">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -44,13 +48,13 @@
             Wipe All History
         </button>
     </div>
- 
+
     <div class="section-label">Timeline Ledger</div>
     <div class="history-container" id="historyContainer">
         <div class="history-empty" id="historyEmpty">No conversations yet.<br>Start chatting below.</div>
     </div>
 </div>
- 
+
 <div class="main-chat">
     <div class="header">
         <button class="mobile-menu-toggle" id="menuToggle" aria-label="Open sidebar">
@@ -71,7 +75,7 @@
             </button>
         </div>
     </div>
- 
+
     <div class="chat-window" id="chatWindow">
         <div class="welcome-screen" id="welcomeScreen">
             <div class="welcome-icon">
@@ -91,7 +95,7 @@
             </div>
         </div>
     </div>
- 
+
     <div class="input-area">
         <div class="quick-actions">
             <button class="quick-btn" onclick="sendQuickMessage('Am I eligible to donate blood?')">Eligibility</button>
@@ -102,7 +106,7 @@
             <button class="quick-btn" onclick="sendQuickMessage('What is the rarest blood type?')">Rare Types</button>
         </div>
         <div class="input-box">
-            <input type="text" id="userInput" placeholder="Ask about blood types, donation rules, compatibility…" autocomplete="off" onkeypress="handleEnter(event)">
+            <input type="text" id="userInput" placeholder="Ask about blood types, donation rules, compatibility…" autocomplete="off" onkeypress="handleEnter(event)" enterkeyhint="send">
             <button class="send-btn" onclick="processUserInput()" aria-label="Send">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="22" y1="2" x2="11" y2="13"/>
@@ -112,8 +116,7 @@
         </div>
     </div>
 </div>
- 
+
 <script src="aboscript.js"></script>
 </body>
 </html>
- 
