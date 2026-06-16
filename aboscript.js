@@ -98,7 +98,10 @@ const romanNepaliKeywords = [
     "mutra", "bish", "bish", "kharaabi", "kharaabi", "bikaar", "bikaar", "ragat ko bikaar", "ragat ko bikaar", "ragat ko cancer", 
     "raato raktakosh ko kami", "raato raktakosh ko kami", "seto raktakosh ko vriddhi", "seto raktakosh ko vriddhi", "platelets ghatnu", 
     "platelets ghatnu", "dengu", "dengu", "jwaro", "jwaro", "thakai", "thakai", "kamjori", "kamjori", "ringataa", "ringataa", "saas fernu gaaro hunu", "saas fernu gaaro hunu", "pheeka", "pheeka", "rang udnu", "rang udnu", "hatkelaa", "hatkelaa", "aankha", "aankha", "jibhro", "jibhro", "ragat ko rang", "ragat ko rang", "gaadha raato", "gaadha raato", "chakilo raato", "chakilo raato", "oxygen bhae ko ragat", "oxygen bhae ko ragat", "oxygen nabhae ko ragat", "oxygen nabhae ko ragat", "carbon dioxide", "tatva", "mishran", "mishran", "ghanatva", "ghanatva", "taapmaan", "taapmaan", "sharir ko taapmaan", "sharir ko taapmaan", "santulan", "santulan", "amilo piro santulan", "amilo piro santulan", "paani", "paani", "noon", "noon", "chini", "chini", "raktagat chini", "raktagat chini", "glucoj", "insulin", "madhumeha", "madhumeha", "thaili", "thaili", "ragat ko thaili", "ragat ko thaili", "ragat bank", "ragat bank", "surakshit ragat", "surakshit ragat", "ragat ko khoji", "ragat ko khoji", "raktadaan shivira", "raktadaan shivira", "svayamsevak", "svayamsevak", "red cross", "upkaar", "upkaar", "sewa", "sewa", "samaj", "samaj", "madad", "madad", "sahayog", "sahayog", "anurodh", "anurodh", "aavashyakataa", "aavashyakataa", "turunta", "turunta", "bachaau garnu", "bachaau garnu", "jivan bachaau", "jivan bachaau"
-];
+    ,"khana", "khayau", "khajaa", "k gardai", "basdai", "sathi", "maya", "bhalai", 
+    "ramailo", "haso", "kura", "guff", "sanchai", "hijo", "bholi", "aaja", "naam",
+    "bhanana", "bhanata", "k kura", "kina yesto", "kasaile", "malai pani"
+  ];
  
 function detectNepali(text) {
     if (devanagariRegex.test(text)) return true;
