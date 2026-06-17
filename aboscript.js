@@ -118,6 +118,24 @@ function detectNepali(text) {
 // 2. MASTER KNOWLEDGE BASE
 // ————————————————————————————————————————
 const knowledgeBase = [
+  {id: "en_greet_name",
+  tags: ["what is your name",
+  "what's your name",
+  "who are you",
+  "tell me your name",
+  "your name",
+  "what do i call you"],
+  answer: "I am ABO± AI."
+},
+  {
+    id: "greet_name",
+    tags: [
+      "what is your name", "what's your name", "who are you", "your name",
+      "तपाईंको नाम के हो", "तिम्रो नाम के हो", "तपाई को हुनुहुन्छ",
+      "tapaiko naam ke ho", "timro naam ke ho", "tapai ko hunuhunchha"
+    ],
+    ans: "I am ABO ± / म ABO ± हुँ।"
+  },
  
   // ── NEPALI GREETINGS (NEW) ────────────────────────────────
   {
