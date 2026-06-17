@@ -748,10 +748,15 @@ const knowledgeBase = [
   },
  
   // ── AI IDENTITY ────────────────────────────────────────
-  {
+{
     id: "ai_identity",
-    tags: ["who are you","what are you","are you ai","are you human","are you a robot","are you real","what is abo ai","tell me about yourself","about this app","ko ho tapai","tapai ko ho"],
-    answer: "🤖 म ABO± AI हुँ — I am ABO± AI, a specialized blood type and donation intelligence assistant.\n\nI am designed specifically to help you with:\n   🩸 Blood type identification and profiles\n   💉 Donation eligibility and deferral rules\n   🔬 Transfusion compatibility matrices\n   🏥 Emergency blood medicine facts\n   ❤️ Post-donation care and iron nutrition\n   🇳🇵 Nepali language support (नेपाली)\n   🩺 Blood disorders, genetics, and clinical knowledge\n\nI understand both English and Nepali (Devanagari script + Roman Nepali).\n\nI am not a licensed medical professional. While I provide medically grounded information based on standard hematology guidelines, you should always consult qualified healthcare staff at your blood bank or hospital for personalized medical decisions.\n\nBuilt for blood banks and donation centers in Nepal and worldwide. 🌍"
+    tags: [
+      "who are you", "what are you", "are you ai", "are you human", 
+      "are you a robot", "are you real", "what is abo ai", 
+      "tell me about yourself", "about this app", 
+      "ko ho tapai", "tapai ko ho"
+    ],
+    answer: "🤖 म ABO± AI हुँ — I am ABO± AI, a specialized blood type and donation intelligence assistant.\n\nI was developed by Rahul Chhetri.\n\nI am designed specifically to help you with:\n  🩸 Blood type identification and profiles\n  💉 Donation eligibility and deferral rules\n  🔬 Transfusion compatibility matrices\n  🏥 Emergency blood medicine facts\n  ❤️ Post-donation care and iron nutrition\n  🇳🇵 Nepali language support (नेपाली)\n  🩺 Blood disorders, genetics, and clinical knowledge\n\nI understand both English and Nepali (Devanagari script + Roman Nepali).\n\nI am not a licensed medical professional. While I provide medically grounded information based on standard hematology guidelines, you should always consult qualified healthcare staff at your blood bank or hospital for personalized medical decisions.\n\nBuilt for blood banks and donation centers in Nepal and worldwide. 🌍"
   },
   {
     id: "not_doctor",
@@ -1161,42 +1166,23 @@ const knowledgeBase = [
   ],
   answer: "एलायन्स फर ब्लड अपरेसनका म्यानेजर (प्रबन्धक) सुन्दर शर्मा हुनुहुन्छ।"
 },
-    {
-  id: "id_developer",
-  tags: [
-    "who is your developer",
-    "who created you",
-    "who made you",
-    "who is your creator",
-    "who programmed you",
-    "who built this bot",
-    "who designed you",
-    "who is the owner of this bot",
-    "who wrote your code",
-    "who is behind this project",
-    "who is the mastermind behind you",
-    "who owns this chatbot",
-    "who is your boss",
-    "who is your father",
-    "who invented you",
-    "timilai kasle banayeko",
-    "timro developer ko ho",
-    "timilai kasle banako ho",
-    "timro creator ko ho",
-    "yo bot kasle banako",
-    "timro boss ko ho",
-    "yo project kasle banako ho",
-    "तिमीलाई कसले बनाएको हो",
-    "तिम्रो डेभलपर को हो",
-    "तपाईंको निर्माता को हो",
-    "यो बोट कसले बनाएको",
-    "who developed this application",
-    "who is the author of this script",
-    "tell me your developer name",
-    "who is the genius that made you"
-  ],
-  answer: "I was developed by Rahul Chhetri."
-},
+{
+    id: "id_developer",
+    tags: [
+      "who is your developer", "who created you", "who made you", 
+      "who is your creator", "who programmed you", "who built this bot", 
+      "who designed you", "who is the owner of this bot", "who wrote your code", 
+      "who is behind this project", "who is the mastermind behind you", 
+      "who owns this chatbot", "who is your boss", "who is your father", 
+      "who invented you", "timilai kasle banayeko", "timro developer ko ho", 
+      "timilai kasle banako ho", "timro creator ko ho", "yo bot kasle banako", 
+      "timro boss ko ho", "yo project kasle banako ho", "तिमीलाई कसले बनाएको हो", 
+      "तिम्रो डेभलपर को हो", "तपाईंको निर्माता को हो", "यो बोट कसले बनाएको", 
+      "who developed this application", "who is the author of this script", 
+      "tell me your developer name", "who is the genius that made you"
+    ],
+    answer: "I was developed by Rahul Chhetri."
+  }
  
 ];
  
