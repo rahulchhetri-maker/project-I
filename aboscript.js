@@ -824,6 +824,343 @@ const knowledgeBase = [
   ],
   answer: "O-negative (O-) blood is known as the universal donor blood type. This is because O-negative red blood cells do not have A, B, or Rh antigens on their surface, meaning they can be safely transfused to patients of any blood type (A, B, AB, or O, whether positive or negative) in an emergency without causing an immune reaction."
 },
+// English Variant
+{
+  id: "id_rahul_chhetri_en",
+  tags: [
+    "who is rahul chhetri",
+    "tell me about rahul chhetri",
+    "who is rahul",
+    "who is the founder of alliance for blood operations",
+    "who is the ceo of alliance for blood operations",
+    "who runs alliance for blood operations",
+    "who is the developer rahul chhetri",
+    "who is the creator rahul chhetri",
+    "know more about rahul chhetri",
+    "rahul chhetri bio",
+    "rahul chhetri profile"
+  ],
+  answer: "Rahul Chhetri is the Founder and CEO of the Alliance for Blood Operations± (ABO±), as well as the developer behind this project."
+},
+
+// Nepali Variant (Includes Romanized Nepali and Devanagari script)
+{
+  id: "id_rahul_chhetri_ne",
+  tags: [
+    "rahul chhetri ko ho",
+    "rahul chhetri ko barema bhana",
+    "alliance for blood operations ko founder ko ho",
+    "alliance for blood operations ko ceo ko ho",
+    "यो बोट बनाउने राहुल क्षेत्री को हो",
+    "राहुल क्षेत्री को हुन्",
+    "राहुल क्षेत्री को बारेमा भन्नुहोस्",
+    "एलायन्स फर ब्लड अपरेसनको संस्थापक को हो",
+    "राहुल क्षेत्री को हो"
+  ],
+  answer: "राहुल क्षेत्री एलायन्स फर ब्लड अपरेसन± (ABO± = Alliance for Blood Operations±) का संस्थापक र सीईओ हुनुहुन्छ, र उहाँ नै यस प्रोजेक्टको डेभलपर पनि हुनुहुन्छ।"
+},
+// English Variant
+{
+  id: "id_alina_banjade_en",
+  tags: [
+    "who is alina banjade",
+    "tell me about alina banjade",
+    "who is alina",
+    "who is the co-founder of alliance for blood operations",
+    "who is the cmo of alliance for blood operations",
+    "who is the chief marketing officer of alliance for blood operations",
+    "know more about alina banjade",
+    "alina banjade bio",
+    "alina banjade profile"
+  ],
+  answer: "Alina Banjade is the Co-Founder and Chief Marketing Officer (CMO) of the Alliance for Blood Operations± (ABO±)."
+},
+
+// Nepali Variant (Includes Romanized Nepali and Devanagari script)
+{
+  id: "id_alina_banjade_ne",
+  tags: [
+    "alina banjade ko ho",
+    "alina banjade ko barema bhana",
+    "alliance for blood operations ko co-founder ko ho",
+    "alliance for blood operations ko cmo ko ho",
+    "अलिना बन्जाडे को हुन्",
+    "अलिना बन्जाडे को बारेमा भन्नुहोस्",
+    "एलायन्स फर ब्लड अपरेसनको सह-संस्थापक को हो",
+    "एलायन्स फर ब्लड अपरेसनको सिएमओ को हो",
+    "अलिना बन्जाडे को हो"
+  ],
+  answer: "अलिना बन्जाडे एलायन्स फर ब्लड अपरेसन± (ABO± = Alliance for Blood Operations±) की सह-संस्थापक र प्रमुख बजारीकरण अधिकृत (CMO) हुनुहुन्छ।"
+},
+// English Variant
+{
+  id: "id_saim_paudel_en",
+  tags: [
+    "who is saim paudel",
+    "tell me about saim paudel",
+    "who is saim",
+    "who is the head of operation of alliance for blood operations",
+    "who is the head of operations here",
+    "who manages operations for alliance for blood operations",
+    "know more about saim paudel",
+    "saim paudel bio",
+    "saim paudel profile"
+  ],
+  answer: "Saim Paudel is the Head of Operations at the Alliance for Blood Operations± (ABO±)."
+},
+
+// Nepali Variant (Includes Romanized Nepali and Devanagari script)
+{
+  id: "id_saim_paudel_ne",
+  tags: [
+    "saim paudel ko ho",
+    "saim paudel ko barema bhana",
+    "alliance for blood operations ko head of operation ko ho",
+    "alliance for blood operations ko operations head ko ho",
+    "साइम पौडेल को हुन्",
+    "साइम पौडेल को बारेमा भन्नुहोस्",
+    "एलायन्स फर ब्लड अपरेसनको हेड अफ अपरेसन को हो",
+    "अपरेसन प्रमुख को हो",
+    "साइम पौडेल को हो"
+  ],
+  answer: "साइम पौडेल एलायन्स फर ब्लड अपरेसन± (ABO± = Alliance for Blood Operations± ) का हेड अफ अपरेसन (संचालन प्रमुख) हुनुहुन्छ।"
+},
+// English Variant
+{
+  id: "id_sangam_pandey_en",
+  tags: [
+    "who is sangam pandey",
+    "tell me about sangam pandey",
+    "who is sangam",
+    "who is the director of alliance for blood operations",
+    "who is the director here",
+    "know more about sangam pandey",
+    "sangam pandey bio",
+    "sangam pandey profile"
+  ],
+  answer: "Sangam Pandey is the Director at the Alliance for Blood Operations± (ABO±)."
+},
+
+// Nepali Variant (Includes Romanized Nepali and Devanagari script)
+{
+  id: "id_sangam_pandey_ne",
+  tags: [
+    "sangam pandey ko ho",
+    "sangam pandey ko barema bhana",
+    "alliance for blood operations ko director ko ho",
+    "संगम पाण्डे को हुन्",
+    "संगम पाण्डे को बारेमा भन्नुहोस्",
+    "एलायन्स फर ब्लड अपरेसनको निर्देशक को हो",
+    "डाइरेक्टर को हो",
+    "संगम पाण्डे को हो"
+  ],
+  answer: "संगम पाण्डे एलायन्स फर ब्लड अपरेसन± (ABO± = Alliance for Blood Operations) का निर्देशक (Director) हुनुहुन्छ।"
+},
+// English Variant
+{
+  id: "id_sundar_sharma_en",
+  tags: [
+    "who is sundar sharma",
+    "tell me about sundar sharma",
+    "who is sundar",
+    "who is the manager of alliance for blood operations",
+    "who is the manager here",
+    "know more about sundar sharma",
+    "sundar sharma bio",
+    "sundar sharma profile",
+    "who is sunder sharma",
+    "tell me about sunder sharma",
+    "who is sunder",
+    "who is the manager of alliance for blood operations",
+    "who is the manager here",
+    "know more about sunder sharma",
+    "sunder sharma bio",
+    "sunder sharma profile"
+  ],
+  answer: "Sunder Sharma is the Manager at the Alliance for Blood Operations± (ABO±)."
+},
+
+// Nepali Variant (Includes Romanized Nepali and Devanagari script)
+{
+  id: "id_sundar_sharma_ne",
+  tags: [
+    "sundar sharma ko ho",
+    "sundar sharma ko barema bhana",
+    "alliance for blood operations ko manager ko ho",
+    "सुन्दर शर्मा को हुन्",
+    "सुन्दर शर्मा को बारेमा भन्नुहोस्",
+    "एलायन्स फर ब्लड अपरेसनको म्यानेजर को हो",
+    "प्रबन्धक को हो",
+    "सुन्दर शर्मा को हो"
+  ],
+  answer: "सुन्दर शर्मा एलायन्स फर ब्लड अपरेसन± (ABO± = Alliance for Blood Operations) का म्यानेजर (प्रबन्धक) हुनुहुन्छ।"
+},
+
+// Founder & CEO - English
+{
+  id: "id_query_founder_ceo_en",
+  keywords: ["founder", "ceo", "boss", "head", "started", "leads", "owner", "rahul", "chhetri",],
+  tags: [
+    "who is the founder of alliance for blood operations",
+    "who is the ceo of alliance for blood operations",
+    "who is the ceo of abo",
+    "who is the CEO of alliance for blood operations",
+    "who is the founder here",
+    "who is the ceo here",
+    "who started alliance for blood operations",
+    "who runs alliance for blood operations",
+    "name of the ceo",
+    "Who is founder",
+    "Who is ceo",
+    "Who is CEO?",
+    "name of the founder",
+    "who is the main boss",
+    "who leads this organization"
+  ],
+  answer: "The Founder and CEO of the Alliance for Blood Operations is Rahul Chhetri."
+},
+
+// Founder & CEO - Nepali
+{
+  id: "id_query_founder_ceo_ne",
+  keywords: ["founder", "ceo", "संस्थापक", "सीईओ", "मालिक", "प्रमुख", "राहुल", "क्षेत्री"],
+  tags: [
+    "alliance for blood operations ko founder ko ho",
+    "alliance for blood operations ko ceo ko ho",
+    "founder ko ho",
+    "ceo ko ho",
+    "यो संस्था कसले सुरु गरेको हो",
+    "एलायन्स फर ब्लड अपरेसनको संस्थापक को हो",
+    "एलायन्स फर ब्लड अपरेसनको सीईओ को हो",
+    "मुख्य व्यक्ति को हो",
+    "यो संस्था कसले चलाउछ"
+  ],
+  answer: "एलायन्स फर ब्लड अपरेसनका संस्थापक र सीईओ राहुल क्षेत्री हुनुहुन्छ।"
+},
+// Co-Founder & CMO - English
+{
+  id: "id_query_cmo_en",
+  keywords: ["co-founder", "cofounder", "cmo", "marketing", "alina", "banjade"],
+  tags: [
+    "who is the co founder of alliance for blood operations",
+    "who is the co-founder here",
+    "Who is the co-founder of abo",
+    "who is the cmo of alliance for blood operations",
+    "who is the cmo here",
+    "who is the chief marketing officer",
+    "who handles marketing for alliance for blood operations",
+    "name of the cmo",
+    "Who is co-founder",
+    "Who is cmo",
+    "name of the co-founder"
+  ],
+  answer: "The Co-Founder and Chief Marketing Officer (CMO) of the Alliance for Blood Operations is Alina Banjade."
+},
+
+// Co-Founder & CMO - Nepali
+{
+  id: "id_query_cmo_ne",
+  keywords: ["co-founder", "cmo", "सह-संस्थापक", "सिएमओ", "मार्केटिङ", "अलिना", "बन्जाडे"],
+  tags: [
+    "alliance for blood operations ko co founder ko ho",
+    "alliance for blood operations ko cmo ko ho",
+    "co founder ko ho",
+    "cmo ko ho",
+    "मार्केटिङ हेर्ने व्यक्ति को हो",
+    "एलायन्स फर ब्लड अपरेसनको सह-संस्थापक को हो",
+    "एलायन्स फर ब्लड अपरेसनको सिएमओ को हो",
+    "चीफ मार्केटिंग अफिसर को हो"
+  ],
+  answer: "एलायन्स फर ब्लड अपरेसनकी सह-संस्थापक र प्रमुख बजारीकरण अधिकृत (CMO) अलिना बन्जाडे हुनुहुन्छ।"
+},
+// Head of Operations - English
+{
+  id: "id_query_operations_en",
+  keywords: ["operations", "operation", "head of operation", "manage", "saim", "paudel"],
+  tags: [
+    "who is the head of operation of alliance for blood operations",
+    "who is the head of operations",
+    "Who is the HO",
+    "Who is the head of operation",
+    "who handles the operations here",
+    "who manages operations for alliance for blood operations",
+    "who is the operations manager",
+    "name of the operations head"
+  ],
+  answer: "The Head of Operations at the Alliance for Blood Operations is Saim Paudel."
+},
+
+// Head of Operations - Nepali
+{
+  id: "id_query_operations_ne",
+  keywords: ["operations", "operation", "अपरेसन", "संचालन", "प्रमुख", "साइम", "पौडेल"],
+  tags: [
+    "alliance for blood operations ko head of operation ko ho",
+    "alliance for blood operations ko operations head ko ho",
+    "operations manager ko ho",
+    "हेड अफ अपरेसन को हो",
+    "संचालन प्रमुख को हो",
+    "एलायन्स फर ब्लड अपरेसनको हेड अफ अपरेसन को हो",
+    "अपरेसन कसले हेर्छ"
+  ],
+  answer: "एलायन्स फर ब्लड अपरेसनका हेड अफ अपरेसन (संचालन प्रमुख) साइम पौडेल हुनुहुन्छ।"
+},
+// Director - English
+{
+  id: "id_query_director_en",
+  keywords: ["director", "board", "management", "sangam", "pandey"],
+  tags: [
+    "who is the director of alliance for blood operations",
+    "who is the director here",
+    "Who is director",
+    "Who is md",
+    "who runs the board",
+    "name of the director",
+    "who is handling the directorship"
+  ],
+  answer: "The Director at the Alliance for Blood Operations is Sangam Pandey."
+},
+
+// Director - Nepali
+{
+  id: "id_query_director_ne",
+  keywords: ["director", "निर्देशक", "डाइरेक्टर", "संगम", "पाण्डे"],
+  tags: [
+    "alliance for blood operations ko director ko ho",
+    "director ko ho",
+    "निर्देशक को हो",
+    "डाइरेक्टर को हो",
+    "एलायन्स फर ब्लड अपरेसनको निर्देशक को हो"
+  ],
+  answer: "एलायन्स फर ब्लड अपरेसनका निर्देशक (Director) संगम पाण्डे हुनुहुन्छ।"
+},
+// Manager - English
+{
+  id: "id_query_manager_en",
+  keywords: ["manager", "manage", "admin", "sunder", "sharma"],
+  tags: [
+    "who is the manager of alliance for blood operations",
+    "who is the manager here",
+    "who manages everything",
+    "Who is manager",
+    "name of the manager"
+  ],
+  answer: "The Manager at the Alliance for Blood Operations is Sunder Sharma."
+},
+
+// Manager - Nepali
+{
+  id: "id_query_manager_ne",
+  keywords: ["manager", "म्यानेजर", "प्रबन्धक", "सुन्दर", "शर्मा"],
+  tags: [
+    "alliance for blood operations ko manager ko ho",
+    "manager ko ho",
+    "म्यानेजर को हो",
+    "प्रबन्धक को हो",
+    "एलायन्स फर ब्लड अपरेसनको म्यानेजर को हो"
+  ],
+  answer: "एलायन्स फर ब्लड अपरेसनका म्यानेजर (प्रबन्धक) सुन्दर शर्मा हुनुहुन्छ।"
+},
     {
   id: "id_developer",
   tags: [
@@ -858,7 +1195,7 @@ const knowledgeBase = [
     "tell me your developer name",
     "who is the genius that made you"
   ],
-  answer: "Rahul Chhetri"
+  answer: "I was developed by Rahul Chhetri."
 },
  
 ];
